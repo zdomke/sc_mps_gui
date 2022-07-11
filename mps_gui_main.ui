@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SC MPS Faults</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="summary">
+      <property name="styleSheet">
+       <string notr="true">PyDMEmbeddedDisplay{
+	background-color: rgb(105, 105, 105);
+	border-color: rgb(105, 105, 105);
+}</string>
+      </property>
+      <attribute name="title">
+       <string>Summary</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="summ_layout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="permit_layout">
+           <property name="spacing">
+            <number>7</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="dumpbsy_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPBSY&quot;, &quot;P_PV&quot;:&quot;SC_BSYD&quot;, &quot;T_PV&quot;:&quot;2&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="diag0_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DIAG0&quot;, &quot;P_PV&quot;:&quot;SC_DIAG0&quot;, &quot;T_PV&quot;:&quot;1&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="dumphxr_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPHXR&quot;, &quot;P_PV&quot;:&quot;SC_HXR&quot;, &quot;T_PV&quot;:&quot;3&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="dumpsxr_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPSXR&quot;, &quot;P_PV&quot;:&quot;SC_SXR&quot;, &quot;T_PV&quot;:&quot;4&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="laser_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;LASER&quot;, &quot;P_PV&quot;:&quot;LASER&quot;, &quot;T_PV&quot;:&quot;0&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PyDMEmbeddedDisplay" name="lesa_embed">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="macros" stdset="0">
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC LESA&quot;, &quot;P_PV&quot;:&quot;SC_LESA&quot;, &quot;T_PV&quot;:&quot;5&quot;}</string>
+             </property>
+             <property name="filename" stdset="0">
+              <string>mps_permit_panel.ui</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="fault_lbl_layout">
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Faulted Objects</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="summ_table">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-weight: bold;
+</string>
+           </property>
+           <property name="verticalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="horizontalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>75</number>
+           </attribute>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Fault</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>State</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_BSY</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_DIAG0</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_HXR</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_SXR</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>LASER</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_LESA</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="byp_lbl_layout">
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="byp_lbl">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Bypassed Faults</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="byp_lbl_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="byp_fault_table">
+           <property name="styleSheet">
+            <string notr="true">font-weight: bold;
+</string>
+           </property>
+           <property name="verticalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="horizontalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="columnCount">
+            <number>3</number>
+           </property>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Fault</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Current State</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Bypass Exp Date</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignCenter</set>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="logic">
+      <attribute name="title">
+       <string>Logic</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="logic_layout">
+         <item>
+          <layout class="QHBoxLayout" name="filter_layout">
+           <item>
+            <spacer name="filter_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="filter_edt">
+             <property name="placeholderText">
+              <string>Case-insensitive Filter</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="logic_table">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-weight: bold;
+</string>
+           </property>
+           <property name="verticalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="horizontalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>75</number>
+           </attribute>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Fault</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>State</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_BSY</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_DIAG0</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_HXR</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_SXR</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>LASER</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SC_LESA</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string/>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PyDMEmbeddedDisplay</class>
+   <extends>QFrame</extends>
+   <header>pydm.widgets.embedded_display</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
