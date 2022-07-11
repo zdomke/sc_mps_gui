@@ -37,7 +37,7 @@ def construct_state_widget(fault):
 
     return state
 
-def construct_cell_widget(pv, ignored):
+def construct_cell_widget(pv):
     """
     Initialize a PyDMLabel for the associated column and return the widget created.
     """
@@ -123,7 +123,7 @@ def construct_table_row(table, fault, row, fault_table=False):
     table.setCellWidget(row, 1, state)
     
     for j in range(len(fault.destinations)):
-        cell = construct_cell_widget(fault.destinations[j], fault.ignored)
+        cell = construct_cell_widget(fault.destinations[j])
         table.setCellWidget(row, j+2, cell)
 
     if fault_table:
