@@ -23,7 +23,7 @@ class MPSModel:
             print("{0:55} {1}".format(fault.description + ':', fault.name))
 
     def set_filename(self):
-        phys_top = path.expandvars("$PHYSICS_TOP") + "/mps_configuration/current/"
+        phys_top = path.expandvars("$PHYSICS_TOP") + "/mps_configuration/injector/"
         filename = glob.glob(phys_top + "mps_config*.db")[0]
         return filename
 
