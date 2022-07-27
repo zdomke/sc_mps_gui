@@ -1,3 +1,7 @@
+R?.?.?  Zach Domke      ??/??/20??
+        DB File validation & logging
+        Selection Details section in the Logic tab
+        Fix bug that shows rows in summary & bypass tables for disconnected PVs
 R1.0.1  Zach Domke      07/26/2022
         Switch default .db file in mps_model
 R1.0.0  Zach Domke      07/11/2022

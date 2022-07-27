@@ -9,6 +9,7 @@
 |-- mps_gui_main.py  
 |-- mps_permit_panel.ui  
 |-- mps_model.py  
+|-- selection_detail.py  
 `-- widget_constructors.py  
 
 
@@ -38,6 +39,11 @@
   - Using MPSConfig, establish a connection to the MPS Database
     - If a filename is not provided, then MPSModel will locate the default file to use
   - The object stores all necessary information from the database
+
+
+### selection_detail.py
+  - Create the Selection Details section used in the Logic and Ignore Logic tabs
+  - The section is shown and populated when a selection is made in the logic table
 
 
 ### widget_constructors.py 

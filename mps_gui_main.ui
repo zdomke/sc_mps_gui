@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SC MPS Faults</string>
+   <string>SC MPS GUI</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -79,10 +79,16 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPBSY&quot;, &quot;P_PV&quot;:&quot;SC_BSYD&quot;, &quot;T_PV&quot;:&quot;2&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;: &quot;SC DUMPBSYD&quot;, &quot;P_PV&quot;: &quot;SC_BSYD&quot;, &quot;T_PV&quot;: &quot;2&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
+             </property>
+             <property name="loadWhenShown" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="disconnectWhenHidden" stdset="0">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -263,9 +269,6 @@
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
-           <attribute name="verticalHeaderHighlightSections">
-            <bool>false</bool>
-           </attribute>
            <column>
             <property name="text">
              <string>Fault</string>
@@ -278,7 +281,7 @@
            </column>
            <column>
             <property name="text">
-             <string>SC_BSY</string>
+             <string>SC_BSYD</string>
             </property>
            </column>
            <column>
@@ -371,9 +374,6 @@
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
-           <attribute name="verticalHeaderHighlightSections">
-            <bool>false</bool>
-           </attribute>
            <column>
             <property name="text">
              <string>Fault</string>
@@ -425,7 +425,7 @@
         <number>0</number>
        </property>
        <item>
-        <layout class="QVBoxLayout" name="logic_layout">
+        <layout class="QVBoxLayout" name="logic_layout" stretch="0,3">
          <item>
           <layout class="QHBoxLayout" name="filter_layout">
            <item>
@@ -477,9 +477,6 @@
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
-           <attribute name="verticalHeaderHighlightSections">
-            <bool>false</bool>
-           </attribute>
            <column>
             <property name="text">
              <string>Fault</string>
@@ -492,7 +489,7 @@
            </column>
            <column>
             <property name="text">
-             <string>SC_BSY</string>
+             <string>SC_BSYD</string>
             </property>
            </column>
            <column>
@@ -522,7 +519,7 @@
            </column>
            <column>
             <property name="text">
-             <string/>
+             <string>Bypassed</string>
             </property>
            </column>
           </widget>

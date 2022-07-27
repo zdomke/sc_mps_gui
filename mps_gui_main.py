@@ -1,18 +1,18 @@
 from os import path
 from functools import partial
 from qtpy.QtCore import Slot
-from qtpy.QtWidgets import QHeaderView
+from qtpy.QtWidgets import (QHeaderView, QAbstractItemView)
 from epics import PV
 from pydm import Display
 from pydm.widgets.channel import PyDMChannel
 from widget_constructors import *
 from mps_model import MPSModel
+from selection_detail import SelectionDetail
 
 
 class MpsGuiDisplay(Display):
     def __init__(self, parent=None, args=[], macros=None):
         super(MpsGuiDisplay, self).__init__(parent=parent, args=args, macros=macros)
-
         if 'DBFILE' in macros:
             self.model = MPSModel(macros['DBFILE'])
         else:
@@ -28,6 +28,7 @@ class MpsGuiDisplay(Display):
         self.logic_init()
 
         self.ui.filter_edt.textChanged.connect(self.search_logic_table)
+        self.ui.logic_table.itemSelectionChanged.connect(self.selection_changed)
 
 
     # ~~~~ Summary Tab ~~~~ #
@@ -37,9 +38,11 @@ class MpsGuiDisplay(Display):
         Create and connect listener channels for each PV in the summary table. Once
         the channels are connected, set the column sizes for the table.
         """
+        self.ui.summ_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.ui.summ_table.setRowCount(len(self.faults))
 
         for i, fault in enumerate(self.faults):
+            self.ui.summ_table.hideRow(i)
             self.faulted_channels.append(PyDMChannel(address="ca://{}".format(fault.name),
                                                      value_slot=partial(self.summ_changed, fault, i)))
             
@@ -79,9 +82,11 @@ class MpsGuiDisplay(Display):
         Create and connect listener channels for each PV in the bypass table. Once
         the channels are connected, set the column sizes for the table.
         """
+        self.ui.byp_fault_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.ui.byp_fault_table.setRowCount(len(self.faults))
 
         for i, fault in enumerate(self.faults):
+            self.ui.byp_fault_table.hideRow(i)
             self.bypassed_channels.append(PyDMChannel(address="ca://{}".format(fault.bypassed),
                                                       value_slot=partial(self.byp_changed, fault, i)))
 
@@ -102,6 +107,7 @@ class MpsGuiDisplay(Display):
         if not bypassed:
             self.ui.byp_fault_table.hideRow(row)
         else:
+            print(self.bypassed_pvs[fault.bypassed])
             # Construct the row if it does not already exist
             if not self.ui.byp_fault_table.item(row, 0):
                 construct_byp_table_row(self.ui.byp_fault_table, fault, row)
@@ -152,6 +158,7 @@ class MpsGuiDisplay(Display):
         For every fault, construct a row in the logic table containing information
         on that fault.
         """
+        self.ui.logic_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.ui.logic_table.setRowCount(len(self.faults))
 
         for i, fault in enumerate(self.faults):
@@ -162,6 +169,18 @@ class MpsGuiDisplay(Display):
         faults_header.setResizeMode(QHeaderView.Interactive)
         faults_header.setResizeMode(0, QHeaderView.Stretch)
         faults_header.resizeSection(1, 125)
+
+        self.details = SelectionDetail(parent=self)
+        # self.select.setupUi(self)
+        self.ui.logic_layout.addWidget(self.details, 2)
+
+        # self.details.change_val("New name text displayed here.")
+
+    def selection_changed(self):
+        row = self.ui.logic_table.currentRow()
+        self.details.set_fault(self.model, self.faults[row])
+        if self.details.isHidden:
+            self.details.show()
 
     # ~~~~ PyDM UI File Management ~~~~ #
 

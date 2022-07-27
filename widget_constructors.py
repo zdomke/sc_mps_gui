@@ -1,10 +1,8 @@
-import json
 from qtpy.QtCore import Qt
+from qtpy.QtGui import QColor
 from qtpy.QtWidgets import (QWidget, QTableWidgetItem, QVBoxLayout)
 from pydm.widgets.label import PyDMLabel
 from pydm.widgets.byte import PyDMByteIndicator
-from pydm.widgets.drawing import PyDMDrawingRectangle
-from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
 # ~~~~ Widget Constructors ~~~~ #
@@ -58,26 +56,27 @@ def construct_bypass_widget(fault):
     bypass_layout.setSpacing(0)
     bypass_layout.setContentsMargins(0, 0, 0, 0)
 
-    bypass_btn = PyDMRelatedDisplayButton(filename="$PYDM/mps/mps_bypass.ui")
-    bypass_btn.macros = "{{\"DEVICE_BYP\":\"{}\"}}".format(fault.name)
-    bypass_btn.setText("Bypass")
-    bypass_btn.showIcon = False
-    bypass_btn.openInNewWindow = True
-    bypass_layout.addWidget(bypass_btn)
+    # bypass_rect = PyDMDrawingRectangle()
+    # bypass_rect.brush.setColor(Qt.red)
+    # rule_dict = [{"name": "Hide Rectangle",
+    #               "property": "Visible",
+    #               "initial_value": "",
+    #               "expression": "ch[0] > 0.9",
+    #               "channels": [{"channel": "ca://{}.RVAL".format(fault.bypassed),
+    #                             "trigger": True,
+    #                             "use_enum": True
+    #                             }]
+    #             }]
+    # bypass_rect.setProperty("rules", json.dumps(rule_dict))
+    # bypass_layout.addWidget(bypass_rect)
 
-    bypass_rect = PyDMDrawingRectangle()
-    bypass_rect.brush.setColor(Qt.red)
-    rule_dict = [{"name": "Hide Rectangle",
-                  "property": "Visible",
-                  "initial_value": "",
-                  "expression": "ch[0] > 0.9",
-                  "channels": [{"channel": "ca://{}.RVAL".format(fault.bypassed),
-                                "trigger": True,
-                                "use_enum": True
-                                }]
-                }]
-    bypass_rect.setProperty("rules", json.dumps(rule_dict))
-    bypass_layout.addWidget(bypass_rect)
+    bypass_ind = PyDMByteIndicator(init_channel="ca://{}.RVAL".format(fault.bypassed))
+    bypass_ind.numBits = 1
+    bypass_ind.circles = True
+    bypass_ind.onColor = Qt.red
+    bypass_ind.offColor = QColor(0, 0, 0, 50)
+    bypass_ind.showLabels = False
+    bypass_layout.addWidget(bypass_ind)
 
     bypass = QWidget()
     bypass.setLayout(bypass_layout)
