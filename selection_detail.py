@@ -130,7 +130,7 @@ class SelectionDetail(QScrollArea):
         else:
             row_count = len(self.inp)
 
-        self.clear_pv_table(len(self.inp))
+        self.clear_pv_table(row_count)
         for i in range(row_count):
             if analog:
                 pv = "{}_T{}_SCMPS".format(self.inp[0], i)
