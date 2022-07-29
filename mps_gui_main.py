@@ -170,7 +170,7 @@ class MpsGuiDisplay(Display):
         faults_header.setResizeMode(0, QHeaderView.Stretch)
         faults_header.resizeSection(1, 125)
 
-        self.details = SelectionDetail(parent=self)
+        self.details = SelectionDetail(parent=self, mps_model=self.model)
         # self.select.setupUi(self)
         self.ui.logic_layout.addWidget(self.details, 2)
 
@@ -178,7 +178,7 @@ class MpsGuiDisplay(Display):
 
     def selection_changed(self):
         row = self.ui.logic_table.currentRow()
-        self.details.set_fault(self.model, self.faults[row])
+        self.details.set_fault(self.faults[row])
         if self.details.isHidden:
             self.details.show()
 

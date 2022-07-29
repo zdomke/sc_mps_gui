@@ -8,20 +8,21 @@ from mps_database.tools.mps_names import MpsName
 
 class MPSModel:
     def __init__(self, filename=None):
+        """Establish logger and establish connection to mps_database."""
         logger = logging.getLogger(__name__)
 
         if filename and path.exists(filename):
             self.filename = filename
         else:
             if filename:
-                logger.error("Given file does not exist. Using default .db file.")
+                logger.error("File does not exist. Using default .db file.")
             self.filename = self.set_filename()
         
         try:
             self.config = MPSConfig(self.filename)
             self.name = MpsName(self.config.session)
         except sqlalchemy.exc.DatabaseError:
-            logger.error("Given file is not a database. Using default .db file.")
+            logger.error("File is not a database. Using default .db file.")
             self.filename = self.set_filename()
             self.config = MPSConfig(self.filename)
             self.name = MpsName(self.config.session)
@@ -30,41 +31,37 @@ class MPSModel:
         self.fault_objects = []
         self.set_faults()
 
-    def print_faults(self):
-        for fault in self.fault_objects:
-            print("{0:55} {1}".format(fault.description + ':', fault.name))
-
     def set_filename(self):
-        phys_top = path.expandvars("$PHYSICS_TOP") + "/mps_configuration/injector/"
+        """Finds default database filename."""
+        phys_top = path.expandvars("$PHYSICS_TOP")
+        phys_top += "/mps_configuration/injector/"
         filename = glob.glob(phys_top + "mps_config*.db")[0]
         return filename
 
     def set_faults(self):
+        """Populate fault_objects with FaultObjects from self.name."""
         self.faults = self.config.session.query(models.Fault).all()
-        self.fault_objects = sorted([self.name.getFaultObject(fault) for fault in self.faults])
+        self.fault_objects = sorted([self.name.getFaultObject(fault)
+                                     for fault in self.faults])
 
     def get_faults(self):
+        """Fault getter function."""
         return self.fault_objects
 
-    def get_fault_model(self, fault_description):
-        return self.config.session.query(models.Fault).filter(models.Fault.description==fault_description).one()
+    def desc_to_fault(self, fault_description):
+        """Get a models.Fault object based on the given description."""
+        return (self.config.session
+                .query(models.Fault)
+                .filter(models.Fault.description==fault_description)
+                .one()
+               )
 
-    def get_fault_states(self, fault_description):
-        return self.get_fault_model(fault_description).states
-
-    def get_device(self, fault_description):
-        fault = self.get_fault_model(fault_description)
+    def fault_to_dev(self, fault):
+        """Get a models.Device object from a models.Fault onject."""
         return self.name.getDeviceFromFault(fault)
 
-    def get_device_inputs(self, fault_description):
-        fault = self.get_fault_model(fault_description)
+    def fault_to_inp(self, fault):
+        """Get a list of Inputs from a models.Device object."""
         dev = self.name.getDeviceFromFault(fault)
 
         return self.name.getInputsFromDevice(dev, fault)
-
-def main():
-    helper = MPSModel()
-    helper.print_faults()
-
-if __name__ == "__main__":
-    main()

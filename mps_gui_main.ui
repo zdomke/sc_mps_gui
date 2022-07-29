@@ -217,7 +217,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Faulted Objects</string>
+              <string>Faulted Devices</string>
              </property>
             </widget>
            </item>
