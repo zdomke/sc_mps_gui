@@ -1,7 +1,9 @@
-R1.0.2  Zach Domke      07/29/2022
+R1.0.2  Zach Domke      08/02/2022
         DB File validation & logging
+        Change Bypass label in Logic tab to a circular indicator
         Selection Details section in the Logic tab
         Fix bug that shows rows in summary & bypass tables for disconnected PVs
+        Fixed names in beam destination displays (Summary tab)
 R1.0.1  Zach Domke      07/26/2022
         Switch default .db file in mps_model
 R1.0.0  Zach Domke      07/11/2022

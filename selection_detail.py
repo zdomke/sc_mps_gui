@@ -4,7 +4,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtWidgets import (QScrollArea, QWidget, QVBoxLayout, QHBoxLayout,
                             QLabel, QTableWidget, QTableWidgetItem,
                             QSizePolicy, QHeaderView, QSpacerItem,
-                            QAbstractItemView)
+                            QAbstractItemView, QPushButton)
 from pydm.widgets.label import PyDMLabel
 from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
@@ -23,7 +23,9 @@ class SelectionDetail(QScrollArea):
             self.set_fault(fault)
         else:
             self.hide()
-            
+
+        self.close_btn.clicked.connect(self.hide)
+
     # ~~~~ Section Management ~~~~ #
      # ~~ Set Fault ~~ #
     def set_fault(self, fault_obj):
@@ -183,7 +185,7 @@ class SelectionDetail(QScrollArea):
         self.main_wid = QWidget(self)
         self.main_lyt = QVBoxLayout()
 
-        # First row: Selection Details label and Bypass button
+        # First row: Selection Details label and Close button
         lyt = QHBoxLayout()
         font = QFont()
         font.setBold(True)
@@ -191,23 +193,29 @@ class SelectionDetail(QScrollArea):
         lbl = QLabel("Selection Details")
         lbl.setFont(font)
         spcr = QSpacerItem(40, 20, QSizePolicy.Expanding)
+        self.close_btn = QPushButton("X")
+        self.close_btn.setFixedSize(15, 15)
+        self.close_btn.setStyleSheet("background-color: rgb(255, 85, 0);")
+        lyt.addWidget(lbl)
+        lyt.addSpacerItem(spcr)
+        lyt.addWidget(self.close_btn)
+        self.main_lyt.addLayout(lyt)
+
+        # Second row: Fault name and Bypass button
+        lyt = QHBoxLayout()
+        lbl = QLabel("Name:")
+        lbl.setSizePolicy(QSizePolicy())
+        self.name_lbl = QLabel("<Display Name>", self.main_wid)
+        spcr = QSpacerItem(40, 20, QSizePolicy.Expanding)
         byp_file = "$PYDM/mps/mps_bypass.ui"
         self.byp_btn = PyDMRelatedDisplayButton(filename=byp_file)
         self.byp_btn.setText("Bypass...")
         self.byp_btn.showIcon = False
         self.byp_btn.openInNewWindow = True
         lyt.addWidget(lbl)
+        lyt.addWidget(self.name_lbl)
         lyt.addSpacerItem(spcr)
         lyt.addWidget(self.byp_btn)
-        self.main_lyt.addLayout(lyt)
-
-        # Second row: Fault name
-        lyt = QHBoxLayout()
-        lbl = QLabel("Name:")
-        lbl.setSizePolicy(QSizePolicy())
-        self.name_lbl = QLabel("<Display Name>", self.main_wid)
-        lyt.addWidget(lbl)
-        lyt.addWidget(self.name_lbl)
         self.main_lyt.addLayout(lyt)
 
         # Third row: Fault state
@@ -240,9 +248,9 @@ class SelectionDetail(QScrollArea):
         hdr.hide()
         self.truth_row_h = hdr.sectionSize(0)
         hdr = self.truth_tbl.horizontalHeader()
-        hdr.setDefaultSectionSize(120)
-        hdr.setResizeMode(QHeaderView.Interactive)
-        hdr.setStretchLastSection(True)
+        hdr.setDefaultSectionSize(225)
+        hdr.setResizeMode(QHeaderView.Stretch)
+        hdr.setSectionResizeMode(0, QHeaderView.Interactive)
         self.truth_hdr_h = hdr.height()
         self.main_lyt.addWidget(self.truth_tbl)
 

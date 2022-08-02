@@ -65,7 +65,7 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="PyDMEmbeddedDisplay" name="dumpbsy_embed">
+            <widget class="PyDMEmbeddedDisplay" name="sc_bsyd_embed">
              <property name="maximumSize">
               <size>
                <width>200</width>
@@ -79,7 +79,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;: &quot;SC DUMPBSYD&quot;, &quot;P_PV&quot;: &quot;SC_BSYD&quot;, &quot;T_PV&quot;: &quot;2&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;: &quot;SC_BSYD&quot;, &quot;P_PV&quot;: &quot;SC_BSYD&quot;, &quot;T_PV&quot;: &quot;2&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
@@ -93,7 +93,7 @@
             </widget>
            </item>
            <item>
-            <widget class="PyDMEmbeddedDisplay" name="diag0_embed">
+            <widget class="PyDMEmbeddedDisplay" name="sc_diag0_embed">
              <property name="maximumSize">
               <size>
                <width>200</width>
@@ -107,7 +107,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DIAG0&quot;, &quot;P_PV&quot;:&quot;SC_DIAG0&quot;, &quot;T_PV&quot;:&quot;1&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC_DIAG0&quot;, &quot;P_PV&quot;:&quot;SC_DIAG0&quot;, &quot;T_PV&quot;:&quot;1&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
@@ -115,7 +115,7 @@
             </widget>
            </item>
            <item>
-            <widget class="PyDMEmbeddedDisplay" name="dumphxr_embed">
+            <widget class="PyDMEmbeddedDisplay" name="sc_hxr_embed">
              <property name="maximumSize">
               <size>
                <width>200</width>
@@ -129,7 +129,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPHXR&quot;, &quot;P_PV&quot;:&quot;SC_HXR&quot;, &quot;T_PV&quot;:&quot;3&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC_HXR&quot;, &quot;P_PV&quot;:&quot;SC_HXR&quot;, &quot;T_PV&quot;:&quot;3&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
@@ -137,7 +137,7 @@
             </widget>
            </item>
            <item>
-            <widget class="PyDMEmbeddedDisplay" name="dumpsxr_embed">
+            <widget class="PyDMEmbeddedDisplay" name="sc_sxr_embed">
              <property name="maximumSize">
               <size>
                <width>200</width>
@@ -151,7 +151,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;:&quot;SC DUMPSXR&quot;, &quot;P_PV&quot;:&quot;SC_SXR&quot;, &quot;T_PV&quot;:&quot;4&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC_SXR&quot;, &quot;P_PV&quot;:&quot;SC_SXR&quot;, &quot;T_PV&quot;:&quot;4&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
@@ -181,7 +181,7 @@
             </widget>
            </item>
            <item>
-            <widget class="PyDMEmbeddedDisplay" name="lesa_embed">
+            <widget class="PyDMEmbeddedDisplay" name="sc_lesa_embed">
              <property name="maximumSize">
               <size>
                <width>200</width>
@@ -195,7 +195,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="macros" stdset="0">
-              <string>{&quot;DEVICE_NAME&quot;:&quot;SC LESA&quot;, &quot;P_PV&quot;:&quot;SC_LESA&quot;, &quot;T_PV&quot;:&quot;5&quot;}</string>
+              <string>{&quot;DEVICE_NAME&quot;:&quot;SC_LESA&quot;, &quot;P_PV&quot;:&quot;SC_LESA&quot;, &quot;T_PV&quot;:&quot;5&quot;}</string>
              </property>
              <property name="filename" stdset="0">
               <string>mps_permit_panel.ui</string>
