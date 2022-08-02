@@ -8,9 +8,8 @@ from pydm.widgets.byte import PyDMByteIndicator
 # ~~~~ Widget Constructors ~~~~ #
 
 def construct_state_widget(fault):
-    """
-    Create a widget to display the current state of the fault and the associated 
-    PyDMByteIndicator. The widget is returned.
+    """Create a widget to display the current state of the fault and the
+    associated PyDMByteIndicator. The widget is returned.
     """
     state_layout = QVBoxLayout()
     state_layout.setSpacing(0)
@@ -23,7 +22,8 @@ def construct_state_widget(fault):
     state_layout.addWidget(fault_state)
     
     if fault.visible:
-        byte_state = PyDMByteIndicator(init_channel="ca://{}_MBBI".format(fault.name))
+        address = "ca://{}_MBBI".format(fault.name)
+        byte_state = PyDMByteIndicator(init_channel=address)
         byte_state.numBits = 8
         byte_state.onColor = Qt.red
         byte_state.showLabels = False
@@ -36,8 +36,8 @@ def construct_state_widget(fault):
     return state
 
 def construct_cell_widget(pv):
-    """
-    Initialize a PyDMLabel for the associated column and return the widget created.
+    """Initialize a PyDMLabel for the associated column and return the
+    widget created.
     """
     lbl = PyDMLabel(init_channel="ca://{}".format(pv))
     lbl.setAlignment(Qt.AlignCenter)
@@ -47,30 +47,16 @@ def construct_cell_widget(pv):
     return lbl
 
 def construct_bypass_widget(fault):
-    """
-    Create a button to open the bypass display for the associated fault and 
-    create a rectangle that alarms when the bypassed fault is about to expire.
-    Return the widget created.
+    """Create a button to open the bypass display for the associated
+    fault and create a rectangle that alarms when the bypassed fault is
+    about to expire. Return the widget created.
     """
     bypass_layout = QVBoxLayout()
     bypass_layout.setSpacing(0)
     bypass_layout.setContentsMargins(0, 0, 0, 0)
 
-    # bypass_rect = PyDMDrawingRectangle()
-    # bypass_rect.brush.setColor(Qt.red)
-    # rule_dict = [{"name": "Hide Rectangle",
-    #               "property": "Visible",
-    #               "initial_value": "",
-    #               "expression": "ch[0] > 0.9",
-    #               "channels": [{"channel": "ca://{}.RVAL".format(fault.bypassed),
-    #                             "trigger": True,
-    #                             "use_enum": True
-    #                             }]
-    #             }]
-    # bypass_rect.setProperty("rules", json.dumps(rule_dict))
-    # bypass_layout.addWidget(bypass_rect)
-
-    bypass_ind = PyDMByteIndicator(init_channel="ca://{}.RVAL".format(fault.bypassed))
+    address = "ca://{}.RVAL".format(fault.bypassed)
+    bypass_ind = PyDMByteIndicator(init_channel=address)
     bypass_ind.numBits = 1
     bypass_ind.circles = True
     bypass_ind.onColor = Qt.red
@@ -84,10 +70,10 @@ def construct_bypass_widget(fault):
     return bypass
 
 def construct_byp_table_row(table, fault, row):
-    """
-    In the bypass table, create the widgets and populate the cells of a
-    given row with information from the associated fault. The rows consist
-    of 3 widgets: Fault Description, Fault State, Fault Bypass Expiration.
+    """In the bypass table, create the widgets and populate the cells of
+    a given row with information from the associated fault. The rows
+    consist of 3 widgets:
+    Fault Description, Fault State, Fault Bypass Expiration.
     """
     item = QTableWidgetItem(fault.description)
     flags = item.flags()
@@ -106,11 +92,10 @@ def construct_byp_table_row(table, fault, row):
     table.setCellWidget(row, 2, lbl)
 
 def construct_table_row(table, fault, row, fault_table=False):
-    """
-    In the summary table and logic table, create the widgets and populate the
-    cells of a given row with information from the associated fault. The rows
-    consist of 9 widgets: Fault Description, Fault State, 6 Fault Destination
-    States, and the Bypass Widget.
+    """In the summary table and logic table, create the widgets and
+    populate the cells of a given row with information from the
+    associated fault. The rows consist of 9 widgets: Fault Description,
+    Fault State, 6 Fault Destination States, and the Bypass Widget.
     """
     item = QTableWidgetItem(fault.description)
     flags = item.flags()

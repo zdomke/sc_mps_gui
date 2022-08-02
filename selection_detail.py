@@ -287,3 +287,4 @@ class CellItem(QTableWidgetItem):
         flags = flags ^ Qt.ItemIsEditable
         self.setFlags(flags)
         self.setTextAlignment(Qt.AlignCenter)
+        self.setBackground(Qt.white)
