@@ -237,7 +237,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="summ_table">
+          <widget class="QTableWidget" name="summ_tbl">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -351,7 +351,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="byp_fault_table">
+          <widget class="QTableWidget" name="byp_tbl">
            <property name="styleSheet">
             <string notr="true">font-weight: bold;
 </string>
@@ -451,7 +451,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="logic_table">
+          <widget class="QTableWidget" name="logic_tbl">
            <property name="font">
             <font>
              <weight>75</weight>

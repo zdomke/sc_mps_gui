@@ -1,6 +1,6 @@
 import json
 from qtpy.QtGui import QFont
-from qtpy.QtCore import Qt
+from qtpy.QtCore import (Qt, Signal)
 from qtpy.QtWidgets import (QScrollArea, QWidget, QVBoxLayout, QHBoxLayout,
                             QLabel, QTableWidget, QTableWidgetItem,
                             QSizePolicy, QHeaderView, QSpacerItem,
@@ -10,21 +10,17 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
 class SelectionDetail(QScrollArea):
-    def __init__(self, parent=None, mps_model=None, fault=None):
-        super(SelectionDetail, self).__init__()
+    deselect = Signal()
+    def __init__(self, parent=None, mps_model=None):
+        super(SelectionDetail, self).__init__(parent=parent)
 
-        self.model = mps_model
-        self.init_wid()
-        
         # Destination.id -> truth_table column index conversion
         self.dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
+        self.model = mps_model
+        self.init_wid()
 
-        if fault:
-            self.set_fault(fault)
-        else:
-            self.hide()
-
-        self.close_btn.clicked.connect(self.hide)
+        self.hide()
+        self.close_btn.clicked.connect(self.deselect.emit)
 
     # ~~~~ Section Management ~~~~ #
      # ~~ Set Fault ~~ #
