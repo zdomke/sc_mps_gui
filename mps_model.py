@@ -44,6 +44,7 @@ class MPSModel:
         for fault in self.faults:
             desc = fault.description
             self.fault_objects[desc] = self.name.getFaultObject(fault)
+        self.fault_objects = dict(sorted(self.fault_objects.items()))
 
     def get_faults(self):
         """Fault getter function."""

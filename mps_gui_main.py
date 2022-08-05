@@ -35,8 +35,6 @@ class MpsGuiDisplay(Display):
         self.ignored_init()
         self.logic_init()
 
-        self.sort_logic_table()
-
         self.ui.a_sort_btn.clicked.connect(self.sort_logic_table)
         self.ui.flt_sort_btn.clicked.connect(self.sort_logic_table)
         self.ui.byp_sort_btn.clicked.connect(self.sort_logic_table)
