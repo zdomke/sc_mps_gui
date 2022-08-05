@@ -429,6 +429,82 @@
          <item>
           <layout class="QHBoxLayout" name="filter_layout">
            <item>
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Sort by:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="a_sort_btn">
+             <property name="text">
+              <string>Alphabetical</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="flt_sort_btn">
+             <property name="text">
+              <string>Faulted</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="byp_sort_btn">
+             <property name="text">
+              <string>Bypassed</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Order:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="order_btn">
+             <property name="text">
+              <string>Ascending</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="filter_spacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -520,6 +596,16 @@
            <column>
             <property name="text">
              <string>Bypassed</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Faulted_invisible</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Bypassed_invisible</string>
             </property>
            </column>
           </widget>

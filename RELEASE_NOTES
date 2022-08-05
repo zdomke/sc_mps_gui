@@ -1,3 +1,9 @@
+R1.0.3  Zach Domke      08/05/2022
+        Add sorting feature
+        Sort by: Alphabetical, Faulted, or Bypassed
+        Set sort order: Ascending or Descending
+        Store faults in dictionary rather than list
+        Add 2 hidden columns to logic_tbl to allow for sorting
 R1.0.2  Zach Domke      08/02/2022
         DB File validation & logging
         Change Bypass label in Logic tab to a circular indicator

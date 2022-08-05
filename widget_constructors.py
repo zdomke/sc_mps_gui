@@ -91,17 +91,18 @@ def construct_byp_table_row(table, fault, row):
     lbl.alarmSensitiveBorder = False
     table.setCellWidget(row, 2, lbl)
 
-def construct_table_row(table, fault, row, fault_table=False):
+def construct_table_row(table, fault, row, logic_tbl=False):
     """In the summary table and logic table, create the widgets and
     populate the cells of a given row with information from the
     associated fault. The rows consist of 9 widgets: Fault Description,
     Fault State, 6 Fault Destination States, and the Bypass Widget.
     """
-    item = QTableWidgetItem(fault.description)
-    flags = item.flags()
-    flags = flags ^ Qt.ItemIsEditable
-    item.setFlags(flags)
-    table.setItem(row, 0, item)
+    if not logic_tbl:
+        item = QTableWidgetItem(fault.description)
+        flags = item.flags()
+        flags = flags ^ Qt.ItemIsEditable
+        item.setFlags(flags)
+        table.setItem(row, 0, item)
 
     state = construct_state_widget(fault)
     table.setCellWidget(row, 1, state)
@@ -110,6 +111,6 @@ def construct_table_row(table, fault, row, fault_table=False):
         cell = construct_cell_widget(fault.destinations[j])
         table.setCellWidget(row, j+2, cell)
 
-    if fault_table:
+    if logic_tbl:
         bypass = construct_bypass_widget(fault)
         table.setCellWidget(row, 8, bypass)

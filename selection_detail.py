@@ -28,7 +28,7 @@ class SelectionDetail(QScrollArea):
         """Populate all labels & tables to represent the given fault.
         """
         self.fault_obj = fault_obj
-        self.fault = self.model.desc_to_fault(fault_obj.description)
+        self.fault = self.fault_obj.fault
         self.dev = self.model.fault_to_dev(self.fault)
         self.inp = self.model.fault_to_inp(self.fault)
 
