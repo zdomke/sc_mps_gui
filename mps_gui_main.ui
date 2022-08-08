@@ -429,7 +429,7 @@
          <item>
           <layout class="QHBoxLayout" name="filter_layout">
            <item>
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="sort_lbl">
              <property name="font">
               <font>
                <pointsize>8</pointsize>
@@ -483,7 +483,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="order_lbl">
              <property name="font">
               <font>
                <pointsize>8</pointsize>

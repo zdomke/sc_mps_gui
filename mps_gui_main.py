@@ -75,10 +75,10 @@ class MpsGuiDisplay(Display):
         not exist, then initialize it.
         """
         faulted = self.faulted_pvs.setdefault(fault.name, PV(fault.name)).value
+        self.set_flt_byp(fault.description, 9, not faulted)
 
         if not faulted:
             self.ui.summ_tbl.hideRow(row)
-            self.set_flt_byp(fault.description, 9, 0)
         else:
             # Construct the row if it does not already exist
             if not self.ui.summ_tbl.item(row, 0):
@@ -90,7 +90,6 @@ class MpsGuiDisplay(Display):
                 self.ui.summ_tbl.hideRow(row)
             else:
                 self.ui.summ_tbl.showRow(row)
-            self.set_flt_byp(fault.description, 9, -1)
 
      # ~~ Bypassed Faults Table ~~ #
     def bypass_init(self):
@@ -121,17 +120,16 @@ class MpsGuiDisplay(Display):
         """
         self.bypassed_pvs.setdefault(fault.bypassed, PV(fault.bypassed))
         bypassed = self.bypassed_pvs[fault.bypassed].value
+        self.set_flt_byp(fault.description, 10, not bypassed)
 
         if not bypassed:
             self.ui.byp_tbl.hideRow(row)
-            self.set_flt_byp(fault.description, 10, 0)
         else:
             print(self.bypassed_pvs[fault.bypassed])
             # Construct the row if it does not already exist
             if not self.ui.byp_tbl.item(row, 0):
                 construct_byp_table_row(self.ui.byp_tbl, fault, row)
             self.ui.byp_tbl.showRow(row)
-            self.set_flt_byp(fault.description, 10, -1)
 
      # ~~ Ignored Channels ~~ #
     def ignored_init(self):
@@ -220,7 +218,6 @@ class MpsGuiDisplay(Display):
         containing information on that fault.
         """
         self.ui.logic_tbl.setSelectionBehavior(QAbstractItemView.SelectRows)
-        # self.ui.logic_tbl.setRowCount(len(self.faults))
 
         for i, fault in enumerate(self.faults.values()):
             construct_table_row(self.ui.logic_tbl, fault, i, True)
