@@ -11,15 +11,15 @@ def construct_state_widget(fault):
     """Create a widget to display the current state of the fault and the
     associated PyDMByteIndicator. The widget is returned.
     """
-    state_layout = QVBoxLayout()
-    state_layout.setSpacing(0)
-    state_layout.setContentsMargins(0, 0, 0, 0)
+    state_lyt = QVBoxLayout()
+    state_lyt.setSpacing(0)
+    state_lyt.setContentsMargins(0, 0, 0, 0)
 
     fault_state = PyDMLabel(init_channel="ca://{}".format(fault.state))
     fault_state.setAlignment(Qt.AlignCenter)
     fault_state.alarmSensitiveBorder = False
     fault_state.alarmSensitiveContent = True
-    state_layout.addWidget(fault_state)
+    state_lyt.addWidget(fault_state)
     
     if fault.visible:
         address = "ca://{}_MBBI".format(fault.name)
@@ -28,10 +28,10 @@ def construct_state_widget(fault):
         byte_state.onColor = Qt.red
         byte_state.showLabels = False
         byte_state.orientation = Qt.Horizontal
-        state_layout.addWidget(byte_state)
+        state_lyt.addWidget(byte_state)
     
     state = QWidget()
-    state.setLayout(state_layout)
+    state.setLayout(state_lyt)
 
     return state
 
@@ -51,9 +51,9 @@ def construct_bypass_widget(fault):
     fault and create a rectangle that alarms when the bypassed fault is
     about to expire. Return the widget created.
     """
-    bypass_layout = QVBoxLayout()
-    bypass_layout.setSpacing(0)
-    bypass_layout.setContentsMargins(0, 0, 0, 0)
+    bypass_lyt = QVBoxLayout()
+    bypass_lyt.setSpacing(0)
+    bypass_lyt.setContentsMargins(0, 0, 0, 0)
 
     address = "ca://{}.RVAL".format(fault.bypassed)
     bypass_ind = PyDMByteIndicator(init_channel=address)
@@ -62,10 +62,10 @@ def construct_bypass_widget(fault):
     bypass_ind.onColor = Qt.red
     bypass_ind.offColor = QColor(0, 0, 0, 50)
     bypass_ind.showLabels = False
-    bypass_layout.addWidget(bypass_ind)
+    bypass_lyt.addWidget(bypass_ind)
 
     bypass = QWidget()
-    bypass.setLayout(bypass_layout)
+    bypass.setLayout(bypass_lyt)
 
     return bypass
 

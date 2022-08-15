@@ -245,7 +245,7 @@ class SelectionDetail(QScrollArea):
         self.truth_row_h = hdr.sectionSize(0)
         hdr = self.truth_tbl.horizontalHeader()
         hdr.setDefaultSectionSize(225)
-        hdr.setResizeMode(QHeaderView.Stretch)
+        hdr.setSectionResizeMode(QHeaderView.Stretch)
         hdr.setSectionResizeMode(0, QHeaderView.Interactive)
         self.truth_hdr_h = hdr.height()
         self.main_lyt.addWidget(self.truth_tbl)

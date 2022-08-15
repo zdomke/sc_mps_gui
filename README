@@ -5,12 +5,21 @@
 |-- README  
 |-- RELEASE_NOTES  
 |-- sc_mps_gui.bash  
-|-- mps_gui_main.ui  
-|-- mps_gui_main.py  
-|-- mps_permit_panel.ui  
-|-- mps_model.py  
-|-- selection_detail.py  
-`-- widget_constructors.py  
+`-- gui/
+    |-- mps_gui_main.ui  
+    |-- mps_gui_main.py  
+    |-- mixins/
+    |   |-- __init__.py
+    |   |-- summary.py
+    |   `-- logic.py
+    |-- models/
+    |   |-- __init__.py  
+    |   `-- mps_model.py  
+    `-- widgets/
+        |-- __init__.py  
+        |-- mps_permit_panel.ui  
+        |-- selection_detail.py  
+        `-- widget_constructors.py  
 
 
 ### sc_mps_gui.bash
@@ -23,25 +32,41 @@
     `` sc_mps_gui.bash faults.db ``
 
 
-### mps_gui_main.py / mps_gui_main.ui
+### gui/mps_gui_main.py & gui/mps_gui_main.ui
   - This is the main display for the SC MPS Display
-  - Contains a tab widget with 2 tabs:
+  - Contains a tab widget with 3 tabs:
     - The Summary tab contains 6 embedded displays and 2 tables, one containg faulted PVs and one containing bypassed faults
     - The Logic tab contains a table of all faults in the database
+      - Selecting a fault opens a panel with more details on that fault
+    - The Recent Faults tab contains a table of the most recent 1000 faults in the history database
 
 
-### mps_permit_panel.ui
-  - The permit panel display embedded in the Summary tab
-  - Shows the Beam Class, Timing Beam Class, and Timing Rate
+### gui/mixins/summary.py
+  - This file contains a subclass to manage the Summary tab
+  - Manage the faults table and the bypass table
+  - Minor interactions with Logic tab:
+    - On fault status change and/or bypass status change, alter the associated cell in Logic tab table
 
 
-### mps_model.py
+### gui/mixins/logic.py
+  - This file contains a subclass to manage the Logic tab
+  - Manage the logic table and open a details pane when a fault is selected
+  - Allow for searching and sorting in the main table
+  - Faults can be bypassed from the selection details pane
+
+
+### gui/models/mps_model.py
   - Using MPSConfig, establish a connection to the MPS Database
     - If a filename is not provided, then MPSModel will locate the default file to use
   - The object stores all necessary information from the database
 
 
-### selection_detail.py
+### gui/widgets/mps_permit_panel.ui
+  - The permit panel display embedded in the Summary tab
+  - Shows the Beam Class, Timing Beam Class, and Timing Rate
+
+
+### gui/widgets/selection_detail.py
   - Create the Selection Details section used in the Logic and Ignore Logic tabs
   - The section is shown and populated when a selection is made in the logic table
   - Details shown:
@@ -52,7 +77,7 @@
     - PV Table
 
 
-### widget_constructors.py 
+### gui/widgets/widget_constructors.py 
   - Functions used by mps_gui_main.py to create widgets for a given fault
   - Contains constructors for:
     - State Widget
