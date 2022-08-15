@@ -1,7 +1,7 @@
 from os import path
 from qtpy.QtCore import Qt
 from pydm import Display
-from models.mps_model import MPSModel
+from models_pkg.mps_model import MPSModel
 from mixins.summary import SummaryMixin
 from mixins.logic import LogicMixin
 

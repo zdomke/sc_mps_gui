@@ -51,7 +51,7 @@ class MPSModel:
         return self.fault_objects
 
     def fault_to_dev(self, fault):
-        """Get a models.Device object from a models.Fault onject."""
+        """Get a models.Device object from a models.Fault object."""
         return self.name.getDeviceFromFault(fault)
 
     def fault_to_inp(self, fault):
