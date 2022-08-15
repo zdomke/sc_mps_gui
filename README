@@ -11,12 +11,10 @@
     |-- mixins/
     |   |-- __init__.py
     |   |-- summary.py
-    |   |-- logic.py
-    |   `-- recent_faults.py
+    |   `-- logic.py
     |-- models/
     |   |-- __init__.py  
-    |   |-- mps_model.py  
-    |   `-- recent_faults_model.py  
+    |   `-- mps_model.py  
     `-- widgets/
         |-- __init__.py  
         |-- mps_permit_panel.ui  
@@ -40,6 +38,7 @@
     - The Summary tab contains 6 embedded displays and 2 tables, one containg faulted PVs and one containing bypassed faults
     - The Logic tab contains a table of all faults in the database
       - Selecting a fault opens a panel with more details on that fault
+    - The Recent Faults tab contains a table of the most recent 1000 faults in the history database
 
 
 ### gui/mixins/summary.py
@@ -56,19 +55,10 @@
   - Faults can be bypassed from the selection details pane
 
 
-### gui/mixins/recent_faults.py
-  - This file contains a subclass to manage the Recent Faults tab
-  - Show a table of the most recent 1000 faults in the mps_history database
-
-
 ### gui/models/mps_model.py
   - Using MPSConfig, establish a connection to the MPS Database
     - If a filename is not provided, then MPSModel will locate the default file to use
   - The object stores all necessary information from the database
-
-
-### gui/models/recent_faults_model.py
-  - Create a custom QAbstractTableModel for use in the Recent Faults tab
 
 
 ### gui/widgets/mps_permit_panel.ui
