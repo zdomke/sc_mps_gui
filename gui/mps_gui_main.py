@@ -4,10 +4,9 @@ from pydm import Display
 from models.mps_model import MPSModel
 from mixins.summary import SummaryMixin
 from mixins.logic import LogicMixin
-from mixins.recent_faults import RecentFaultsMixin
 
 
-class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, RecentFaultsMixin):
+class MpsGuiDisplay(Display, SummaryMixin, LogicMixin):
     def __init__(self, parent=None, args=[], macros=None):
         super(MpsGuiDisplay, self).__init__(parent=parent, args=args,
                                             macros=macros)
@@ -31,7 +30,6 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, RecentFaultsMixin):
         self.bypass_init()
         self.ignored_init()
         self.logic_init()
-        self.recent_init()
 
         self.ui.a_sort_btn.clicked.connect(self.sort_logic_table)
         self.ui.flt_sort_btn.clicked.connect(self.sort_logic_table)
