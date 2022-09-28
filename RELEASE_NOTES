@@ -1,5 +1,6 @@
 R1.0.4  Zach Domke      08/15/2022
         Change App's file structure
+        Switch default .db file in mps_model
 R1.0.3  Zach Domke      08/05/2022
         Add sorting feature
             Sort by: Alphabetical, Faulted, or Bypassed
