@@ -1,6 +1,13 @@
+R1.0.5  Zach Domke      10/03/2022
+        Add MPS Check Engine Lights to the Summary tab
+        Convert tables in Summary and Logic tabs to QTableView/QAbstractTableModel
+        Add sorting to Logic table by clicking headers
+        Remove the sorting buttons from the Logic tab
+        Add 'Active' column to the Logic tab
+        Allow users to show all inactive faults (they are hidden by default)
 R1.0.4  Zach Domke      08/15/2022
-        Change App's file structure
         Switch default .db file in mps_model
+        Change App's file structure
 R1.0.3  Zach Domke      08/05/2022
         Add sorting feature
             Sort by: Alphabetical, Faulted, or Bypassed

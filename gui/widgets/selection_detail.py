@@ -1,4 +1,4 @@
-import json
+from json import dumps
 from qtpy.QtGui import QFont
 from qtpy.QtCore import (Qt, Signal)
 from qtpy.QtWidgets import (QScrollArea, QWidget, QVBoxLayout, QHBoxLayout,
@@ -11,6 +11,7 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 class SelectionDetail(QScrollArea):
     deselect = Signal()
+
     def __init__(self, parent=None, mps_model=None):
         super(SelectionDetail, self).__init__(parent=parent)
 
@@ -23,7 +24,7 @@ class SelectionDetail(QScrollArea):
         self.close_btn.clicked.connect(self.deselect.emit)
 
     # ~~~~ Section Management ~~~~ #
-     # ~~ Set Fault ~~ #
+    # ~~ Set Fault ~~ #
     def set_fault(self, fault_obj):
         """Populate all labels & tables to represent the given fault.
         """
@@ -32,7 +33,7 @@ class SelectionDetail(QScrollArea):
         self.dev = self.model.fault_to_dev(self.fault)
         self.inp = self.model.fault_to_inp(self.fault)
 
-        self.byp_btn.macros = json.dumps({"DEVICE_BYP": self.fault_obj.name})
+        self.byp_btn.macros = dumps({"DEVICE_BYP": self.fault_obj.name})
         self.name_lbl.setText(self.fault_obj.description)
         self.state_lbl.channel = self.fault_obj.state
 
@@ -40,7 +41,7 @@ class SelectionDetail(QScrollArea):
         self.pop_truth_table()
         self.pop_pv_table()
 
-     # ~~ Ignored Conditions ~~ #
+    # ~~ Ignored Conditions ~~ #
     def ignored_conditions(self):
         """Set the selection's ignored conditions consisting of a comma
         separated list of condition descriptions.
@@ -51,10 +52,10 @@ class SelectionDetail(QScrollArea):
 
         if not ign_str:
             ign_str = "--"
-            
+
         self.ignored_lbl.setText(ign_str)
 
-     # ~~ Truth Table ~~ #
+    # ~~ Truth Table ~~ #
     def clear_truth_table(self, truth_row_count):
         """Clear contents of truth_table, then set the table size."""
         self.truth_tbl.clearContents()
@@ -77,7 +78,7 @@ class SelectionDetail(QScrollArea):
 
         shifted_val = self.fault.states[-1].device_state.value >> shift_val
         max_len = len(format(shifted_val, 'b'))
-    
+
         self.clear_truth_table(len(self.fault.states))
         for i, state in enumerate(self.fault.states):
             item0 = CellItem(state.device_state.description)
@@ -98,7 +99,7 @@ class SelectionDetail(QScrollArea):
                 item = CellItem(cl.beam_class.name)
                 self.truth_tbl.setItem(i, col, item)
 
-     # ~~ PV Table ~~ #
+    # ~~ PV Table ~~ #
     def clear_pv_table(self, pv_row_count):
         """Clear contents of pv_table, then set the table size."""
         self.pv_tbl.clearContents()
@@ -107,7 +108,7 @@ class SelectionDetail(QScrollArea):
         for i in range(pv_row_count):
             self.default_row(self.pv_tbl, i, 4)
         self.pv_tbl.setFixedHeight((pv_row_count * self.pv_row_h)
-                                     + self.pv_hdr_h + 2)
+                                   + self.pv_hdr_h + 2)
 
     def pop_pv_table(self):
         """Display all PVs used by digital devices or all inputs of
@@ -156,10 +157,10 @@ class SelectionDetail(QScrollArea):
             node_btn.setText(btn_text)
             node_btn.showIcon = False
             node_btn.openInNewWindow = True
-            node_btn.macros = json.dumps(dev_macros)
+            node_btn.macros = dumps(dev_macros)
             self.pv_tbl.setCellWidget(i, 3, node_btn)
 
-     # ~~ Helper Functions ~~ #
+    # ~~ Helper Functions ~~ #
     def node_macros(self):
         """Populate the macros dict used by pv_table"""
         ret_macros = {}
