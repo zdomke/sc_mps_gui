@@ -59,8 +59,8 @@ class LogicMixin:
     @Slot(int)
     def show_inactive(self, state):
         """Slot called when Inactive Checkbox is toggled. Determines if
-        the inactive faults are shown. Shows faults without a connection
-        for {FLT_PV}_ACTIVE as they may still be active."""
+        the inactive faults are shown. Only show faults that are active,
+        this not including faults that could not establish a connection."""
         if not state:
             self.ui.logic_tbl.hideColumn(11)
             self.logic_model.setFilterByColumn(11, "Y")

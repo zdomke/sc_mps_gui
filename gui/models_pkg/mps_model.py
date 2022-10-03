@@ -40,11 +40,8 @@ class MPSModel:
 
     def set_faults(self):
         """Populate fault_objects with FaultObjects from self.name."""
-        self.faults = self.config.session.query(models.Fault).all()
-        for fault in self.faults:
-            desc = fault.description
-            self.fault_objects[desc] = self.name.getFaultObject(fault)
-        self.fault_objects = dict(sorted(self.fault_objects.items()))
+        self.faults = [self.name.getFaultObject(fault) for fault in
+                       self.config.session.query(models.Fault).all()]
 
     def get_faults(self):
         """Fault getter function."""
