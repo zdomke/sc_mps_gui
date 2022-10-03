@@ -208,6 +208,9 @@ class LogicTableModel(QAbstractTableModel):
 
 
 class LogicSortFilterModel(QSortFilterProxyModel):
+    """Customized QSortFilterProxyModel to allow the user to sort and
+    filter the customized QAbstractTableModel. Allows for functionality
+    for the summary table, bypass table, and logic table."""
     def __init__(self, parent):
         super(LogicSortFilterModel, self).__init__(parent)
         self.filters = {}
@@ -259,6 +262,9 @@ class LogicSortFilterModel(QSortFilterProxyModel):
 
 
 class LogicItemDelegate(QStyledItemDelegate):
+    """Customized QStyledItemDelegate to allow the user to copy
+    some fault information from the table. Mimics functionality from
+    PyDMWidgets."""
     def __init__(self, parent):
         super(LogicItemDelegate, self).__init__(parent)
 
@@ -280,113 +286,3 @@ class LogicItemDelegate(QStyledItemDelegate):
             QApplication.instance().sendEvent(clipboard, new_event)
             QToolTip.showText(event.globalPos(), text)
         return super().editorEvent(event, model, option, index)
-
-
-# class LogicTableModel(QAbstractTableModel):
-#     def __init__(self, parent, faults_dict):
-#         super(LogicTableModel, self).__init__(parent)
-
-#         self.hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR",
-#                         "SC_SXR", "LASER", "SC_LESA", "Bypassed",
-#                         "fault_hidden", "bypassed_hidden"]
-#         self.font = QFont()
-#         self.font.setBold(True)
-
-#         self.faulted_pvs = {}
-#         self.bypassed_pvs = {}
-#         self.ignored_pvs = {}
-
-#         self.set_data(faults_dict)
-
-#     def data(self, index: QModelIndex, role: Qt.ItemDataRole):
-#         if role == Qt.DisplayRole:
-#             return str(self._data[index.row()][index.column()])
-#         if index.column() != 0 and role == Qt.TextAlignmentRole:
-#             return Qt.AlignCenter
-
-#     def rowCount(self, index=QModelIndex()):
-#         return len(self._data)
-
-#     def columnCount(self, index=QModelIndex()):
-#         return len(self._data[0])
-
-#     def headerData(self, section: int, orientation: Qt.Orientation,
-#                    role: Qt.ItemDataRole):
-#         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-#             return self.hdr_lst[section]
-#         if orientation == Qt.Horizontal and role == Qt.FontRole:
-#             return self.font
-
-#     def set_data(self, faults_dict: dict):
-#         self._data = []
-
-#         for fault in faults_dict.values():
-#             self.faulted_pvs.setdefault(fault.state, PV(fault.name))
-#             self.bypassed_pvs.setdefault(fault.bypassed, PV(fault.bypassed))
-#             self.ignored_pvs.setdefault(fault.ignored, PV(fault.ignored))
-
-#             lst = []
-#             lst.append(fault.description)
-#             lst.append(fault.state)
-#             for i in range(len(fault.destinations)):
-#                 lst.append(fault.destinations[i])
-#             lst.append(fault.bypassed)
-#             lst.append("0")
-#             lst.append("0")
-#             self._data.append(lst)
-
-#     def modify_data(self, parent: QModelIndex, new_val):
-#         self._data[parent.row()][parent.column()] = str(new_val)
-#         self.dataChanged.emit(parent, parent)
-
-#     def fault_less_than(self, left: QModelIndex, right: QModelIndex):
-#         return (self.faulted_pvs[left.data()].value
-#                 >= self.faulted_pvs[right.data()].value)
-
-#     def bypass_less_than(self, left: QModelIndex, right: QModelIndex):
-#         return (self.bypassed_pvs[left.data()].value
-#                 >= self.bypassed_pvs[right.data()].value)
-
-
-# class LogicSortFilterModel(QSortFilterProxyModel):
-#     def __init__(self, parent):
-#         super(LogicSortFilterModel, self).__init__(parent)
-
-#     def sort(self, column: int, order: Qt.SortOrder = ...) -> None:
-#         if column in [0, 1, 8]:
-#             return super().sort(column, order)
-#         else:
-#             return super().sort(0, order)
-
-#     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
-#         if left.column() == 1:
-#             return self.sourceModel().fault_less_than(left, right)
-#         elif left.column() == 8:
-#             return self.sourceModel().bypass_less_than(left, right)
-#         else:
-#             return super().lessThan(left, right)
-
-
-# class LogicItemDelegate(QStyledItemDelegate):
-#     def __init__(self, parent, faults):
-#         super(LogicItemDelegate, self).__init__(parent)
-#         self.faults = faults
-
-#     def initStyleOption(self, option, index: QModelIndex):
-#         wid = self.parent().indexWidget(index)
-#         if not wid and index.column() not in [0, 9, 10]:
-#             desc = self.parent().model().index(index.row(), 0).data()
-#             if index.column() == 1:
-#                 wid = construct_state_widget(self.faults[desc])
-#             # elif index.column() == 8:
-#                 # wid = construct_bypass_widget(self.faults[desc].bypassed)
-#             else:
-#                 wid = construct_cell_widget(index.data())
-#             self.parent().setIndexWidget(index, wid)
-#         else:
-#             return super().initStyleOption(option, index)
-
-
-# Use a PV watcher on {fault base PV}_CALC to find the current status of
-#  the given device and construct a row based on the device_states
-#  (seems to work for digital devices)

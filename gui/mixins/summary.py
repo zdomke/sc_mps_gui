@@ -5,7 +5,8 @@ from models_pkg.logic_model import LogicSortFilterModel
 
 class SummaryMixin:
     def summary_init(self):
-        """Initializer for the Summary tab."""
+        """Initializer for everything in the Summary tab: Summary table,
+        Bypass table, and Custom Context menus."""
         # Initialize the Summary Table and Headers
         self.summ_model = LogicSortFilterModel(self)
         self.summ_model.setSourceModel(self.tbl_model)

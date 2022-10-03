@@ -8,6 +8,8 @@ from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
 
 class LogicMixin:
     def logic_init(self):
+        """Initializer for everything in Logic tab: Logic Table Model,
+        Logic Item Delegatw, and Selection Details."""
         self.tbl_model = LogicTableModel(self, self.faults,
                                          self.model.config.Session)
         self.delegate = LogicItemDelegate(self)
@@ -56,6 +58,9 @@ class LogicMixin:
 
     @Slot(int)
     def show_inactive(self, state):
+        """Slot called when Inactive Checkbox is toggled. Determines if
+        the inactive faults are shown. Shows faults without a connection
+        for {FLT_PV}_ACTIVE as they may still be active."""
         if not state:
             self.ui.logic_tbl.hideColumn(11)
             self.logic_model.setFilterByColumn(11, "Y")
@@ -65,12 +70,16 @@ class LogicMixin:
 
     @Slot()
     def show_row_count(self):
+        """When the number of displayed rows changes, update the row
+        count at the bottom of the tab."""
         rows = self.logic_model.rowCount(QModelIndex())
         self.ui.num_flts_lbl.setText("Displaying {} / {} Faults"
                                      .format(rows, self.total_faults))
 
     @Slot(QItemSelection, QItemSelection)
     def selected(self, current, previous):
+        """Slot called when a row is selected. This will change the
+        SelectionDetails widget and open it if it's hidden."""
         indices = current.indexes()
         if not indices:
             indices = previous.indexes()
@@ -81,5 +90,6 @@ class LogicMixin:
 
     @Slot()
     def details_closed(self):
+        """Slot to close the SelectionDetails widget."""
         self.ui.logic_tbl.clearSelection()
         self.details.hide()
