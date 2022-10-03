@@ -200,12 +200,6 @@ class LogicTableModel(QAbstractTableModel):
         self._data[row][11] = "Y" if cur_act else "N"
         self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
 
-    @Slot()
-    def remove_session(self):
-        """Close the SQLAlchemy scoped_session when closing application."""
-        self.session.remove()
-        [ch.disconnect(True) for ch in self._channels]
-
 
 class LogicSortFilterModel(QSortFilterProxyModel):
     """Customized QSortFilterProxyModel to allow the user to sort and

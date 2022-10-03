@@ -1,6 +1,6 @@
 from functools import partial
 from qtpy.QtCore import (Qt, Slot, QModelIndex, QItemSelection)
-from qtpy.QtWidgets import (QHeaderView, QApplication)
+from qtpy.QtWidgets import QHeaderView
 from widgets.selection_detail import SelectionDetail
 from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
                                     LogicItemDelegate)
@@ -28,6 +28,8 @@ class LogicMixin:
         self.hdr.setSectionResizeMode(QHeaderView.Interactive)
         self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
         self.hdr.resizeSection(1, 125)
+        self.hdr.resizeSection(8, 70)
+        self.hdr.resizeSection(11, 70)
 
         self.show_row_count()
         self.show_inactive(0)
@@ -51,10 +53,6 @@ class LogicMixin:
         self.logic_model.rowsRemoved.connect(self.show_row_count)
         self.logic_model.rowsInserted.connect(self.show_row_count)
         self.logic_model.layoutChanged.connect(self.show_row_count)
-
-        # Establish connection to remove channels on application close
-        app = QApplication.instance()
-        app.aboutToQuit.connect(self.tbl_model.remove_session)
 
     @Slot(int)
     def show_inactive(self, state):
