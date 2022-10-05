@@ -8,19 +8,19 @@
 `-- gui/  
     |-- mps_gui_main.ui  
     |-- mps_gui_main.py  
-    |-- lcls_mps_lockup_sidebyside_digital.png  
     |-- mixins/  
     |   |-- __init__.py  
     |   |-- summary.py  
-    |   `-- logic.py  
+    |   |-- logic.py  
+    |   `-- selection_detail.py  
     |-- models/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
     |   `-- logic_model.py
-    `-- widgets/  
+    `-- resources/  
         |-- __init__.py  
         |-- mps_permit_panel.ui  
-        `-- selection_detail.py  
+        `-- lcls_mps_lockup_sidebyside_digital.png  
 
 
 ### sc_mps_gui.bash  
@@ -43,10 +43,6 @@
       - Selecting a fault opens a panel with more details on that fault  
 
 
-### lcls_mps_lockup_sidebyside_digital.png
-  - A standard-use image to tell the user this application is a part of the SC MPS  
-
-
 ### summary.py  
   - This file contains a python mixin to manage the Summary tab  
   - Manage the faults table and the bypass table  
@@ -61,6 +57,17 @@
   - Allow for searching and sorting in the main table  
   - Allow the user to filter out all inactive faults
   - Faults can be bypassed from the selection details pane  
+
+
+### selection_detail.py  
+  - Manage the Selection Details section used in the Logic tab  
+  - The section is shown and populated when a selection is made in the logic table  
+  - Details shown:  
+    - Name  
+    - Current State  
+    - Ignore Conditions  
+    - Truth Table  
+    - PV Table  
 
 
 ### mps_model.py  
@@ -78,12 +85,5 @@
   - Shows the Beam Class, Timing Beam Class, and Timing Rate  
 
 
-### selection_detail.py  
-  - Create the Selection Details section used in the Logic and Ignore Logic tabs  
-  - The section is shown and populated when a selection is made in the logic table  
-  - Details shown:  
-    - Name  
-    - Current State  
-    - Ignore Conditions  
-    - Truth Table  
-    - PV Table  
+### lcls_mps_lockup_sidebyside_digital.png
+  - A standard-use image to tell the user this application is a part of the SC MPS  

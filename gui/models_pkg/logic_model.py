@@ -22,9 +22,8 @@ class LogicTableModel(QAbstractTableModel):
                "red": QBrush(QColor(255, 0, 0)),
                "magenta": QBrush(QColor(235, 0, 235)),
                "white": QBrush(QColor(255, 255, 255))}
-    hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0",
-               "SC_HXR", "SC_SXR", "LASER", "SC_LESA",
-               "Bypassed", "Bypass Exp Date", "ignored_hidden",
+    hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR",
+               "LASER", "SC_LESA", "Bypassed", "Bypass Exp Date", "Ignored",
                "Active"]
     dest_order = [-1, -1, 3, 2, 4, 5, 1, 6, -1, -1, -1, -1]
     logger = getLogger(__name__)

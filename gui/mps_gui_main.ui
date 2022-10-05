@@ -82,7 +82,7 @@
               <string>{&quot;DEVICE_NAME&quot;: &quot;SC_BSYD&quot;, &quot;P_PV&quot;: &quot;SC_BSYD&quot;, &quot;T_PV&quot;: &quot;2&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
              <property name="loadWhenShown" stdset="0">
               <bool>true</bool>
@@ -110,7 +110,7 @@
               <string>{&quot;DEVICE_NAME&quot;:&quot;SC_DIAG0&quot;, &quot;P_PV&quot;:&quot;SC_DIAG0&quot;, &quot;T_PV&quot;:&quot;1&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
             </widget>
            </item>
@@ -132,7 +132,7 @@
               <string>{&quot;DEVICE_NAME&quot;:&quot;SC_HXR&quot;, &quot;P_PV&quot;:&quot;SC_HXR&quot;, &quot;T_PV&quot;:&quot;3&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
             </widget>
            </item>
@@ -154,7 +154,7 @@
               <string>{&quot;DEVICE_NAME&quot;:&quot;SC_SXR&quot;, &quot;P_PV&quot;:&quot;SC_SXR&quot;, &quot;T_PV&quot;:&quot;4&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
             </widget>
            </item>
@@ -176,7 +176,7 @@
               <string>{&quot;DEVICE_NAME&quot;:&quot;LASER&quot;, &quot;P_PV&quot;:&quot;LASER&quot;, &quot;T_PV&quot;:&quot;0&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
             </widget>
            </item>
@@ -198,7 +198,7 @@
               <string>{&quot;DEVICE_NAME&quot;:&quot;SC_LESA&quot;, &quot;P_PV&quot;:&quot;SC_LESA&quot;, &quot;T_PV&quot;:&quot;5&quot;}</string>
              </property>
              <property name="filename" stdset="0">
-              <string>widgets/mps_permit_panel.ui</string>
+              <string>resources/mps_permit_panel.ui</string>
              </property>
             </widget>
            </item>
@@ -407,108 +407,429 @@
       <attribute name="title">
        <string>Logic</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QVBoxLayout" name="logic_lyt" stretch="0,0,0">
+        <layout class="QHBoxLayout" name="logic_filter_lyt">
          <item>
-          <layout class="QHBoxLayout" name="logic_filter_lyt">
-           <item>
-            <widget class="QCheckBox" name="inactive_chck">
-             <property name="text">
-              <string>Show Inactive Faults</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="logic_filter_spcr">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="logic_filter_edt">
-             <property name="placeholderText">
-              <string>Case-insensitive Filter</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QTableView" name="logic_tbl">
-           <property name="contextMenuPolicy">
-            <enum>Qt::DefaultContextMenu</enum>
+          <widget class="QCheckBox" name="inactive_chck">
+           <property name="text">
+            <string>Show Inactive Faults</string>
            </property>
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-           <property name="verticalScrollMode">
-            <enum>QAbstractItemView::ScrollPerPixel</enum>
-           </property>
-           <property name="horizontalScrollMode">
-            <enum>QAbstractItemView::ScrollPerPixel</enum>
-           </property>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>100</number>
-           </attribute>
-           <attribute name="horizontalHeaderHighlightSections">
-            <bool>false</bool>
-           </attribute>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="num_flts_lyt">
-           <item>
-            <spacer name="num_flts_spcr">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="num_flts_lbl">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>####</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <spacer name="logic_filter_spcr">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="logic_filter_edt">
+           <property name="placeholderText">
+            <string>Case-insensitive Filter</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QSplitter" name="logic_spltr">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <widget class="QTableView" name="logic_tbl">
+          <property name="contextMenuPolicy">
+           <enum>Qt::DefaultContextMenu</enum>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="verticalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <property name="horizontalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>100</number>
+          </attribute>
+          <attribute name="horizontalHeaderHighlightSections">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+         <widget class="QScrollArea" name="dtls_area">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="dtls_cntnt">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1358</width>
+             <height>440</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QHBoxLayout" name="dtls_row1_lyt">
+              <item>
+               <widget class="QLabel" name="dtls_title_lbl">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Selection Details</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="dtls_row1_spcr">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>1353</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="dtls_close_btn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 85, 0);</string>
+                </property>
+                <property name="text">
+                 <string>X</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="dtls_row2_lyt">
+              <item>
+               <widget class="QLabel" name="dtls_name_title_lbl">
+                <property name="text">
+                 <string>Name:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="dtls_name_lbl">
+                <property name="text">
+                 <string>&lt;Display Name&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="dtls_row2_spcr">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="PyDMRelatedDisplayButton" name="dtls_byp_btn">
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="text">
+                 <string>Bypass...</string>
+                </property>
+                <property name="filenames" stdset="0">
+                 <stringlist>
+                  <string>$PYDM/mps/mps_bypass.ui</string>
+                 </stringlist>
+                </property>
+                <property name="titles" stdset="0">
+                 <stringlist>
+                  <string>Bypass: ${DEVICE_BYP}</string>
+                 </stringlist>
+                </property>
+                <property name="showIcon" stdset="0">
+                 <bool>false</bool>
+                </property>
+                <property name="macros" stdset="0">
+                 <stringlist>
+                  <string>{}</string>
+                 </stringlist>
+                </property>
+                <property name="openInNewWindow" stdset="0">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="dtls_row3_lyt">
+              <item>
+               <widget class="QLabel" name="dtls_state_title_lbl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Current State:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="PyDMLabel" name="dtls_state_lbl">
+                <property name="toolTip">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="dtls_row4_lyt">
+              <item>
+               <widget class="QLabel" name="dtls_ign_title_lbl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Ignored When:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="dtls_ign_lbl">
+                <property name="text">
+                 <string>&lt;Ignored Conditions&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="dtls_truth_tbl">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QAbstractScrollArea::AdjustToContents</enum>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectRows</enum>
+              </property>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>225</number>
+              </attribute>
+              <attribute name="horizontalHeaderHighlightSections">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderHighlightSections">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>State</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Value</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SC_BSYD</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SC_DIAG0</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SC_HXR</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SC_SXR</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>LASER</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SC_LESA</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="dtls_where_lbl">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Where:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="dtls_pv_tbl">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QAbstractScrollArea::AdjustToContents</enum>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectRows</enum>
+              </property>
+              <attribute name="horizontalHeaderHighlightSections">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderHighlightSections">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>Bit Position</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Current PV</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Latched PV</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Related Information</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="num_flts_lyt">
+         <item>
+          <spacer name="num_flts_spcr">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="num_flts_lbl">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>####</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -533,7 +854,7 @@
         <string/>
        </property>
        <property name="filename" stdset="0">
-        <string>lcls_mps_lockup_sidebyside_digital.png</string>
+        <string>resources/lcls_mps_lockup_sidebyside_digital.png</string>
        </property>
       </widget>
      </item>
@@ -584,6 +905,11 @@
    <class>PyDMEmbeddedDisplay</class>
    <extends>QFrame</extends>
    <header>pydm.widgets.embedded_display</header>
+  </customwidget>
+  <customwidget>
+   <class>PyDMRelatedDisplayButton</class>
+   <extends>QPushButton</extends>
+   <header>pydm.widgets.related_display_button</header>
   </customwidget>
  </customwidgets>
  <resources/>

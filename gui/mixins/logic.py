@@ -1,7 +1,6 @@
 from functools import partial
-from qtpy.QtCore import (Qt, Slot, QModelIndex, QItemSelection)
+from qtpy.QtCore import (Qt, Slot, QModelIndex)
 from qtpy.QtWidgets import QHeaderView
-from widgets.selection_detail import SelectionDetail
 from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
                                     LogicItemDelegate)
 
@@ -34,20 +33,12 @@ class LogicMixin:
         self.show_row_count()
         self.show_inactive(0)
 
-        self.details = SelectionDetail(parent=self, mps_model=self.model)
-        self.ui.logic_lyt.insertWidget(2, self.details)
-
     def logic_slot_connections(self):
         """Establish slot connections for the logic model and logic tab."""
-        # Establish connections for inactive checkbox and filter lineedit
+        # Establish connections for inactive checkbox and filter box
         self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
         self.ui.logic_filter_edt.textChanged.connect(
             partial(self.logic_model.setFilterByColumn, 0))
-
-        # Establish connections for the SelectionDetails widget
-        self.ui.logic_tbl.selectionModel().selectionChanged.connect(
-            self.selected)
-        self.details.deselect.connect(self.details_closed)
 
         # Establish connections for showing the row count
         self.logic_model.rowsRemoved.connect(self.show_row_count)
@@ -73,21 +64,3 @@ class LogicMixin:
         rows = self.logic_model.rowCount(QModelIndex())
         self.ui.num_flts_lbl.setText("Displaying {} / {} Faults"
                                      .format(rows, self.total_faults))
-
-    @Slot(QItemSelection, QItemSelection)
-    def selected(self, current, previous):
-        """Slot called when a row is selected. This will change the
-        SelectionDetails widget and open it if it's hidden."""
-        indices = current.indexes()
-        if not indices:
-            indices = previous.indexes()
-        row_ind = self.logic_model.mapToSource(indices[0])
-        self.details.set_fault(self.faults[row_ind.row()])
-        if self.details.isHidden():
-            self.details.show()
-
-    @Slot()
-    def details_closed(self):
-        """Slot to close the SelectionDetails widget."""
-        self.ui.logic_tbl.clearSelection()
-        self.details.hide()

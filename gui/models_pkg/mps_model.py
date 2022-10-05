@@ -28,7 +28,6 @@ class MPSModel:
             self.name = MpsName(self.config.session)
 
         self.faults = []
-        self.fault_objects = {}
         self.set_faults()
 
     def set_filename(self):
@@ -42,10 +41,6 @@ class MPSModel:
         """Populate fault_objects with FaultObjects from self.name."""
         self.faults = [self.name.getFaultObject(fault) for fault in
                        self.config.session.query(models.Fault).all()]
-
-    def get_faults(self):
-        """Fault getter function."""
-        return self.fault_objects
 
     def fault_to_dev(self, fault):
         """Get a models.Device object from a models.Fault object."""

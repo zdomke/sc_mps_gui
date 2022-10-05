@@ -1,3 +1,7 @@
+R1.2.0  Zach Domke      10/05/2022
+        Selection Details section is now created in the mps_gui_main.ui
+        Selection Details code is now a class Mixin rather than a standalone class
+        The Selection Details section's size is now adjustable
 R1.1.0  Zach Domke      10/03/2022
         Add MPS Check Engine Lights to the Summary tab
         Convert tables in Summary and Logic tabs to QTableView/QAbstractTableModel
