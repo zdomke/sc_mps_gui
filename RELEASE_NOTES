@@ -1,3 +1,5 @@
+R1.2.1  Zach Domke      10/06/2022
+        Fixing bug with Current State in Selection Details section not matching
 R1.2.0  Zach Domke      10/05/2022
         Selection Details section is now created in the mps_gui_main.ui
         Selection Details code is now a class Mixin rather than a standalone class

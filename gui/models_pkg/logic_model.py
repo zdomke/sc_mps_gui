@@ -25,7 +25,7 @@ class LogicTableModel(QAbstractTableModel):
     hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR",
                "LASER", "SC_LESA", "Bypassed", "Bypass Exp Date", "Ignored",
                "Active"]
-    dest_order = [-1, -1, 3, 2, 4, 5, 1, 6, -1, -1, -1, -1]
+    dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
     logger = getLogger(__name__)
 
     def __init__(self, parent, faults: list, sessionmaker: sessionmaker):
@@ -35,7 +35,10 @@ class LogicTableModel(QAbstractTableModel):
 
         self._data = []
         self._colors = []
-        self._channels = []
+        self.state_channels = []
+        self.byp_channels = []
+        self.ign_channels = []
+        self.act_channels = []
         self.pv_addresses = []
 
         self.set_data()
@@ -101,29 +104,32 @@ class LogicTableModel(QAbstractTableModel):
             self._data.append(lst)
             self._colors.append(self.brushes["white"])
             self.pv_addresses.append(fault.name)
-            ch = PyDMChannel(address="ca://{}_TEST".format(fault.name),
+            ch = PyDMChannel(address=f"ca://{fault.name}_TEST",
                              value_slot=partial(self.set_row,
                                                 i,
-                                                fault.name + "_TEST"))
-            self._channels.append(ch)
-            ch = PyDMChannel(address="ca://{}_SCBYPS".format(fault.name),
+                                                f"{fault.name}_TEST"))
+            self.state_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_SCBYPS",
                              value_slot=partial(self.set_byp,
                                                 i,
-                                                fault.name + "_SCBYPS"))
-            self._channels.append(ch)
-            ch = PyDMChannel(address="ca://{}_IGNORED".format(fault.name),
+                                                f"{fault.name}_SCBYPS"))
+            self.byp_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_IGNORED",
                              value_slot=partial(self.set_ign,
                                                 i,
-                                                fault.name + "_IGNORED"))
-            self._channels.append(ch)
-            ch = PyDMChannel(address="ca://{}_ACTIVE".format(fault.name),
+                                                f"{fault.name}_IGNORED"))
+            self.ign_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_ACTIVE",
                              value_slot=partial(self.set_act,
                                                 i,
-                                                fault.name + "_ACTIVE"))
-            self._channels.append(ch)
+                                                f"{fault.name}_ACTIVE"))
+            self.act_channels.append(ch)
 
     def connect_channels(self):
-        [ch.connect() for ch in self._channels]
+        [ch.connect() for ch in self.state_channels]
+        [ch.connect() for ch in self.byp_channels]
+        [ch.connect() for ch in self.ign_channels]
+        [ch.connect() for ch in self.act_channels]
 
     def is_row_faulted(self, row: int):
         """Check if row is faulted based on the color (red, yellow, and
@@ -154,8 +160,8 @@ class LogicTableModel(QAbstractTableModel):
             curr_state = (self.session.query(FaultState)
                           .filter(FaultState.id == curr_state_id).one())
         except NoResultFound:
-            self.logger.error("No result for FaultState.id == '{}' was found "
-                              "in the SQLite DB".format(curr_state_id))
+            self.logger.error(f"No Result: FaultState.id == '{curr_state_id}' "
+                              "was not found in the SQLite DB")
 
         self._data[row][1] = curr_state.device_state.description
         self._data[row][2:8] = ["-"] * 6
@@ -221,18 +227,14 @@ class LogicSortFilterModel(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex):
         """Override QSortFilterProxyModel's lessThan method to sort
         columns to meet more personalized needs."""
-        if left.column() == 1:
-            left_fltd = self.sourceModel().is_row_faulted(left.row())
-            right_fltd = self.sourceModel().is_row_faulted(right.row())
-            return left_fltd or not right_fltd
-        elif 1 < left.column() < 8:
+        if 0 < left.column() < 8:
             left_fltd = self.sourceModel().is_row_faulted(left.row())
             right_fltd = self.sourceModel().is_row_faulted(right.row())
             if left_fltd and right_fltd:
-                # Lower the priority of '-' by replacing it with a
-                #   higher value character '~'
-                return (left.data().replace('-', '~')
-                        < right.data().replace('-', '~'))
+                # Lower the priority of '-' and "BROKEN" by replacing
+                # them with higher value characters '~' and '}'
+                return (left.data().replace('-', '~').replace("BROKE", '}')
+                        < right.data().replace('-', '~').replace("BROKE", '}'))
             else:
                 return left_fltd or not right_fltd
         elif left.column() == 8 or left.column() == 11:

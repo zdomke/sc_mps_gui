@@ -2,6 +2,7 @@ from json import dumps
 from functools import partial
 from qtpy.QtCore import (Qt, Slot, QItemSelection)
 from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
+from pydm.widgets.channel import PyDMChannel
 from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
@@ -21,6 +22,8 @@ class SelectionDetailsMixin:
         self.ui.logic_spltr.setSizes([1, 0])
         self.ui.logic_spltr.setCollapsible(0, False)
         self.ui.logic_spltr.setStretchFactor(0, 1)
+
+        self.state_ch = None
 
     def selection_slot_connections(self):
         """Set up slot connections for the Selection Details section."""
@@ -45,7 +48,6 @@ class SelectionDetailsMixin:
         # Set information at the top of the section
         self.ui.dtls_byp_btn.macros = dumps({"DEVICE_BYP": fault.name})
         self.ui.dtls_name_lbl.setText(fault.description)
-        self.ui.dtls_state_lbl.channel = fault.name + "_SCMPSC"
 
         # Get ignore conditions and set the related label's text
         ign_str = ", ".join([ign.condition.description
@@ -114,9 +116,9 @@ class SelectionDetailsMixin:
         self.clear_table(self.ui.dtls_pv_tbl, row_count, 4)
         for i in range(row_count):
             if analog:
-                pv = "{}_T{}_SCMPSC".format(inp[0], i)
+                pv = f"{inp[0]}_T{i}_SCMPSC"
             else:
-                pv = "{}_SCMPSC".format(inp[i])
+                pv = f"{i}_SCMPSC"
 
             item0 = CellItem(str(i))
             item1 = CellItem(pv + "C")
@@ -133,7 +135,7 @@ class SelectionDetailsMixin:
                 ch = dev.channel.number
             else:
                 ch = dev.inputs[i].channel.number
-            btn_txt = "LN {}, Card{}, Ch {}...".format(ln, card, ch)
+            btn_txt = f"LN {ln}, Card{card}, Ch {ch}..."
 
             node_btn = NodeButton(btn_txt, dumps(dev_macros))
             self.ui.dtls_pv_tbl.setCellWidget(i, 3, node_btn)
@@ -161,15 +163,29 @@ class SelectionDetailsMixin:
         if not indices:
             indices = previous.indexes()
         row_ind = self.logic_model.mapToSource(indices[0])
-        self.set_fault_details(self.faults[row_ind.row()])
+        fault = self.faults[row_ind.row()]
+        self.set_fault_details(fault)
         if not self.ui.logic_spltr.sizes()[1]:
             self.ui.logic_spltr.setSizes(self.splitter_state)
+
+        if self.state_ch:
+            self.state_ch.disconnect()
+        row = indices[0].row()
+        self.state_ch = PyDMChannel(f"ca://{fault.name}_TEST",
+                                    value_slot=partial(self.state_change, row))
+        self.state_ch.connect()
 
     @Slot()
     def details_closed(self):
         """Slot to close the SelectionDetails widget."""
         self.ui.logic_tbl.clearSelection()
         self.ui.logic_spltr.setSizes([1, 0])
+
+    @Slot(int)
+    def state_change(self, row):
+        ind = self.logic_model.index(row, 1)
+        text = ind.data()
+        self.ui.dtls_state_lbl.setText(text)
 
     @Slot(QTableWidget)
     def table_max_size(self, table):
