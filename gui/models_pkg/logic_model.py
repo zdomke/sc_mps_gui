@@ -230,13 +230,17 @@ class LogicSortFilterModel(QSortFilterProxyModel):
         if 0 < left.column() < 8:
             left_fltd = self.sourceModel().is_row_faulted(left.row())
             right_fltd = self.sourceModel().is_row_faulted(right.row())
-            if left_fltd and right_fltd:
-                # Lower the priority of '-' and "BROKEN" by replacing
-                # them with higher value characters '~' and '}'
-                return (left.data().replace('-', '~').replace("BROKE", '}')
-                        < right.data().replace('-', '~').replace("BROKE", '}'))
-            else:
-                return left_fltd or not right_fltd
+
+            # Sort by which row is faulted. If both rows have the same
+            # fault status, then sort alphabetically. Set a lower
+            # priority for "BROKEN" faults
+            if left_fltd ^ right_fltd:
+                return left_fltd
+            if left.column() == 1:
+                return (self.sourceModel().index(left.row(), 0).data()
+                        < self.sourceModel().index(right.row(), 0).data())
+            return (left.data().replace('-', '~').replace("BROKEN", '}')
+                    < right.data().replace('-', '~').replace("BROKEN", '}'))
         elif left.column() == 8 or left.column() == 11:
             return right.data() < left.data()
         else:
