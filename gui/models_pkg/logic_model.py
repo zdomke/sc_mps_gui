@@ -1,12 +1,10 @@
 from logging import getLogger
 from platform import system
-from functools import partial
 from qtpy.QtGui import (QBrush, QColor, QFont)
-from qtpy.QtCore import (Qt, Slot, QModelIndex, QAbstractTableModel, QEvent,
-                         QSortFilterProxyModel)
+from qtpy.QtCore import (Qt, Slot, QModelIndex, QAbstractTableModel,
+                         QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
 from epics import caget
-from pydm.widgets.channel import PyDMChannel
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import sessionmaker, scoped_session
 from mps_database.models.fault_state import FaultState
@@ -35,10 +33,6 @@ class LogicTableModel(QAbstractTableModel):
 
         self._data = []
         self._colors = []
-        self.state_channels = []
-        self.byp_channels = []
-        self.ign_channels = []
-        self.act_channels = []
         self.pv_addresses = []
 
         self.set_data()
@@ -89,9 +83,8 @@ class LogicTableModel(QAbstractTableModel):
     def set_data(self):
         """Set initial data for each fault. Populate each fault with the
         description, the PV name, and default values for bypass, ignore,
-        and active cells. Set the color to white (for disconnected).
-        Create all channels used by the model."""
-        for i, fault in enumerate(self.faults):
+        and active cells. Set the color to white (for disconnected)."""
+        for fault in self.faults:
             lst = []
             lst.append(fault.description)
             lst.append(fault.name)
@@ -104,32 +97,6 @@ class LogicTableModel(QAbstractTableModel):
             self._data.append(lst)
             self._colors.append(self.brushes["white"])
             self.pv_addresses.append(fault.name)
-            ch = PyDMChannel(address=f"ca://{fault.name}_TEST",
-                             value_slot=partial(self.set_row,
-                                                i,
-                                                f"{fault.name}_TEST"))
-            self.state_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_SCBYPS",
-                             value_slot=partial(self.set_byp,
-                                                i,
-                                                f"{fault.name}_SCBYPS"))
-            self.byp_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_IGNORED",
-                             value_slot=partial(self.set_ign,
-                                                i,
-                                                f"{fault.name}_IGNORED"))
-            self.ign_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_ACTIVE",
-                             value_slot=partial(self.set_act,
-                                                i,
-                                                f"{fault.name}_ACTIVE"))
-            self.act_channels.append(ch)
-
-    def connect_channels(self):
-        [ch.connect() for ch in self.state_channels]
-        [ch.connect() for ch in self.byp_channels]
-        [ch.connect() for ch in self.ign_channels]
-        [ch.connect() for ch in self.act_channels]
 
     def is_row_faulted(self, row: int):
         """Check if row is faulted based on the color (red, yellow, and
@@ -139,18 +106,17 @@ class LogicTableModel(QAbstractTableModel):
                    or self._colors[row] == self.brushes["white"])
         return ret
 
-    @Slot(int, str, int)
-    def set_row(self, row: int, pv: str, new_val: int):
+    @Slot(int, int)
+    def set_row(self, value: int, row: int):
         """Called when a Fault's state changes. Set the Fault's
         description and beam destinations based on the current state."""
-        curr_state_id = new_val
-        if curr_state_id == -1:
+        if value == -1:
             # 'BROKEN' State: all cells should be "BROKEN" in magenta
             self._data[row][1:8] = ["BROKEN"] * 7
             self._colors[row] = self.brushes["magenta"]
             self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
             return
-        elif curr_state_id == 0:
+        elif value == 0:
             # Analog 'OK' State: all cells should be represented as '-'
             self._data[row][1:8] = ["-"] * 7
             self._colors[row] = self.brushes["green"]
@@ -158,10 +124,10 @@ class LogicTableModel(QAbstractTableModel):
             return
         try:
             curr_state = (self.session.query(FaultState)
-                          .filter(FaultState.id == curr_state_id).one())
+                          .filter(FaultState.id == value).one())
         except NoResultFound:
-            self.logger.error(f"No Result: FaultState.id == '{curr_state_id}' "
-                              "was not found in the SQLite DB")
+            self.logger.error(f"No Result: FaultState.id == '{value}' was not "
+                              "found in the SQLite DB")
 
         self._data[row][1] = curr_state.device_state.description
         self._data[row][2:8] = ["-"] * 6
@@ -182,27 +148,24 @@ class LogicTableModel(QAbstractTableModel):
         self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
 
     @Slot(int, str, int)
-    def set_byp(self, row: int, pv: str, new_val: int):
+    def set_byp(self, value: int, pvname: str, row: int):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
-        cur_byp = new_val
-        byp_exp = caget(pv[:-1] + "_END", as_string=True)
-        self._data[row][8] = "Y" if cur_byp else "N"
-        self._data[row][9] = byp_exp if cur_byp else "None"
+        byp_exp = caget(pvname[:-1] + "_END", as_string=True)
+        self._data[row][8] = "Y" if value else "N"
+        self._data[row][9] = byp_exp if value else "None"
         self.dataChanged.emit(self.index(row, 8), self.index(row, 9))
 
-    @Slot(int, str, int)
-    def set_ign(self, row: int, pv: str, new_val: int):
+    @Slot(int, int)
+    def set_ign(self, value: int, row: int):
         """Sets the 'ignored_hidden' cell for the given row."""
-        cur_ign = new_val
-        self._data[row][10] = bool(cur_ign)
+        self._data[row][10] = bool(value)
         self.dataChanged.emit(self.index(row, 10), self.index(row, 10))
 
-    @Slot(int, str, int)
-    def set_act(self, row: int, pv: str, new_val: int):
+    @Slot(int, int)
+    def set_act(self, value: int, row: int):
         """Sets the 'Active' cell for the given row."""
-        cur_act = new_val
-        self._data[row][11] = "Y" if cur_act else "N"
+        self._data[row][11] = "Y" if value else "N"
         self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
 
 

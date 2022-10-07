@@ -28,7 +28,7 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin):
         self.logic_slot_connections()
         self.selection_slot_connections()
         self.summ_slot_connections()
-        self.tbl_model.connect_channels()
+        self.connect_logic_channels()
 
     # ~~~~ PyDM UI File Management ~~~~ #
     @staticmethod

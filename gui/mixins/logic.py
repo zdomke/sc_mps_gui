@@ -1,6 +1,7 @@
 from functools import partial
 from qtpy.QtCore import (Qt, Slot, QModelIndex)
 from qtpy.QtWidgets import QHeaderView
+from pydm.widgets.channel import PyDMChannel
 from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
                                     LogicItemDelegate)
 
@@ -30,6 +31,30 @@ class LogicMixin:
         self.hdr.resizeSection(8, 70)
         self.hdr.resizeSection(11, 70)
 
+        self.state_channels = []
+        self.byp_channels = []
+        self.ign_channels = []
+        self.act_channels = []
+
+        for i, fault in enumerate(self.faults):
+            ch = PyDMChannel(address=f"ca://{fault.name}_TEST",
+                             value_slot=partial(self.tbl_model.set_row,
+                                                row=i))
+            self.state_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_SCBYPS",
+                             value_slot=partial(self.tbl_model.set_byp,
+                                                pvname=f"{fault.name}_SCBYPS",
+                                                row=i))
+            self.byp_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_IGNORED",
+                             value_slot=partial(self.tbl_model.set_ign,
+                                                row=i))
+            self.ign_channels.append(ch)
+            ch = PyDMChannel(address=f"ca://{fault.name}_ACTIVE",
+                             value_slot=partial(self.tbl_model.set_act,
+                                                row=i))
+            self.act_channels.append(ch)
+
         self.show_row_count()
         self.show_inactive(0)
 
@@ -44,6 +69,12 @@ class LogicMixin:
         self.logic_model.rowsRemoved.connect(self.show_row_count)
         self.logic_model.rowsInserted.connect(self.show_row_count)
         self.logic_model.layoutChanged.connect(self.show_row_count)
+
+    def connect_logic_channels(self):
+        [ch.connect() for ch in self.state_channels]
+        [ch.connect() for ch in self.byp_channels]
+        [ch.connect() for ch in self.ign_channels]
+        [ch.connect() for ch in self.act_channels]
 
     @Slot(int)
     def show_inactive(self, state):
