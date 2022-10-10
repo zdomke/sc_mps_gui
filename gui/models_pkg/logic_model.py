@@ -1,10 +1,10 @@
 from logging import getLogger
 from platform import system
 from qtpy.QtGui import (QBrush, QColor, QFont)
-from qtpy.QtCore import (Qt, Slot, QModelIndex, QAbstractTableModel,
+from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
                          QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
-from epics import caget
+from epics import PV
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import sessionmaker, scoped_session
 from mps_database.models.fault_state import FaultState
@@ -26,6 +26,11 @@ class LogicTableModel(QAbstractTableModel):
     dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
     logger = getLogger(__name__)
 
+    new_row_signal = Signal(int, int)
+    new_byp_signal = Signal(str, int, int)
+    new_ign_signal = Signal(int, int)
+    new_act_signal = Signal(int, int)
+
     def __init__(self, parent, faults: list, sessionmaker: sessionmaker):
         super(LogicTableModel, self).__init__(parent)
         self.faults = faults
@@ -33,9 +38,13 @@ class LogicTableModel(QAbstractTableModel):
 
         self._data = []
         self._colors = []
-        self.pv_addresses = []
+        self.byp_ends = {}
 
         self.set_data()
+        self.new_row_signal.connect(self.set_row)
+        self.new_byp_signal.connect(self.set_byp)
+        self.new_ign_signal.connect(self.set_ign)
+        self.new_act_signal.connect(self.set_act)
 
     def rowCount(self, index: QModelIndex = QModelIndex()):
         """Return the number of rows in the model."""
@@ -94,9 +103,10 @@ class LogicTableModel(QAbstractTableModel):
             lst.append("None")
             lst.append(False)
             lst.append("?")
+            pv = PV(f"{fault.name}_SCBYP_END")
             self._data.append(lst)
             self._colors.append(self.brushes["white"])
-            self.pv_addresses.append(fault.name)
+            self.byp_ends[fault.name] = pv
 
     def is_row_faulted(self, row: int):
         """Check if row is faulted based on the color (red, yellow, and
@@ -107,7 +117,7 @@ class LogicTableModel(QAbstractTableModel):
         return ret
 
     @Slot(int, int)
-    def set_row(self, value: int, row: int):
+    def set_row(self, value: int, row: int, **kw):
         """Called when a Fault's state changes. Set the Fault's
         description and beam destinations based on the current state."""
         if value == -1:
@@ -147,23 +157,22 @@ class LogicTableModel(QAbstractTableModel):
                 self._colors[row] = self.brushes["red"]
         self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
 
-    @Slot(int, str, int)
-    def set_byp(self, value: int, pvname: str, row: int):
+    @Slot(str, int, int)
+    def set_byp(self, pvname: str, value: int, row: int, **kw):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
-        byp_exp = caget(pvname[:-1] + "_END", as_string=True)
         self._data[row][8] = "Y" if value else "N"
-        self._data[row][9] = byp_exp if value else "None"
+        self._data[row][9] = self.byp_ends[pvname].get() if value else "None"
         self.dataChanged.emit(self.index(row, 8), self.index(row, 9))
 
     @Slot(int, int)
-    def set_ign(self, value: int, row: int):
+    def set_ign(self, value: int, row: int, **kw):
         """Sets the 'ignored_hidden' cell for the given row."""
         self._data[row][10] = bool(value)
         self.dataChanged.emit(self.index(row, 10), self.index(row, 10))
 
     @Slot(int, int)
-    def set_act(self, value: int, row: int):
+    def set_act(self, value: int, row: int, **kw):
         """Sets the 'Active' cell for the given row."""
         self._data[row][11] = "Y" if value else "N"
         self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
@@ -240,7 +249,8 @@ class LogicItemDelegate(QStyledItemDelegate):
                 mode = clipboard.Selection
             if index.column() != 0:
                 source_ind = model.mapToSource(index)
-                text = model.sourceModel().pv_addresses[source_ind.row()]
+                key_list = list(model.sourceModel().byp_ends.keys())
+                text = key_list[source_ind.row()]
             else:
                 text = index.data()
             clipboard.setText(text, mode=mode)

@@ -1,7 +1,8 @@
 from functools import partial
+from epics import PV
+from epics.dbr import DBE_VALUE
 from qtpy.QtCore import (Qt, Slot, QModelIndex)
 from qtpy.QtWidgets import QHeaderView
-from pydm.widgets.channel import PyDMChannel
 from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
                                     LogicItemDelegate)
 
@@ -31,29 +32,28 @@ class LogicMixin:
         self.hdr.resizeSection(8, 70)
         self.hdr.resizeSection(11, 70)
 
-        self.state_channels = []
-        self.byp_channels = []
-        self.ign_channels = []
-        self.act_channels = []
+        self.state_pvs = []
+        self.byp_pvs = []
+        self.ign_pvs = []
+        self.act_pvs = []
 
         for i, fault in enumerate(self.faults):
-            ch = PyDMChannel(address=f"ca://{fault.name}_TEST",
-                             value_slot=partial(self.tbl_model.set_row,
-                                                row=i))
-            self.state_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_SCBYPS",
-                             value_slot=partial(self.tbl_model.set_byp,
-                                                pvname=f"{fault.name}_SCBYPS",
-                                                row=i))
-            self.byp_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_IGNORED",
-                             value_slot=partial(self.tbl_model.set_ign,
-                                                row=i))
-            self.ign_channels.append(ch)
-            ch = PyDMChannel(address=f"ca://{fault.name}_ACTIVE",
-                             value_slot=partial(self.tbl_model.set_act,
-                                                row=i))
-            self.act_channels.append(ch)
+            state_pv = PV(f"{fault.name}_TEST",
+                          callback=partial(self.send_new_val, row=i),
+                          auto_monitor=DBE_VALUE)
+            self.state_pvs.append(state_pv)
+            byp_pv = PV(f"{fault.name}_SCBYPS",
+                        callback=partial(self.send_new_val, row=i),
+                        auto_monitor=DBE_VALUE)
+            self.byp_pvs.append(byp_pv)
+            ign_pv = PV(f"{fault.name}_IGNORED",
+                        callback=partial(self.send_new_val, row=i),
+                        auto_monitor=DBE_VALUE)
+            self.ign_pvs.append(ign_pv)
+            act_pv = PV(f"{fault.name}_ACTIVE",
+                        callback=partial(self.send_new_val, row=i),
+                        auto_monitor=DBE_VALUE)
+            self.act_pvs.append(act_pv)
 
         self.show_row_count()
         self.show_inactive(0)
@@ -70,11 +70,16 @@ class LogicMixin:
         self.logic_model.rowsInserted.connect(self.show_row_count)
         self.logic_model.layoutChanged.connect(self.show_row_count)
 
-    def connect_logic_channels(self):
-        [ch.connect() for ch in self.state_channels]
-        [ch.connect() for ch in self.byp_channels]
-        [ch.connect() for ch in self.ign_channels]
-        [ch.connect() for ch in self.act_channels]
+    def send_new_val(self, value: int, pvname: str, row: int, **kw):
+        """Function to emit the appropriate signal based on the pvname."""
+        if pvname[-5:] == "_TEST":
+            self.tbl_model.new_row_signal.emit(value, row)
+        elif pvname[-7:] == "_SCBYPS":
+            self.tbl_model.new_byp_signal.emit(pvname[:-7], value, row)
+        elif pvname[-8:] == "_IGNORED":
+            self.tbl_model.new_act_signal.emit(value, row)
+        elif pvname[-7:] == "_ACTIVE":
+            self.tbl_model.new_ign_signal.emit(value, row)
 
     @Slot(int)
     def show_inactive(self, state):
