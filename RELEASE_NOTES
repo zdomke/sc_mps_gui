@@ -1,3 +1,6 @@
+R1.2.2  Zach Domke      10/10/2022
+        Remove bug to speed up startup times
+        Convert PyDMChannels to epics.PV classes
 R1.2.1  Zach Domke      10/06/2022
         Fixing bug with Current State in Selection Details section not matching
 R1.2.0  Zach Domke      10/05/2022
