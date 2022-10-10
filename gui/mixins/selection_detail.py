@@ -2,7 +2,8 @@ from json import dumps
 from functools import partial
 from qtpy.QtCore import (Qt, Slot, QItemSelection)
 from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
-from pydm.widgets.channel import PyDMChannel
+from epics import PV
+from epics.dbr import DBE_VALUE
 from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
@@ -23,7 +24,7 @@ class SelectionDetailsMixin:
         self.ui.logic_spltr.setCollapsible(0, False)
         self.ui.logic_spltr.setStretchFactor(0, 1)
 
-        self.state_ch = None
+        self.state_pv = None
 
     def selection_slot_connections(self):
         """Set up slot connections for the Selection Details section."""
@@ -168,12 +169,12 @@ class SelectionDetailsMixin:
         if not self.ui.logic_spltr.sizes()[1]:
             self.ui.logic_spltr.setSizes(self.splitter_state)
 
-        if self.state_ch:
-            self.state_ch.disconnect()
+        if self.state_pv:
+            self.state_pv.disconnect()
         row = indices[0].row()
-        self.state_ch = PyDMChannel(f"ca://{fault.name}_TEST",
-                                    value_slot=partial(self.state_change, row))
-        self.state_ch.connect()
+        self.state_pv = PV(f"{fault.name}_TEST",
+                           callback=partial(self.state_change, row),
+                           auto_monitor=DBE_VALUE)
 
     @Slot()
     def details_closed(self):
@@ -181,8 +182,8 @@ class SelectionDetailsMixin:
         self.ui.logic_tbl.clearSelection()
         self.ui.logic_spltr.setSizes([1, 0])
 
-    @Slot(int)
-    def state_change(self, row):
+    # State change Callback
+    def state_change(self, row, **kw):
         ind = self.logic_model.index(row, 1)
         text = ind.data()
         self.ui.dtls_state_lbl.setText(text)

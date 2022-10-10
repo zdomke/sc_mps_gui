@@ -77,9 +77,9 @@ class LogicMixin:
         elif pvname[-7:] == "_SCBYPS":
             self.tbl_model.new_byp_signal.emit(pvname[:-7], value, row)
         elif pvname[-8:] == "_IGNORED":
-            self.tbl_model.new_act_signal.emit(value, row)
-        elif pvname[-7:] == "_ACTIVE":
             self.tbl_model.new_ign_signal.emit(value, row)
+        elif pvname[-7:] == "_ACTIVE":
+            self.tbl_model.new_act_signal.emit(value, row)
 
     @Slot(int)
     def show_inactive(self, state):
