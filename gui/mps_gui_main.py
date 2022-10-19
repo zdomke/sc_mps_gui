@@ -8,10 +8,11 @@ from mixins.selection_detail import SelectionDetailsMixin
 from mixins.configure import ConfigureMixin
 from mixins.ignore import IgnoreMixin
 from mixins.app_status import AppStatusMixin
+from mixins.recent_faults import RecentFaultsMixin
 
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
-                    ConfigureMixin, IgnoreMixin, AppStatusMixin):
+                    ConfigureMixin, IgnoreMixin, AppStatusMixin, RecentFaultsMixin):
     def git_version(self):
         git_cmd = run("git describe --tags",
                       text=True,
@@ -47,11 +48,13 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
             self.selection_init()
             self.ignore_init()
             self.app_status_init()
+            self.recent_init()
 
         self.logic_connections(cud_mode=cud_mode)
         if not cud_mode:
             self.configure_connections()
             self.selection_connections()
+            self.recent_connections()
             self.summ_connections()
             self.ignore_connections()
             self.app_status_connections()

@@ -1,10 +1,12 @@
 # SC MPS Display  
 
 ## Directory Structure  
+```
 .  
 |-- README  
 |-- RELEASE_NOTES  
 |-- sc_mps_gui.bash  
+|  
 `-- gui/  
     |-- mps_cud_main.ui  
     |-- mps_gui_main.ui  
@@ -17,13 +19,15 @@
     |   |-- selection_detail.py  
     |   |-- ignore.py  
     |   |-- app_status.py  
-    |   `-- configure.py  
+    |   |-- configure.py  
+    |   `-- recent_faults.py  
     |-- models_pkg/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
     |   |-- logic_model.py
     |   |-- app_status_model.py
-    |   `-- configure_model.py
+    |   |-- configure_model.py
+    |   `-- recent_faults_model.py  
     `-- resources/  
         |-- __init__.py  
         |-- mps_permit_panel.ui  
@@ -53,7 +57,7 @@
 
 ### mps_gui_main.py & mps_gui_main.ui & mps_cud_main.ui 
   - This is the main display for the SC MPS Display  
-  - Contains a tab widget with 4 tabs:  
+  - Contains a tab widget with 5 tabs:  
     - The Summary tab contains 6 embedded displays, 2 'check engine lights', and 2 tables, one containing faulted PVs and one containing bypassed faults  
     - The Logic tab contains a table of all faults in the database  
       - The searchbar shows only faults containing that substring  
@@ -61,6 +65,7 @@
       - Selecting a fault opens a panel with more details on that fault  
     - The Ignore Logic tab displays which faults are ignored and the conditions in which they are ignored  
     - The Configure tab allows the user to set thresholds for multiple devices at once  
+    - The Recent Faults tab shows the user the fault history and allows the user to sort or open the fault in the Logic tab
   - mps_cud_main.ui is the UI for the CUD mode, consisting of the
     summary tab contents (without interactivity) in a CUD-ified UI
 
@@ -122,6 +127,11 @@
     - BPMS  
 
 
+### recent_faults.py  
+  - Show faults from recent history using the mps_history package
+  - Allow the user to filter by inputted text
+
+
 ### mps_model.py  
   - Using MPSConfig, establish a connection to the MPS Database  
     - If a filename is not provided, then MPSModel will locate the default file to use  
@@ -139,6 +149,10 @@
 
 ### configure_model.py  
   - Create a custom QAbstractTableModel used to manage the table of all devices and selected devices in the Configure tab  
+
+
+### recent_faults_model.py  
+  - Create a custom QAbstractTableModel, QSortFilterProxyModel, and QStyledItemDelegate for use in the Recent Faults tab
 
 
 ### mps_permit_panel.ui  
