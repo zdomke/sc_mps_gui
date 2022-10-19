@@ -1,10 +1,12 @@
-# SC MPS Display  
+# SC MPS GUI  
 
 ## Directory Structure  
-.  
+```
+sc_mps_gui  
 |-- README  
 |-- RELEASE_NOTES  
 |-- sc_mps_gui.bash  
+|  
 `-- gui/  
     |-- mps_cud_main.ui  
     |-- mps_gui_main.ui  
@@ -23,6 +25,7 @@
     |   |-- logic_model.py
     |   |-- configure_model.py
     |   `-- future_model.py  
+    |  
     `-- resources/  
         |-- __init__.py  
         |-- mps_permit_panel.ui  
@@ -48,7 +51,7 @@
 
 ### mps_gui_main.py & mps_gui_main.ui & mps_cud_main.ui 
   - This is the main display for the SC MPS Display  
-  - Contains a tab widget with 2 tabs:  
+  - Contains a tab widget with 3 tabs:  
     - The Summary tab contains 6 embedded displays, 2 'check engine lights', and 2 tables, one containing faulted PVs and one containing bypassed faults  
     - The Logic tab contains a table of all faults in the database  
       - The searchbar shows only faults containing that substring  
@@ -105,8 +108,6 @@
 
 ### future.py  
   - This file contains a python mixin to manage the Future Sight tab  
-  - This tab shows the user all faults regardless of ignore status  
-  - Allow the user to filter out faults based on ignore conditions and/or fault name  
   - Right-clicking a fault allows the user to open more details in the Logic tab  
   - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
 
