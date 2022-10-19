@@ -80,6 +80,7 @@ class LogicMixin:
             self.tbl_model.ign_signal.emit(value, row)
         elif pvname[-7:] == "_ACTIVE":
             self.tbl_model.act_signal.emit(value, row)
+            self.ftr_tbl_model.act_signal.emit(value, row)
 
     @Slot(int)
     def show_inactive(self, state):
