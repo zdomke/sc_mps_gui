@@ -54,7 +54,7 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
         if not cud_mode:
             self.configure_connections()
             self.selection_connections()
-            self.recent_connections()
             self.summ_connections()
             self.ignore_connections()
             self.app_status_connections()
+            self.recent_connections()
