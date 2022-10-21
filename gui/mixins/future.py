@@ -66,7 +66,7 @@ class FutureMixin:
         self.show_future_row_count()
         self.set_new_filter(-1, -1)
 
-    def ftr_connections(self):
+    def future_connections(self):
         """Establish PV and slot connections for the context menus and
         their action."""
         for i, fault in enumerate(self.faults):

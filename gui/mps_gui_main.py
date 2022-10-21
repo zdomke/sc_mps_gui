@@ -42,4 +42,4 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
             self.configure_connections()
             self.selection_connections()
             self.summ_connections()
-            self.ftr_connections()
+            self.future_connections()
