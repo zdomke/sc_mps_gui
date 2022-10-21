@@ -26,7 +26,7 @@ class SelectionDetailsMixin:
 
         self.state_pv = None
 
-    def selection_slot_connections(self):
+    def selection_connections(self):
         """Set up slot connections for the Selection Details section."""
         # Establish connections for the SelectionDetails widget
         self.ui.logic_tbl.selectionModel().selectionChanged.connect(
@@ -119,7 +119,7 @@ class SelectionDetailsMixin:
             if analog:
                 pv = f"{inp[0]}_T{i}_SCMPSC"
             else:
-                pv = f"{i}_SCMPSC"
+                pv = f"{inp[i]}_SCMPSC"
 
             item0 = CellItem(str(i))
             item1 = CellItem(pv + "C")
@@ -175,6 +175,8 @@ class SelectionDetailsMixin:
         self.state_pv = PV(f"{fault.name}_TEST",
                            callback=partial(self.state_change, row),
                            auto_monitor=DBE_VALUE)
+        if not self.state_pv.connected:
+            self.ui.dtls_state_lbl.setText("<Fault PVs Not Connected>")
 
     @Slot()
     def details_closed(self):

@@ -19,15 +19,14 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin):
             self.model = MPSModel()
 
         self.faults = self.model.faults
-        self.total_faults = len(self.faults)
 
         self.logic_init()
         self.selection_init()
         self.summary_init()
 
-        self.logic_slot_connections()
-        self.selection_slot_connections()
-        self.summ_slot_connections()
+        self.logic_connections()
+        self.selection_connections()
+        self.summ_connections()
 
     # ~~~~ PyDM UI File Management ~~~~ #
     @staticmethod

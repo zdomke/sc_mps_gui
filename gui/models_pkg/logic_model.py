@@ -7,6 +7,7 @@ from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
 from epics import PV
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import sessionmaker, scoped_session
+from models_pkg.mps_model import MPSModel
 from mps_database.models.fault_state import FaultState
 
 
@@ -14,37 +15,38 @@ class LogicTableModel(QAbstractTableModel):
     # Set class variables for the model. These are standard and static.
     font = QFont()
     font.setBold(True)
-    brushes = {"bg": QBrush(QColor(0, 0, 0, 165)),
-               "green": QBrush(QColor(0, 235, 0)),
-               "yellow": QBrush(QColor(235, 235, 0)),
-               "red": QBrush(QColor(255, 0, 0)),
-               "magenta": QBrush(QColor(235, 0, 235)),
-               "white": QBrush(QColor(255, 255, 255))}
+    brushes = {3: QBrush(QColor(255, 0, 0)),       # Red
+               2: QBrush(QColor(235, 235, 0)),     # Yellow
+               1: QBrush(QColor(235, 0, 235)),     # Magenta
+               0: QBrush(QColor(0, 235, 0)),       # Green
+               -1: QBrush(QColor(255, 255, 255)),  # White
+               -2: QBrush(QColor(0, 0, 0, 165))}   # Background
     hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR",
                "LASER", "SC_LESA", "Bypassed", "Bypass Exp Date", "Ignored",
                "Active"]
     dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
     logger = getLogger(__name__)
 
-    new_row_signal = Signal(int, int)
-    new_byp_signal = Signal(str, int, int)
-    new_ign_signal = Signal(int, int)
-    new_act_signal = Signal(int, int)
+    state_signal = Signal(int, int)
+    byp_signal = Signal(str, int, int)
+    ign_signal = Signal(int, int)
+    act_signal = Signal(int, int)
 
-    def __init__(self, parent, faults: list, sessionmaker: sessionmaker):
+    def __init__(self, parent, model: MPSModel, sessionmaker: sessionmaker):
         super(LogicTableModel, self).__init__(parent)
-        self.faults = faults
+        self.faults = model.faults
+        self.model = model
         self.session = scoped_session(sessionmaker)
 
         self._data = []
-        self._colors = []
+        self.status = []
         self.byp_ends = {}
 
         self.set_data()
-        self.new_row_signal.connect(self.set_row)
-        self.new_byp_signal.connect(self.set_byp)
-        self.new_ign_signal.connect(self.set_ign)
-        self.new_act_signal.connect(self.set_act)
+        self.state_signal.connect(self.set_state)
+        self.byp_signal.connect(self.set_byp)
+        self.ign_signal.connect(self.set_ign)
+        self.act_signal.connect(self.set_act)
 
     def rowCount(self, index: QModelIndex = QModelIndex()):
         """Return the number of rows in the model."""
@@ -52,9 +54,7 @@ class LogicTableModel(QAbstractTableModel):
 
     def columnCount(self, index: QModelIndex = QModelIndex()):
         """Return the number of columns in the model."""
-        if not self._data:
-            return 0
-        return len(self._data[0])
+        return len(self.hdr_lst)
 
     def data(self, index: QModelIndex, role: Qt.ItemDataRole):
         """Return the index's text, font, alignment, background color,
@@ -63,23 +63,21 @@ class LogicTableModel(QAbstractTableModel):
             return str(self._data[index.row()][index.column()])
         elif role == Qt.FontRole:
             return self.font
-        elif 0 < index.column() and role == Qt.TextAlignmentRole:
+        elif role == Qt.TextAlignmentRole and 0 < index.column():
             return Qt.AlignCenter
-        elif (0 < index.column() and role == Qt.BackgroundRole):
-            return self.brushes["bg"]
-        elif index.column() == 1 and role == Qt.ForegroundRole:
-            row_color = self._colors[index.row()]
-            if row_color in [self.brushes["white"], self.brushes["magenta"]]:
-                return row_color
-            return self.brushes["green"]
-        elif 1 < index.column() < 8 and role == Qt.ForegroundRole:
-            if index.data() == '-':
-                return self.brushes["green"]
-            return self._colors[index.row()]
-        elif 8 <= index.column() and role == Qt.ForegroundRole:
-            if index.data() == "?":
-                return self.brushes["white"]
-            return self.brushes["green"]
+        elif role == Qt.BackgroundRole and 0 < index.column():
+            return self.brushes[-2]
+        elif role == Qt.ForegroundRole:
+            col = index.column()
+            if col == 1:
+                status = self.status[index.row()]
+                color = status if status in [-1, 1] else 0
+            elif 2 <= col < 8:
+                color = 0 if index.data() == '-' else self.status[index.row()]
+            elif 8 <= col:
+                color = -1 if index.data() == '?' else 0
+            if col != 0:
+                return self.brushes[color]
 
     def headerData(self, section: int, orientation: Qt.Orientation,
                    role: Qt.ItemDataRole):
@@ -94,42 +92,39 @@ class LogicTableModel(QAbstractTableModel):
         description, the PV name, and default values for bypass, ignore,
         and active cells. Set the color to white (for disconnected)."""
         for fault in self.faults:
-            lst = []
-            lst.append(fault.description)
-            lst.append(fault.name)
-            for _ in range(6):
-                lst.append(fault.name)
-            lst.append("?")
-            lst.append("None")
-            lst.append(False)
-            lst.append("?")
-            pv = PV(f"{fault.name}_SCBYP_END")
+            lst = [fault.name] * len(self.hdr_lst)
+            lst[0] = fault.description
+            lst[1] = fault.name
+            lst[8] = "?"
+            lst[9] = "None"
+            lst[10] = False
+            lst[11] = "?"
+
             self._data.append(lst)
-            self._colors.append(self.brushes["white"])
+            self.status.append(-1)
+            pv = PV(f"{fault.name}_SCBYP_END")
             self.byp_ends[fault.name] = pv
 
     def is_row_faulted(self, row: int):
         """Check if row is faulted based on the color (red, yellow, and
         magenta are faulted) then confirm that fault is not ignored and
         is active."""
-        ret = not (self._colors[row] == self.brushes["green"]
-                   or self._colors[row] == self.brushes["white"])
-        return ret
+        return 0 < self.status[row]
 
     @Slot(int, int)
-    def set_row(self, value: int, row: int, **kw):
+    def set_state(self, value: int, row: int):
         """Called when a Fault's state changes. Set the Fault's
         description and beam destinations based on the current state."""
         if value == -1:
             # 'BROKEN' State: all cells should be "BROKEN" in magenta
             self._data[row][1:8] = ["BROKEN"] * 7
-            self._colors[row] = self.brushes["magenta"]
+            self.status[row] = 1
             self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
             return
         elif value == 0:
             # Analog 'OK' State: all cells should be represented as '-'
             self._data[row][1:8] = ["-"] * 7
-            self._colors[row] = self.brushes["green"]
+            self.status[row] = 0
             self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
             return
         try:
@@ -141,7 +136,7 @@ class LogicTableModel(QAbstractTableModel):
 
         self._data[row][1] = curr_state.device_state.description
         self._data[row][2:8] = ["-"] * 6
-        self._colors[row] = self.brushes["green"]
+        self.status[row] = 0
 
         for cl in curr_state.allowed_classes:
             if cl.beam_class.name == "Full":
@@ -149,30 +144,30 @@ class LogicTableModel(QAbstractTableModel):
 
             col = self.dest_order.index(cl.beam_destination.id)
             self._data[row][col] = cl.beam_class.name
-            if (self._colors[row] != self.brushes["red"]
+            if (self.status[row] != 3
                     and (cl.beam_class.name in ["Diagnostic", "Tuning"]
                          or "Hz" in cl.beam_class.name)):
-                self._colors[row] = self.brushes["yellow"]
+                self.status[row] = 2
             else:
-                self._colors[row] = self.brushes["red"]
-        self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
+                self.status[row] = 3
+        self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
 
     @Slot(str, int, int)
-    def set_byp(self, pvname: str, value: int, row: int, **kw):
+    def set_byp(self, pvname: str, value: int, row: int):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
         self._data[row][8] = "Y" if value else "N"
-        self._data[row][9] = self.byp_ends[pvname].get() if value else "None"
+        self._data[row][9] = self.byp_ends[pvname].value if value else "None"
         self.dataChanged.emit(self.index(row, 8), self.index(row, 9))
 
     @Slot(int, int)
-    def set_ign(self, value: int, row: int, **kw):
+    def set_ign(self, value: int, row: int):
         """Sets the 'ignored_hidden' cell for the given row."""
         self._data[row][10] = bool(value)
         self.dataChanged.emit(self.index(row, 10), self.index(row, 10))
 
     @Slot(int, int)
-    def set_act(self, value: int, row: int, **kw):
+    def set_act(self, value: int, row: int):
         """Sets the 'Active' cell for the given row."""
         self._data[row][11] = "Y" if value else "N"
         self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
@@ -185,34 +180,47 @@ class LogicSortFilterModel(QSortFilterProxyModel):
     def __init__(self, parent):
         super(LogicSortFilterModel, self).__init__(parent)
         self.filters = {}
+        self.exclusions = {}
 
     def setFilterByColumn(self, column: int, text: str):
         """Sets the filters to be used on individual columns."""
         self.filters[column] = text.lower()
         self.invalidateFilter()
 
+    def setExclusionByColumn(self, column: int, text: str):
+        """Sets filter to exclude from given column."""
+        self.exclusions[column] = text.lower()
+        self.invalidateFilter()
+
     def removeFilterByColumn(self, column: int):
         """Removes the filters from a given column."""
-        del self.filters[column]
-        self.invalidateFilter()
+        if column in self.filters:
+            del self.filters[column]
+            self.invalidateFilter()
+
+    def removeExclusionByColumn(self, column: int):
+        """Removes the filters from a given column."""
+        if column in self.exclusions:
+            del self.exclusions[column]
+            self.invalidateFilter()
 
     def lessThan(self, left: QModelIndex, right: QModelIndex):
         """Override QSortFilterProxyModel's lessThan method to sort
         columns to meet more personalized needs."""
         if 0 < left.column() < 8:
-            left_fltd = self.sourceModel().is_row_faulted(left.row())
-            right_fltd = self.sourceModel().is_row_faulted(right.row())
+            left_state = self.sourceModel().status[left.row()]
+            right_state = self.sourceModel().status[right.row()]
 
-            # Sort by which row is faulted. If both rows have the same
-            # fault status, then sort alphabetically. Set a lower
-            # priority for "BROKEN" faults
-            if left_fltd ^ right_fltd:
-                return left_fltd
-            if left.column() == 1:
-                return (self.sourceModel().index(left.row(), 0).data()
-                        < self.sourceModel().index(right.row(), 0).data())
-            return (left.data().replace('-', '~').replace("BROKEN", '}')
-                    < right.data().replace('-', '~').replace("BROKEN", '}'))
+            if left.column() != 1:
+                left_txt = left.data()
+                if left_state > 0 and left_txt == '-':
+                    left_state /= 10
+
+                right_txt = right.data()
+                if right_state > 0 and right_txt == '-':
+                    right_state /= 10
+
+            return right_state < left_state
         elif left.column() == 8 or left.column() == 11:
             return right.data() < left.data()
         else:
@@ -227,7 +235,14 @@ class LogicSortFilterModel(QSortFilterProxyModel):
                     return False
             else:
                 ind = self.sourceModel().index(source_row, col, source_parent)
-                if ind.isValid() and text not in str(ind.data()).lower():
+                if ind.isValid() and (text not in str(ind.data()).lower()):
+                    return False
+        for col, text in self.exclusions.items():
+            ind = self.sourceModel().index(source_row, col, source_parent)
+            if text in str(ind.data()).lower():
+                return False
+            for word in text.split(','):
+                if word.strip() in str(ind.data()).lower():
                     return False
         return True
 

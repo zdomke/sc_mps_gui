@@ -1,7 +1,7 @@
 from functools import partial
 from epics import PV
 from epics.dbr import DBE_VALUE
-from qtpy.QtCore import (Qt, Slot, QModelIndex)
+from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import QHeaderView
 from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
                                     LogicItemDelegate)
@@ -10,8 +10,8 @@ from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
 class LogicMixin:
     def logic_init(self):
         """Initializer for everything in Logic tab: Logic Table Model,
-        Logic Item Delegatw, and Selection Details."""
-        self.tbl_model = LogicTableModel(self, self.faults,
+        Logic Item Delegate, and Selection Details."""
+        self.tbl_model = LogicTableModel(self, self.model,
                                          self.model.config.Session)
         self.delegate = LogicItemDelegate(self)
 
@@ -21,8 +21,8 @@ class LogicMixin:
         self.ui.logic_tbl.setModel(self.logic_model)
         self.ui.logic_tbl.setSortingEnabled(True)
         self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-        self.ui.logic_tbl.hideColumn(9)
-        self.ui.logic_tbl.hideColumn(10)
+        for i in range(9, 11):
+            self.ui.logic_tbl.hideColumn(i)
         self.ui.logic_tbl.setItemDelegate(self.delegate)
 
         self.hdr = self.ui.logic_tbl.horizontalHeader()
@@ -37,6 +37,12 @@ class LogicMixin:
         self.ign_pvs = []
         self.act_pvs = []
 
+        self.show_inactive(0)
+        self.show_row_count()
+
+    def logic_connections(self):
+        """Establish PV and slot connections for the logic model and
+        logic tab."""
         for i, fault in enumerate(self.faults):
             state_pv = PV(f"{fault.name}_TEST",
                           callback=partial(self.send_new_val, row=i),
@@ -55,11 +61,6 @@ class LogicMixin:
                         auto_monitor=DBE_VALUE)
             self.act_pvs.append(act_pv)
 
-        self.show_row_count()
-        self.show_inactive(0)
-
-    def logic_slot_connections(self):
-        """Establish slot connections for the logic model and logic tab."""
         # Establish connections for inactive checkbox and filter box
         self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
         self.ui.logic_filter_edt.textChanged.connect(
@@ -73,13 +74,13 @@ class LogicMixin:
     def send_new_val(self, value: int, pvname: str, row: int, **kw):
         """Function to emit the appropriate signal based on the pvname."""
         if pvname[-5:] == "_TEST":
-            self.tbl_model.new_row_signal.emit(value, row)
+            self.tbl_model.state_signal.emit(value, row)
         elif pvname[-7:] == "_SCBYPS":
-            self.tbl_model.new_byp_signal.emit(pvname[:-7], value, row)
+            self.tbl_model.byp_signal.emit(pvname[:-7], value, row)
         elif pvname[-8:] == "_IGNORED":
-            self.tbl_model.new_ign_signal.emit(value, row)
+            self.tbl_model.ign_signal.emit(value, row)
         elif pvname[-7:] == "_ACTIVE":
-            self.tbl_model.new_act_signal.emit(value, row)
+            self.tbl_model.act_signal.emit(value, row)
 
     @Slot(int)
     def show_inactive(self, state):
@@ -97,6 +98,6 @@ class LogicMixin:
     def show_row_count(self):
         """When the number of displayed rows changes, update the row
         count at the bottom of the tab."""
-        rows = self.logic_model.rowCount(QModelIndex())
+        rows = self.logic_model.rowCount()
         self.ui.num_flts_lbl.setText("Displaying {} / {} Faults"
-                                     .format(rows, self.total_faults))
+                                     .format(rows, len(self.faults)))

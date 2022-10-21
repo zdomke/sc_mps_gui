@@ -1,4 +1,4 @@
-from qtpy.QtCore import (Slot, QPoint)
+from qtpy.QtCore import (Qt, Slot, QPoint)
 from qtpy.QtWidgets import (QHeaderView, QAction, QMenu, QTableView)
 from models_pkg.logic_model import LogicSortFilterModel
 
@@ -16,6 +16,7 @@ class SummaryMixin:
         self.ui.summ_tbl.setModel(self.summ_model)
         for i in range(8, 12):
             self.ui.summ_tbl.hideColumn(i)
+        self.ui.summ_tbl.sortByColumn(1, Qt.AscendingOrder)
         self.ui.summ_tbl.setItemDelegate(self.delegate)
 
         self.hdr = self.ui.summ_tbl.horizontalHeader()
@@ -42,7 +43,7 @@ class SummaryMixin:
         self.menu = QMenu(self)
         self.menu.addAction(self.action)
 
-    def summ_slot_connections(self):
+    def summ_connections(self):
         """Establish connections for the context menus and their action."""
         self.ui.summ_tbl.customContextMenuRequested.connect(
             self.custom_context_menu)
@@ -64,9 +65,12 @@ class SummaryMixin:
         """Create a custom context menu to open the Fault's Details."""
         table = self.sender()
         if not table or not isinstance(table, QTableView):
-            print("error", type(table))
+            self.logger.error("Internal error: "
+                              f"{type(table)} is not a QTableView")
             return
         index = table.indexAt(pos)
         if index.isValid():
-            self.selected_fault = table.model().mapToSource(index)
+            source_index = table.model().mapToSource(index)
+            self.selected_fault = (self.logic_model.sourceModel()
+                                   .index(source_index.row(), 0))
             self.menu.popup(table.viewport().mapToGlobal(pos))
