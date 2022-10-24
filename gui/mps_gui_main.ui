@@ -731,6 +731,11 @@
                 <string>SC_LESA</string>
                </property>
               </column>
+              <column>
+               <property name="text">
+                <string>LASER_HTR</string>
+               </property>
+              </column>
              </widget>
             </item>
             <item>

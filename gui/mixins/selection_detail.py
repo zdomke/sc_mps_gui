@@ -8,8 +8,6 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
 class SelectionDetailsMixin:
-    dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
-
     def selection_init(self):
         hdr = self.ui.dtls_truth_tbl.horizontalHeader()
         hdr.setSectionResizeMode(QHeaderView.Stretch)
@@ -82,7 +80,7 @@ class SelectionDetailsMixin:
         shifted_val = fault.fault.states[-1].device_state.value >> shift_val
         max_len = len(format(shifted_val, 'b'))
 
-        self.clear_table(self.ui.dtls_truth_tbl, len(fault.fault.states), 8)
+        self.clear_table(self.ui.dtls_truth_tbl, len(fault.fault.states), 9)
         for i, state in enumerate(fault.fault.states):
             item0 = CellItem(state.device_state.description)
 
@@ -99,7 +97,7 @@ class SelectionDetailsMixin:
                     continue
 
                 try:
-                    col = self.dest_order.index(cl.beam_destination.id)
+                    col = self.dest_lst.index(cl.beam_destination.name)
                 except ValueError:
                     self.logger.error("No Column for Destination "
                                       f"{cl.beam_destination.name}.")

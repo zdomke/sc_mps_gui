@@ -1,3 +1,5 @@
+R1.3.0  Zach Domke      10/24/2022
+        Add destination LASER_HTR
 R1.2.4  Zach Domke      10/24/2022
         Transition from PVs ending in "_FLT_TEST" -> "_FLT"
         Prepare for destinations without a column

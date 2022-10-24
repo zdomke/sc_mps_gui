@@ -22,9 +22,8 @@ class LogicTableModel(QAbstractTableModel):
                -1: QBrush(QColor(255, 255, 255)),  # White
                -2: QBrush(QColor(0, 0, 0, 165))}   # Background
     hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR",
-               "LASER", "SC_LESA", "Bypassed", "Bypass Exp Date", "Ignored",
-               "Active"]
-    dest_order = [-1, -1, 3, 2, 4, 5, 1, 6]
+               "LASER", "SC_LESA", "LASER_HTR", "Bypassed", "Bypass Exp Date",
+               "Ignored", "Active"]
     logger = getLogger(__name__)
 
     state_signal = Signal(int, int)
@@ -72,9 +71,9 @@ class LogicTableModel(QAbstractTableModel):
             if col == 1:
                 status = self.status[index.row()]
                 color = status if status in [-1, 1] else 0
-            elif 2 <= col < 8:
+            elif 2 <= col < 9:
                 color = 0 if index.data() == '-' else self.status[index.row()]
-            elif 8 <= col:
+            elif 9 <= col:
                 color = -1 if index.data() == '?' else 0
             if col != 0:
                 return self.brushes[color]
@@ -95,10 +94,10 @@ class LogicTableModel(QAbstractTableModel):
             lst = [fault.name] * len(self.hdr_lst)
             lst[0] = fault.description
             lst[1] = fault.name
-            lst[8] = "?"
-            lst[9] = "None"
-            lst[10] = False
-            lst[11] = "?"
+            lst[9] = "?"
+            lst[10] = "None"
+            lst[11] = False
+            lst[12] = "?"
 
             self._data.append(lst)
             self.status.append(-1)
@@ -117,15 +116,15 @@ class LogicTableModel(QAbstractTableModel):
         description and beam destinations based on the current state."""
         if value == -1:
             # 'BROKEN' State: all cells should be "BROKEN" in magenta
-            self._data[row][1:8] = ["BROKEN"] * 7
+            self._data[row][1:9] = ["BROKEN"] * 8
             self.status[row] = 1
-            self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
+            self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
             return
         elif value == 0:
             # Analog 'OK' State: all cells should be represented as '-'
-            self._data[row][1:8] = ["-"] * 7
+            self._data[row][1:9] = ["-"] * 8
             self.status[row] = 0
-            self.dataChanged.emit(self.index(row, 1), self.index(row, 7))
+            self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
             return
         try:
             curr_state = (self.session.query(FaultState)
@@ -135,7 +134,7 @@ class LogicTableModel(QAbstractTableModel):
                               "found in the SQLite DB")
 
         self._data[row][1] = curr_state.device_state.description
-        self._data[row][2:8] = ["-"] * 6
+        self._data[row][2:9] = ["-"] * 7
         self.status[row] = 0
 
         for cl in curr_state.allowed_classes:
@@ -143,7 +142,7 @@ class LogicTableModel(QAbstractTableModel):
                 continue
 
             try:
-                col = self.dest_order.index(cl.beam_destination.id)
+                col = self.hdr_lst.index(cl.beam_destination.name)
             except ValueError:
                 self.logger.error("No Column for Destination "
                                   f"{cl.beam_destination.name}.")
@@ -161,21 +160,21 @@ class LogicTableModel(QAbstractTableModel):
     def set_byp(self, pvname: str, value: int, row: int):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
-        self._data[row][8] = "Y" if value else "N"
-        self._data[row][9] = self.byp_ends[pvname].value if value else "None"
-        self.dataChanged.emit(self.index(row, 8), self.index(row, 9))
+        self._data[row][9] = "Y" if value else "N"
+        self._data[row][10] = self.byp_ends[pvname].value if value else "None"
+        self.dataChanged.emit(self.index(row, 9), self.index(row, 10))
 
     @Slot(int, int)
     def set_ign(self, value: int, row: int):
         """Sets the 'ignored_hidden' cell for the given row."""
-        self._data[row][10] = bool(value)
-        self.dataChanged.emit(self.index(row, 10), self.index(row, 10))
+        self._data[row][11] = bool(value)
+        self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
 
     @Slot(int, int)
     def set_act(self, value: int, row: int):
         """Sets the 'Active' cell for the given row."""
-        self._data[row][11] = "Y" if value else "N"
-        self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
+        self._data[row][12] = "Y" if value else "N"
+        self.dataChanged.emit(self.index(row, 12), self.index(row, 12))
 
 
 class LogicSortFilterModel(QSortFilterProxyModel):
@@ -212,7 +211,7 @@ class LogicSortFilterModel(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex):
         """Override QSortFilterProxyModel's lessThan method to sort
         columns to meet more personalized needs."""
-        if 0 < left.column() < 8:
+        if 0 < left.column() < 9:
             left_state = self.sourceModel().status[left.row()]
             right_state = self.sourceModel().status[right.row()]
 
@@ -226,7 +225,7 @@ class LogicSortFilterModel(QSortFilterProxyModel):
                     right_state /= 10
 
             return right_state < left_state
-        elif left.column() == 8 or left.column() == 11:
+        elif left.column() == 9 or left.column() == 12:
             return right.data() < left.data()
         else:
             return left.data() < right.data()

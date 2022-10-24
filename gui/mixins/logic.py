@@ -21,7 +21,7 @@ class LogicMixin:
         self.ui.logic_tbl.setModel(self.logic_model)
         self.ui.logic_tbl.setSortingEnabled(True)
         self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-        for i in range(9, 11):
+        for i in range(10, 12):
             self.ui.logic_tbl.hideColumn(i)
         self.ui.logic_tbl.setItemDelegate(self.delegate)
 
@@ -29,8 +29,8 @@ class LogicMixin:
         self.hdr.setSectionResizeMode(QHeaderView.Interactive)
         self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
         self.hdr.resizeSection(1, 125)
-        self.hdr.resizeSection(8, 70)
-        self.hdr.resizeSection(11, 70)
+        self.hdr.resizeSection(9, 70)
+        self.hdr.resizeSection(12, 70)
 
         self.state_pvs = []
         self.byp_pvs = []
@@ -88,11 +88,11 @@ class LogicMixin:
         the inactive faults are shown. Only show faults that are active,
         this not including faults that could not establish a connection."""
         if not state:
-            self.ui.logic_tbl.hideColumn(11)
-            self.logic_model.setFilterByColumn(11, "Y")
+            self.ui.logic_tbl.hideColumn(12)
+            self.logic_model.setFilterByColumn(12, "Y")
         else:
-            self.ui.logic_tbl.showColumn(11)
-            self.logic_model.removeFilterByColumn(11)
+            self.ui.logic_tbl.showColumn(12)
+            self.logic_model.removeFilterByColumn(12)
 
     @Slot()
     def show_row_count(self):

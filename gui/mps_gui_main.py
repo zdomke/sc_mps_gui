@@ -8,6 +8,9 @@ from mixins.selection_detail import SelectionDetailsMixin
 
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin):
+    dest_lst = ["SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR", "LASER",
+                "SC_LESA", "LASER_HTR"]
+
     def __init__(self, parent=None, args=[], macros=None):
         super(MpsGuiDisplay, self).__init__(parent=parent, args=args,
                                             macros=macros)
