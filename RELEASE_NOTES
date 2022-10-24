@@ -1,3 +1,6 @@
+R1.2.4  Zach Domke      10/24/2022
+        Transition from PVs ending in "_FLT_TEST" -> "_FLT"
+        Prepare for destinations without a column
 R1.2.3  Zach Domke      10/21/2022
         Changes to Logic Table Model to how states are managed
         Fix Selection Details bug in the PV table

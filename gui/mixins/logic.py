@@ -44,7 +44,7 @@ class LogicMixin:
         """Establish PV and slot connections for the logic model and
         logic tab."""
         for i, fault in enumerate(self.faults):
-            state_pv = PV(f"{fault.name}_TEST",
+            state_pv = PV(fault.name,
                           callback=partial(self.send_new_val, row=i),
                           auto_monitor=DBE_VALUE)
             self.state_pvs.append(state_pv)
@@ -73,7 +73,7 @@ class LogicMixin:
 
     def send_new_val(self, value: int, pvname: str, row: int, **kw):
         """Function to emit the appropriate signal based on the pvname."""
-        if pvname[-5:] == "_TEST":
+        if pvname[-4:] == "_FLT":
             self.tbl_model.state_signal.emit(value, row)
         elif pvname[-7:] == "_SCBYPS":
             self.tbl_model.byp_signal.emit(pvname[:-7], value, row)

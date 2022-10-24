@@ -98,7 +98,12 @@ class SelectionDetailsMixin:
                 if cl.beam_class.name == "Full":
                     continue
 
-                col = self.dest_order.index(cl.beam_destination.id)
+                try:
+                    col = self.dest_order.index(cl.beam_destination.id)
+                except ValueError:
+                    self.logger.error("No Column for Destination "
+                                      f"{cl.beam_destination.name}.")
+                    continue
                 item = CellItem(cl.beam_class.name)
                 self.ui.dtls_truth_tbl.setItem(i, col, item)
 
@@ -172,7 +177,7 @@ class SelectionDetailsMixin:
         if self.state_pv:
             self.state_pv.disconnect()
         row = indices[0].row()
-        self.state_pv = PV(f"{fault.name}_TEST",
+        self.state_pv = PV(fault.name,
                            callback=partial(self.state_change, row),
                            auto_monitor=DBE_VALUE)
         if not self.state_pv.connected:

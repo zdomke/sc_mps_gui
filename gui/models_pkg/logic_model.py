@@ -142,7 +142,12 @@ class LogicTableModel(QAbstractTableModel):
             if cl.beam_class.name == "Full":
                 continue
 
-            col = self.dest_order.index(cl.beam_destination.id)
+            try:
+                col = self.dest_order.index(cl.beam_destination.id)
+            except ValueError:
+                self.logger.error("No Column for Destination "
+                                  f"{cl.beam_destination.name}.")
+                continue
             self._data[row][col] = cl.beam_class.name
             if (self.status[row] != 3
                     and (cl.beam_class.name in ["Diagnostic", "Tuning"]
