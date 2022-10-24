@@ -97,7 +97,7 @@ class SelectionDetailsMixin:
                     continue
 
                 try:
-                    col = self.dest_lst.index(cl.beam_destination.name)
+                    col = 2 + self.dest_lst.index(cl.beam_destination.name)
                 except ValueError:
                     self.logger.error("No Column for Destination "
                                       f"{cl.beam_destination.name}.")
