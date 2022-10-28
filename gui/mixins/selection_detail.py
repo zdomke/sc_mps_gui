@@ -9,6 +9,9 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 class SelectionDetailsMixin:
     def selection_init(self):
+        self.dtl_hdr = ["State", "Value"] + self.model.dest_lst
+        self.ui.dtls_truth_tbl.setColumnCount(len(self.dtl_hdr))
+        self.ui.dtls_truth_tbl.setHorizontalHeaderLabels(self.dtl_hdr)
         hdr = self.ui.dtls_truth_tbl.horizontalHeader()
         hdr.setSectionResizeMode(QHeaderView.Stretch)
         hdr.setSectionResizeMode(0, QHeaderView.Interactive)
@@ -80,7 +83,8 @@ class SelectionDetailsMixin:
         shifted_val = fault.fault.states[-1].device_state.value >> shift_val
         max_len = len(format(shifted_val, 'b'))
 
-        self.clear_table(self.ui.dtls_truth_tbl, len(fault.fault.states), 9)
+        cols = len(self.dtl_hdr)
+        self.clear_table(self.ui.dtls_truth_tbl, len(fault.fault.states), cols)
         for i, state in enumerate(fault.fault.states):
             item0 = CellItem(state.device_state.description)
 
@@ -96,12 +100,7 @@ class SelectionDetailsMixin:
                 if cl.beam_class.name == "Full":
                     continue
 
-                try:
-                    col = 2 + self.dest_lst.index(cl.beam_destination.name)
-                except ValueError:
-                    self.logger.error("No Column for Destination "
-                                      f"{cl.beam_destination.name}.")
-                    continue
+                col = self.dtl_hdr.index(cl.beam_destination.name)
                 item = CellItem(cl.beam_class.name)
                 self.ui.dtls_truth_tbl.setItem(i, col, item)
 
@@ -167,7 +166,7 @@ class SelectionDetailsMixin:
         if not indices:
             indices = previous.indexes()
         row_ind = self.logic_model.mapToSource(indices[0])
-        fault = self.faults[row_ind.row()]
+        fault = self.model.faults[row_ind.row()]
         self.set_fault_details(fault)
         if not self.ui.logic_spltr.sizes()[1]:
             self.ui.logic_spltr.setSizes(self.splitter_state)

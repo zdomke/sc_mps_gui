@@ -21,9 +21,6 @@ class LogicTableModel(QAbstractTableModel):
                0: QBrush(QColor(0, 235, 0)),       # Green
                -1: QBrush(QColor(255, 255, 255)),  # White
                -2: QBrush(QColor(0, 0, 0, 165))}   # Background
-    hdr_lst = ["Fault", "State", "SC_BSYD", "SC_DIAG0", "SC_HXR", "SC_SXR",
-               "LASER", "SC_LESA", "LASER_HTR", "Bypassed", "Bypass Exp Date",
-               "Ignored", "Active"]
     logger = getLogger(__name__)
 
     state_signal = Signal(int, int)
@@ -33,9 +30,16 @@ class LogicTableModel(QAbstractTableModel):
 
     def __init__(self, parent, model: MPSModel, sessionmaker: sessionmaker):
         super(LogicTableModel, self).__init__(parent)
-        self.faults = model.faults
         self.model = model
         self.session = scoped_session(sessionmaker)
+
+        self.hdr_lst = (["Fault", "State"] + self.model.dest_lst
+                        + ["Bypassed", "Bypass Exp Date", "Ignored", "Active"])
+
+        self.bind = self.hdr_lst.index("Bypassed")
+        self.beind = self.hdr_lst.index("Bypass Exp Date")
+        self.iind = self.hdr_lst.index("Ignored")
+        self.aind = self.hdr_lst.index("Active")
 
         self._data = []
         self.status = []
@@ -71,9 +75,9 @@ class LogicTableModel(QAbstractTableModel):
             if col == 1:
                 status = self.status[index.row()]
                 color = status if status in [-1, 1] else 0
-            elif 2 <= col < 9:
+            elif 2 <= col < self.bind:
                 color = 0 if index.data() == '-' else self.status[index.row()]
-            elif 9 <= col:
+            elif self.bind <= col:
                 color = -1 if index.data() == '?' else 0
             if col != 0:
                 return self.brushes[color]
@@ -90,14 +94,14 @@ class LogicTableModel(QAbstractTableModel):
         """Set initial data for each fault. Populate each fault with the
         description, the PV name, and default values for bypass, ignore,
         and active cells. Set the color to white (for disconnected)."""
-        for fault in self.faults:
+        for fault in self.model.faults:
             lst = [fault.name] * len(self.hdr_lst)
             lst[0] = fault.description
             lst[1] = fault.name
-            lst[9] = "?"
-            lst[10] = "None"
-            lst[11] = False
-            lst[12] = "?"
+            lst[self.bind] = "?"
+            lst[self.beind] = "None"
+            lst[self.iind] = False
+            lst[self.aind] = "?"
 
             self._data.append(lst)
             self.status.append(-1)
@@ -114,67 +118,64 @@ class LogicTableModel(QAbstractTableModel):
     def set_state(self, value: int, row: int):
         """Called when a Fault's state changes. Set the Fault's
         description and beam destinations based on the current state."""
-        if value == -1:
-            # 'BROKEN' State: all cells should be "BROKEN" in magenta
-            self._data[row][1:9] = ["BROKEN"] * 8
-            self.status[row] = 1
-            self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
-            return
-        elif value == 0:
+        self._data[row][1:self.bind] = ["-"] * (self.bind - 1)
+        self.status[row] = 0
+
+        if value == 0:
             # Analog 'OK' State: all cells should be represented as '-'
-            self._data[row][1:9] = ["-"] * 8
-            self.status[row] = 0
-            self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
+            self.dataChanged.emit(self.index(row, 1),
+                                  self.index(row, self.bind - 1))
             return
+
         try:
             curr_state = (self.session.query(FaultState)
                           .filter(FaultState.id == value).one())
         except NoResultFound:
-            self.logger.error(f"No Result: FaultState.id == '{value}' was not "
-                              "found in the SQLite DB")
-
-        self._data[row][1] = curr_state.device_state.description
-        self._data[row][2:9] = ["-"] * 7
-        self.status[row] = 0
+            # 'BROKEN' State: all cells should be "BROKEN" in magenta
+            self._data[row][1:self.bind] = ["BROKEN"] * (self.bind - 1)
+            self.status[row] = 1
+            self.dataChanged.emit(self.index(row, 1),
+                                  self.index(row, self.bind - 1))
+            return
+        else:
+            self._data[row][1] = curr_state.device_state.description
 
         for cl in curr_state.allowed_classes:
             if cl.beam_class.name == "Full":
                 continue
 
-            try:
-                col = self.hdr_lst.index(cl.beam_destination.name)
-            except ValueError:
-                self.logger.error("No Column for Destination "
-                                  f"{cl.beam_destination.name}.")
-                continue
+            col = self.hdr_lst.index(cl.beam_destination.name)
             self._data[row][col] = cl.beam_class.name
-            if (self.status[row] != 3
-                    and (cl.beam_class.name in ["Diagnostic", "Tuning"]
-                         or "Hz" in cl.beam_class.name)):
-                self.status[row] = 2
-            else:
-                self.status[row] = 3
-        self.dataChanged.emit(self.index(row, 1), self.index(row, 8))
+
+            is_yellow = "Hz" in cl.beam_class.name
+            is_yellow |= cl.beam_class.name in ["Diagnostic", "Tuning"]
+            self.status[row] = 2 if self.status[row] != 3 and is_yellow else 3
+        self.dataChanged.emit(self.index(row, 1),
+                              self.index(row, self.bind - 1))
 
     @Slot(str, int, int)
     def set_byp(self, pvname: str, value: int, row: int):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
-        self._data[row][9] = "Y" if value else "N"
-        self._data[row][10] = self.byp_ends[pvname].value if value else "None"
-        self.dataChanged.emit(self.index(row, 9), self.index(row, 10))
+        self._data[row][self.bind] = "Y" if value else "N"
+        self._data[row][self.beind] = (self.byp_ends[pvname].value
+                                       if value else "None")
+        self.dataChanged.emit(self.index(row, self.bind),
+                              self.index(row, self.beind))
 
     @Slot(int, int)
     def set_ign(self, value: int, row: int):
         """Sets the 'ignored_hidden' cell for the given row."""
-        self._data[row][11] = bool(value)
-        self.dataChanged.emit(self.index(row, 11), self.index(row, 11))
+        self._data[row][self.iind] = bool(value)
+        self.dataChanged.emit(self.index(row, self.iind),
+                              self.index(row, self.iind))
 
     @Slot(int, int)
     def set_act(self, value: int, row: int):
         """Sets the 'Active' cell for the given row."""
-        self._data[row][12] = "Y" if value else "N"
-        self.dataChanged.emit(self.index(row, 12), self.index(row, 12))
+        self._data[row][self.aind] = "Y" if value else "N"
+        self.dataChanged.emit(self.index(row, self.aind),
+                              self.index(row, self.aind))
 
 
 class LogicSortFilterModel(QSortFilterProxyModel):
@@ -211,7 +212,7 @@ class LogicSortFilterModel(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex):
         """Override QSortFilterProxyModel's lessThan method to sort
         columns to meet more personalized needs."""
-        if 0 < left.column() < 9:
+        if 0 < left.column() < self.sourceModel().bind:
             left_state = self.sourceModel().status[left.row()]
             right_state = self.sourceModel().status[right.row()]
 
@@ -225,7 +226,8 @@ class LogicSortFilterModel(QSortFilterProxyModel):
                     right_state /= 10
 
             return right_state < left_state
-        elif left.column() == 9 or left.column() == 12:
+        elif (left.column() == self.sourceModel().bind
+              or left.column() == self.sourceModel().aind):
             return right.data() < left.data()
         else:
             return left.data() < right.data()

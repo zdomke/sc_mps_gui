@@ -691,51 +691,6 @@
               <attribute name="verticalHeaderHighlightSections">
                <bool>false</bool>
               </attribute>
-              <column>
-               <property name="text">
-                <string>State</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Value</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>SC_BSYD</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>SC_DIAG0</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>SC_HXR</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>SC_SXR</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>LASER</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>SC_LESA</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>LASER_HTR</string>
-               </property>
-              </column>
              </widget>
             </item>
             <item>

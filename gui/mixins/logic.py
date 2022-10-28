@@ -21,7 +21,7 @@ class LogicMixin:
         self.ui.logic_tbl.setModel(self.logic_model)
         self.ui.logic_tbl.setSortingEnabled(True)
         self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-        for i in range(10, 12):
+        for i in range(self.tbl_model.beind, self.tbl_model.aind):
             self.ui.logic_tbl.hideColumn(i)
         self.ui.logic_tbl.setItemDelegate(self.delegate)
 
@@ -29,8 +29,8 @@ class LogicMixin:
         self.hdr.setSectionResizeMode(QHeaderView.Interactive)
         self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
         self.hdr.resizeSection(1, 125)
-        self.hdr.resizeSection(9, 70)
-        self.hdr.resizeSection(12, 70)
+        self.hdr.resizeSection(self.tbl_model.bind, 70)
+        self.hdr.resizeSection(self.tbl_model.aind, 70)
 
         self.state_pvs = []
         self.byp_pvs = []
@@ -43,7 +43,7 @@ class LogicMixin:
     def logic_connections(self):
         """Establish PV and slot connections for the logic model and
         logic tab."""
-        for i, fault in enumerate(self.faults):
+        for i, fault in enumerate(self.model.faults):
             state_pv = PV(fault.name,
                           callback=partial(self.send_new_val, row=i),
                           auto_monitor=DBE_VALUE)
@@ -88,11 +88,11 @@ class LogicMixin:
         the inactive faults are shown. Only show faults that are active,
         this not including faults that could not establish a connection."""
         if not state:
-            self.ui.logic_tbl.hideColumn(12)
-            self.logic_model.setFilterByColumn(12, "Y")
+            self.ui.logic_tbl.hideColumn(self.tbl_model.aind)
+            self.logic_model.setFilterByColumn(self.tbl_model.aind, "Y")
         else:
-            self.ui.logic_tbl.showColumn(12)
-            self.logic_model.removeFilterByColumn(12)
+            self.ui.logic_tbl.showColumn(self.tbl_model.aind)
+            self.logic_model.removeFilterByColumn(self.tbl_model.aind)
 
     @Slot()
     def show_row_count(self):
@@ -100,4 +100,4 @@ class LogicMixin:
         count at the bottom of the tab."""
         rows = self.logic_model.rowCount()
         self.ui.num_flts_lbl.setText("Displaying {} / {} Faults"
-                                     .format(rows, len(self.faults)))
+                                     .format(rows, len(self.model.faults)))

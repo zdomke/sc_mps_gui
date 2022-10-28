@@ -11,10 +11,10 @@ class SummaryMixin:
         self.summ_model = LogicSortFilterModel(self)
         self.summ_model.setSourceModel(self.tbl_model)
         self.summ_model.setFilterByColumn(1, "True")
-        self.summ_model.setFilterByColumn(11, "False")
-        self.summ_model.setFilterByColumn(12, "Y")
+        self.summ_model.setFilterByColumn(self.tbl_model.iind, "False")
+        self.summ_model.setFilterByColumn(self.tbl_model.aind, "Y")
         self.ui.summ_tbl.setModel(self.summ_model)
-        for i in range(9, 13):
+        for i in range(self.tbl_model.bind, self.tbl_model.aind + 1):
             self.ui.summ_tbl.hideColumn(i)
         self.ui.summ_tbl.sortByColumn(1, Qt.AscendingOrder)
         self.ui.summ_tbl.setItemDelegate(self.delegate)
@@ -27,11 +27,11 @@ class SummaryMixin:
         # Initialize the Bypass Table and Headers
         self.byp_model = LogicSortFilterModel(self)
         self.byp_model.setSourceModel(self.tbl_model)
-        self.byp_model.setFilterByColumn(9, "Y")
+        self.byp_model.setFilterByColumn(self.tbl_model.bind, "Y")
         self.ui.byp_tbl.setModel(self.byp_model)
-        for i in range(2, 13):
+        for i in range(2, self.tbl_model.aind + 1):
             self.ui.byp_tbl.hideColumn(i)
-        self.ui.byp_tbl.showColumn(10)
+        self.ui.byp_tbl.showColumn(self.tbl_model.beind)
         self.ui.byp_tbl.setItemDelegate(self.delegate)
 
         self.hdr = self.ui.byp_tbl.horizontalHeader()
