@@ -1,3 +1,5 @@
+R1.3.2  Zach Domke      10/31/2022
+        Fix bug in selection details that broke the Link Node button
 R1.3.1  Zach Domke      10/28/2022
         Add destination columns to tables dynamically
 R1.3.0  Zach Domke      10/24/2022

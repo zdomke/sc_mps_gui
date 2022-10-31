@@ -150,6 +150,7 @@ class SelectionDetailsMixin:
         ret_macros['LN'] = dev.card.link_node.lcls1_id
         ret_macros['AREA'] = dev.area.lower()
         ret_macros['AREAU'] = dev.area
+        return ret_macros
 
     @Slot()
     def save_split_state(self):
