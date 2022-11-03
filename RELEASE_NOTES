@@ -1,3 +1,7 @@
+R1.4.0  Zach Domke      11/03/2022
+        Add Threshold related display button to Selection Details panel for analog devices
+        Add spacer to the bottom of the Selection Details panel so info is not spaced out
+        In logic.py, add all PVs to one list rather than 4
 R1.3.3  Zach Domke      11/03/2022
         Faults with the FaultState.id == -1 show as "TIMEOUT"
         Faults with the FaultState.id not in the database show as "DB_ERROR"

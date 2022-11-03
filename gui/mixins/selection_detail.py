@@ -1,5 +1,6 @@
 from json import dumps
 from functools import partial
+from os.path import expandvars
 from qtpy.QtCore import (Qt, Slot, QItemSelection)
 from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
 from epics import PV
@@ -8,6 +9,12 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
 class SelectionDetailsMixin:
+    """Type map is used for device types and their PV representation."""
+    type_map = {'BPMS': 'BPM',
+                'TORO': 'CHRG',
+                'BLM': 'I0_LOSS',
+                'BACT': 'I0_BACT'}
+
     def selection_init(self):
         self.dtl_hdr = ["State", "Value"] + self.model.dest_lst
         self.ui.dtls_truth_tbl.setColumnCount(len(self.dtl_hdr))
@@ -48,6 +55,12 @@ class SelectionDetailsMixin:
         inp = self.model.fault_to_inp(fault.fault)
 
         # Set information at the top of the section
+        if dev.is_analog():
+            self.ui.dtls_thr_btn.show()
+            self.prep_thr_btn(fault, dev)
+        else:
+            self.ui.dtls_thr_btn.hide()
+
         self.ui.dtls_byp_btn.macros = dumps({"DEVICE_BYP": fault.name})
         self.ui.dtls_name_lbl.setText(fault.description)
 
@@ -59,6 +72,24 @@ class SelectionDetailsMixin:
         # Set cells in the Truth Table and PV Table
         self.pop_truth_table(fault)
         self.pop_pv_table(fault, dev, inp)
+
+    def prep_thr_btn(self, fault, dev):
+        """Populate the Threshold button with filename and macro data."""
+        mac = self.thr_macros(fault, dev)
+        if not mac:
+            self.ui.dtls_thr_btn.hide()
+            return
+
+        file = expandvars("$PYDM") + "/mps/"
+        if dev.device_type.name == "BPMS":
+            file += "mps_application_threshold_combined.ui"
+        elif (dev.device_type.name == "BLM"
+              and fault.name.split(':')[0] == "CBLM"):
+            file += "mps_cblm_thresholds.ui"
+        else:
+            file += "mps_application_threshold.ui"
+        self.ui.dtls_thr_btn.filenames = [file]
+        self.ui.dtls_thr_btn.macros = dumps(mac)
 
     def clear_table(self, table, row_count, col_count):
         """Clear the contents of the Truth Table or PV Table."""
@@ -143,14 +174,34 @@ class SelectionDetailsMixin:
             node_btn = NodeButton(btn_txt, dumps(dev_macros))
             self.ui.dtls_pv_tbl.setCellWidget(i, 3, node_btn)
 
+    def thr_macros(self, fault, dev):
+        """Populate the macros dict used by the Threshold button."""
+        dev_type = dev.device_type.name
+        if dev_type not in self.type_map.keys():
+            return {}
+
+        bpm2 = ""
+        if dev_type == "BPMS" and len(dev.card.devices) > 1:
+            for d in dev.card.devices:
+                if d is dev:
+                    continue
+                bpm2 = self.model.name.getDeviceName(d)
+
+        mac = {}
+        mac['MPS_PREFIX'] = dev.card.get_pv_name()
+        mac['DEVICE'] = fault.name[:fault.name.rfind(':')]
+        mac['THR'] = self.type_map[dev_type]
+        mac['BPM2'] = bpm2
+        return mac
+
     def node_macros(self, dev):
         """Populate the macros dict used by the PV table."""
-        ret_macros = {}
-        ret_macros['ID'] = dev.card.link_node.lcls1_id
-        ret_macros['LN'] = dev.card.link_node.lcls1_id
-        ret_macros['AREA'] = dev.area.lower()
-        ret_macros['AREAU'] = dev.area
-        return ret_macros
+        mac = {}
+        mac['ID'] = dev.card.link_node.lcls1_id
+        mac['LN'] = dev.card.link_node.lcls1_id
+        mac['AREA'] = dev.area.lower()
+        mac['AREAU'] = dev.area
+        return mac
 
     @Slot()
     def save_split_state(self):
@@ -189,6 +240,7 @@ class SelectionDetailsMixin:
 
     # State change Callback
     def state_change(self, row, **kw):
+        """On state change, change the Current State label."""
         ind = self.logic_model.index(row, 1)
         text = ind.data()
         self.ui.dtls_state_lbl.setText(text)

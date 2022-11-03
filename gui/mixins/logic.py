@@ -32,10 +32,7 @@ class LogicMixin:
         self.hdr.resizeSection(self.tbl_model.bind, 70)
         self.hdr.resizeSection(self.tbl_model.aind, 70)
 
-        self.state_pvs = []
-        self.byp_pvs = []
-        self.ign_pvs = []
-        self.act_pvs = []
+        self.pvs = []
 
         self.show_inactive(0)
         self.show_row_count()
@@ -47,19 +44,19 @@ class LogicMixin:
             state_pv = PV(fault.name,
                           callback=partial(self.send_new_val, row=i),
                           auto_monitor=DBE_VALUE)
-            self.state_pvs.append(state_pv)
+            self.pvs.append(state_pv)
             byp_pv = PV(f"{fault.name}_SCBYPS",
                         callback=partial(self.send_new_val, row=i),
                         auto_monitor=DBE_VALUE)
-            self.byp_pvs.append(byp_pv)
+            self.pvs.append(byp_pv)
             ign_pv = PV(f"{fault.name}_IGNORED",
                         callback=partial(self.send_new_val, row=i),
                         auto_monitor=DBE_VALUE)
-            self.ign_pvs.append(ign_pv)
+            self.pvs.append(ign_pv)
             act_pv = PV(f"{fault.name}_ACTIVE",
                         callback=partial(self.send_new_val, row=i),
                         auto_monitor=DBE_VALUE)
-            self.act_pvs.append(act_pv)
+            self.pvs.append(act_pv)
 
         # Establish connections for inactive checkbox and filter box
         self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
