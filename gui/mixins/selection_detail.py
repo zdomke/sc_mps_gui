@@ -1,5 +1,6 @@
 from json import dumps
 from functools import partial
+from os.path import expandvars
 from qtpy.QtCore import (Qt, Slot, QItemSelection)
 from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
 from epics import PV
@@ -48,6 +49,12 @@ class SelectionDetailsMixin:
         inp = self.model.fault_to_inp(fault.fault)
 
         # Set information at the top of the section
+        if dev.is_analog():
+            self.ui.dtls_thr_btn.show()
+            self.prep_thr_btn(fault, dev)
+        else:
+            self.ui.dtls_thr_btn.hide()
+
         self.ui.dtls_byp_btn.macros = dumps({"DEVICE_BYP": fault.name})
         self.ui.dtls_name_lbl.setText(fault.description)
 
@@ -59,6 +66,23 @@ class SelectionDetailsMixin:
         # Set cells in the Truth Table and PV Table
         self.pop_truth_table(fault)
         self.pop_pv_table(fault, dev, inp)
+
+    def prep_thr_btn(self, fault, dev):
+        mac = self.thr_macros(fault, dev)
+        if not mac:
+            self.ui.dtls_thr_btn.hide()
+            return
+
+        file = expandvars("$PYDM") + "/mps/"
+        if dev.device_type.name == "BPMS":
+            file += "mps_application_threshold_combined.ui"
+        elif (dev.device_type.name == "BLM"
+              and fault.name.split(':')[0] == "CBLM"):
+            file += "mps_cblm_threshold.ui"
+        else:
+            file += "mps_application_threshold.ui"
+        self.ui.dtls_thr_btn.filenames = [file]
+        self.ui.dtls_thr_btn.macros = dumps(mac)
 
     def clear_table(self, table, row_count, col_count):
         """Clear the contents of the Truth Table or PV Table."""
@@ -143,14 +167,34 @@ class SelectionDetailsMixin:
             node_btn = NodeButton(btn_txt, dumps(dev_macros))
             self.ui.dtls_pv_tbl.setCellWidget(i, 3, node_btn)
 
+    def thr_macros(self, fault, dev):
+        """Populate the macros dict used by the Threshold button."""
+        mac = {}
+        dtype = dev.device_type.name
+        if dtype == "BPMS":
+            mac['THR'] = "BPM"
+        elif dtype == "TORO":
+            mac['THR'] = "CHRG"
+        elif dtype == "BACT":
+            mac['THR'] = "I0_BACT"
+        elif dtype == "BLM":
+            mac['THR'] = "I0_LOSS"
+        else:
+            return {}
+
+        mac['DEVICE'] = fault.name[:fault.name.rfind(':')]
+        mac['MPS_PREFIX'] = dev.card.get_pv_name()
+        mac['BPM2'] = ""
+        return mac
+
     def node_macros(self, dev):
         """Populate the macros dict used by the PV table."""
-        ret_macros = {}
-        ret_macros['ID'] = dev.card.link_node.lcls1_id
-        ret_macros['LN'] = dev.card.link_node.lcls1_id
-        ret_macros['AREA'] = dev.area.lower()
-        ret_macros['AREAU'] = dev.area
-        return ret_macros
+        mac = {}
+        mac['ID'] = dev.card.link_node.lcls1_id
+        mac['LN'] = dev.card.link_node.lcls1_id
+        mac['AREA'] = dev.area.lower()
+        mac['AREAU'] = dev.area
+        return mac
 
     @Slot()
     def save_split_state(self):
