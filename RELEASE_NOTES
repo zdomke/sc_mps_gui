@@ -1,4 +1,4 @@
-R1.4.0  Zach Domke      11/02/2022
+R1.4.0  Zach Domke      11/03/2022
         Add Threshold related display button to Selection Details panel for analog devices
         Add spacer to the bottom of the Selection Details panel so info is not spaced out
         In logic.py, add all PVs to one list rather than 4

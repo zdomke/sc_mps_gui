@@ -9,6 +9,12 @@ from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
 
 
 class SelectionDetailsMixin:
+    """Type map is used for device types and their PV representation."""
+    type_map = {'BPMS': 'BPM',
+                'TORO': 'CHRG',
+                'BLM': 'I0_LOSS',
+                'BACT': 'I0_BACT'}
+
     def selection_init(self):
         self.dtl_hdr = ["State", "Value"] + self.model.dest_lst
         self.ui.dtls_truth_tbl.setColumnCount(len(self.dtl_hdr))
@@ -68,6 +74,7 @@ class SelectionDetailsMixin:
         self.pop_pv_table(fault, dev, inp)
 
     def prep_thr_btn(self, fault, dev):
+        """Populate the Threshold button with filename and macro data."""
         mac = self.thr_macros(fault, dev)
         if not mac:
             self.ui.dtls_thr_btn.hide()
@@ -78,7 +85,7 @@ class SelectionDetailsMixin:
             file += "mps_application_threshold_combined.ui"
         elif (dev.device_type.name == "BLM"
               and fault.name.split(':')[0] == "CBLM"):
-            file += "mps_cblm_threshold.ui"
+            file += "mps_cblm_thresholds.ui"
         else:
             file += "mps_application_threshold.ui"
         self.ui.dtls_thr_btn.filenames = [file]
@@ -169,22 +176,22 @@ class SelectionDetailsMixin:
 
     def thr_macros(self, fault, dev):
         """Populate the macros dict used by the Threshold button."""
-        mac = {}
-        dtype = dev.device_type.name
-        if dtype == "BPMS":
-            mac['THR'] = "BPM"
-        elif dtype == "TORO":
-            mac['THR'] = "CHRG"
-        elif dtype == "BACT":
-            mac['THR'] = "I0_BACT"
-        elif dtype == "BLM":
-            mac['THR'] = "I0_LOSS"
-        else:
+        dev_type = dev.device_type.name
+        if dev_type not in self.type_map.keys():
             return {}
 
-        mac['DEVICE'] = fault.name[:fault.name.rfind(':')]
+        bpm2 = ""
+        if dev_type == "BPMS" and len(dev.card.devices) > 1:
+            for d in dev.card.devices:
+                if d is dev:
+                    continue
+                bpm2 = self.model.name.getDeviceName(d)
+
+        mac = {}
         mac['MPS_PREFIX'] = dev.card.get_pv_name()
-        mac['BPM2'] = ""
+        mac['DEVICE'] = fault.name[:fault.name.rfind(':')]
+        mac['THR'] = self.type_map[dev_type]
+        mac['BPM2'] = bpm2
         return mac
 
     def node_macros(self, dev):
@@ -233,6 +240,7 @@ class SelectionDetailsMixin:
 
     # State change Callback
     def state_change(self, row, **kw):
+        """On state change, change the Current State label."""
         ind = self.logic_model.index(row, 1)
         text = ind.data()
         self.ui.dtls_state_lbl.setText(text)
