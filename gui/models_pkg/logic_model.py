@@ -126,13 +126,20 @@ class LogicTableModel(QAbstractTableModel):
             self.dataChanged.emit(self.index(row, 1),
                                   self.index(row, self.bind - 1))
             return
+        elif value == -1:
+            # Timeout State: all cells should be represented as 'TIMEOUT'
+            self._data[row][1:self.bind] = ["TIMEOUT"] * (self.bind - 1)
+            self.status[row] = 1
+            self.dataChanged.emit(self.index(row, 1),
+                                  self.index(row, self.bind - 1))
+            return
 
         try:
             curr_state = (self.session.query(FaultState)
                           .filter(FaultState.id == value).one())
         except NoResultFound:
-            # 'BROKEN' State: all cells should be "BROKEN" in magenta
-            self._data[row][1:self.bind] = ["BROKEN"] * (self.bind - 1)
+            # Database Error State: all cells should be "DB_ERROR"
+            self._data[row][1:self.bind] = ["DB_ERROR"] * (self.bind - 1)
             self.status[row] = 1
             self.dataChanged.emit(self.index(row, 1),
                                   self.index(row, self.bind - 1))
