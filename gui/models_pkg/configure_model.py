@@ -19,12 +19,14 @@ class ConfigureListModel(QAbstractListModel):
 
     def add_datum(self, datum: Device):
         ind = len(self._data)
-        self.beginInsertRows(self.parent(), ind, ind)
+        self.beginInsertRows(QModelIndex(), ind, ind)
         self._data.append(datum)
-        self.endInsertRows(self.parent(), ind, ind)
+        self.endInsertRows()
 
-    def remove_datum(self, datum: Device):
-        ind = self._data.index(datum)
-        self.beginRemoveRows(self.parent(), ind, ind)
-        self._data.remove(datum)
-        self.beginRemoveRows(self.parent(), ind, ind)
+    def remove_datum(self, index: int):
+        self.beginRemoveRows(QModelIndex(), index, index)
+        del self._data[index]
+        self.endRemoveRows()
+
+    def get_device(self, index: int):
+        return self._data[index]

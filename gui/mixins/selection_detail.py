@@ -211,12 +211,12 @@ class SelectionDetailsMixin:
             self.splitter_state = sizes
 
     @Slot(QItemSelection, QItemSelection)
-    def selected(self, current, previous):
+    def selected(self, selected, deselected):
         """Slot called when a row is selected. This will change the
         SelectionDetails widget and open it if it's hidden."""
-        indices = current.indexes()
+        indices = selected.indexes()
         if not indices:
-            indices = previous.indexes()
+            indices = deselected.indexes()
         row_ind = self.logic_model.mapToSource(indices[0])
         fault = self.model.faults[row_ind.row()]
         self.set_fault_details(fault)

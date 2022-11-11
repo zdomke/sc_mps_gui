@@ -1,4 +1,5 @@
-from qtpy.QtCore import (Qt, QSortFilterProxyModel)
+from qtpy.QtCore import (Qt, Slot, QModelIndex, QItemSelection,
+                         QSortFilterProxyModel)
 from mps_database.models import Device
 from models_pkg.configure_model import (ConfigureListModel)
 
@@ -32,7 +33,22 @@ class ConfigureMixin:
         (self.ui.sel_devs_edt.textChanged
             .connect(self.sel_devs_filter.setFilterFixedString))
 
-    # @Slot(QItemSelection, QItemSelection)
-    # def item_selected(self, selected, deselected):
-    #     sel_ind = self.ui.all_devs_list.selectionModel().selectedIndexes()
-    #     self.conf_index.set_filter([i.row() for i in sel_ind])
+        (self.ui.all_devs_list.selectionModel().selectionChanged
+            .connect(self.dev_selected))
+        self.ui.sel_devs_list.clicked.connect(self.dev_deselect)
+
+    @Slot(QItemSelection, QItemSelection)
+    def dev_selected(self, selected: QItemSelection, deselected):
+        indices = selected.indexes()
+        for ind in indices:
+            dev_id = self.all_devs_filter.mapToSource(ind).row()
+            dev = self.all_devs_model.get_device(dev_id)
+            self.sel_devs_model.add_datum(dev)
+
+    @Slot(QModelIndex)
+    def dev_deselect(self, index: QModelIndex):
+        if not index.isValid():
+            return
+
+        dev_id = self.sel_devs_filter.mapToSource(index).row()
+        self.sel_devs_model.remove_datum(dev_id)
