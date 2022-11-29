@@ -57,6 +57,7 @@ class ConfigureTableModel(QAbstractTableModel):
         self.type_dict[dev_type] += 1
 
     def add_datum(self, datum: Device):
+        """Add a single device to the model."""
         if datum in self._data:
             return
 
@@ -69,6 +70,7 @@ class ConfigureTableModel(QAbstractTableModel):
         self.table_changed.emit(self.table_type())
 
     def remove_type(self, dev_type: str):
+        """Remove the given device type from the type dictionary."""
         if dev_type not in self.type_dict:
             return
         self.type_dict[dev_type] -= 1
@@ -76,6 +78,7 @@ class ConfigureTableModel(QAbstractTableModel):
             del self.type_dict[dev_type]
 
     def remove_datum(self, index: int):
+        """Remove a single device from the model."""
         datum = self._data[index]
         self.beginRemoveRows(QModelIndex(), index, index)
         del self._data[index]
@@ -85,6 +88,7 @@ class ConfigureTableModel(QAbstractTableModel):
         self.table_changed.emit(self.table_type())
 
     def clear_data(self):
+        """Remove all devices and device types from the model."""
         ind = len(self._data)
         self.beginRemoveRows(QModelIndex(), 0, ind)
         self._data = []
@@ -94,4 +98,5 @@ class ConfigureTableModel(QAbstractTableModel):
         self.table_changed.emit(ConfFiles['DEF'])
 
     def get_device(self, index: int):
+        """Return the requested device."""
         return self._data[index]

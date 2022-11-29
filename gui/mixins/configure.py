@@ -54,6 +54,8 @@ class ConfigureMixin:
 
     @Slot(QItemSelection, QItemSelection)
     def dev_selected(self, selected: QItemSelection, **kw):
+        """When a device is selected in all_devs_tbl, add it to the
+        sel_devs_tbl."""
         indexes = [i for i in selected.indexes() if i.column() == 0]
 
         for ind in indexes:
@@ -63,6 +65,7 @@ class ConfigureMixin:
 
     @Slot(QModelIndex)
     def dev_deselect(self, index: QModelIndex):
+        """When a device is selected in sel_devs_tbl, remove it."""
         if not index.isValid():
             return
 
@@ -71,6 +74,8 @@ class ConfigureMixin:
 
     @Slot(ConfFiles)
     def reload_embed(self, dev_type: ConfFiles):
+        """Reload the embedded display when the Selected Devices table
+        content changes. Load the associated Configure Display."""
         if dev_type == ConfFiles.BPMS:
             if self.sel_devs_model.rowCount() == 1:
                 dev = self.sel_devs_model.get_device(0)
