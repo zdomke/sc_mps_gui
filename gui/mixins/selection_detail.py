@@ -6,15 +6,10 @@ from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
 from epics import PV
 from epics.dbr import DBE_VALUE
 from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
+from enums import DevThr
 
 
 class SelectionDetailsMixin:
-    """Type map is used for device types and their PV representation."""
-    type_map = {'BPMS': 'BPM',
-                'TORO': 'CHRG',
-                'BLM': 'I0_LOSS',
-                'BACT': 'I0_BACT'}
-
     def selection_init(self):
         self.dtl_hdr = ["State", "Value"] + self.model.dest_lst
         self.ui.dtls_truth_tbl.setColumnCount(len(self.dtl_hdr))
@@ -37,8 +32,7 @@ class SelectionDetailsMixin:
     def selection_connections(self):
         """Set up slot connections for the Selection Details section."""
         # Establish connections for the SelectionDetails widget
-        self.ui.logic_tbl.selectionModel().selectionChanged.connect(
-            self.selected)
+        self.ui.logic_tbl.selectionModel().selectionChanged.connect(self.selected)
         self.ui.dtls_close_btn.clicked.connect(self.details_closed)
         self.ui.logic_spltr.splitterMoved.connect(self.save_split_state)
 
@@ -65,8 +59,7 @@ class SelectionDetailsMixin:
         self.ui.dtls_name_lbl.setText(fault.description)
 
         # Get ignore conditions and set the related label's text
-        ign_str = ", ".join([ign.condition.description
-                             for ign in dev.ignore_conditions])
+        ign_str = ", ".join([ign.condition.description for ign in dev.ignore_conditions])
         self.ui.dtls_ign_lbl.setText(ign_str if ign_str else "--")
 
         # Set cells in the Truth Table and PV Table
@@ -83,8 +76,7 @@ class SelectionDetailsMixin:
         file = expandvars("$PYDM") + "/mps/"
         if dev.device_type.name == "BPMS":
             file += "mps_application_threshold_combined.ui"
-        elif (dev.device_type.name == "BLM"
-              and fault.name.split(':')[0] == "CBLM"):
+        elif dev.device_type.name == "BLM" and fault.name.split(':')[0] == "CBLM":
             file += "mps_cblm_thresholds.ui"
         else:
             file += "mps_application_threshold.ui"
@@ -164,12 +156,12 @@ class SelectionDetailsMixin:
             ln = dev.card.link_node.lcls1_id
             card = dev.card.number
             if card == 1:
-                card = "RTN"
+                card = "RTM"
             if analog:
                 ch = dev.channel.number
             else:
                 ch = dev.inputs[i].channel.number
-            btn_txt = f"LN {ln}, Card{card}, Ch {ch}..."
+            btn_txt = f"LN {ln}, Card {card}, Ch {ch}..."
 
             node_btn = NodeButton(btn_txt, dumps(dev_macros))
             self.ui.dtls_pv_tbl.setCellWidget(i, 3, node_btn)
@@ -177,7 +169,7 @@ class SelectionDetailsMixin:
     def thr_macros(self, fault, dev):
         """Populate the macros dict used by the Threshold button."""
         dev_type = dev.device_type.name
-        if dev_type not in self.type_map.keys():
+        if dev_type not in [member.name for member in DevThr]:
             return {}
 
         bpm2 = ""
@@ -190,7 +182,7 @@ class SelectionDetailsMixin:
         mac = {}
         mac['MPS_PREFIX'] = dev.card.get_pv_name()
         mac['DEVICE'] = fault.name[:fault.name.rfind(':')]
-        mac['THR'] = self.type_map[dev_type]
+        mac['THR'] = DevThr[dev_type].value
         mac['BPM2'] = bpm2
         return mac
 
@@ -214,10 +206,10 @@ class SelectionDetailsMixin:
     def selected(self, selected, deselected):
         """Slot called when a row is selected. This will change the
         SelectionDetails widget and open it if it's hidden."""
-        indices = selected.indexes()
-        if not indices:
-            indices = deselected.indexes()
-        row_ind = self.logic_model.mapToSource(indices[0])
+        indexes = selected.indexes()
+        if not indexes:
+            indexes = deselected.indexes()
+        row_ind = self.logic_model.mapToSource(indexes[0])
         fault = self.model.faults[row_ind.row()]
         self.set_fault_details(fault)
         if not self.ui.logic_spltr.sizes()[1]:
@@ -225,7 +217,7 @@ class SelectionDetailsMixin:
 
         if self.state_pv:
             self.state_pv.disconnect()
-        row = indices[0].row()
+        row = indexes[0].row()
         self.state_pv = PV(fault.name,
                            callback=partial(self.state_change, row),
                            auto_monitor=DBE_VALUE)

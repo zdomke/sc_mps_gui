@@ -1,4 +1,3 @@
-from os import path
 from logging import getLogger
 from pydm import Display
 from models_pkg.mps_model import MPSModel
@@ -10,9 +9,9 @@ from mixins.configure import ConfigureMixin
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
                     ConfigureMixin):
-    def __init__(self, parent=None, args=[], macros=None):
-        super(MpsGuiDisplay, self).__init__(parent=parent, args=args,
-                                            macros=macros)
+    def __init__(self, parent=None, args=[], macros=None, ui_filename=None):
+        super(MpsGuiDisplay, self).__init__(parent=parent, args=args, macros=macros,
+                                            ui_filename=__file__.replace(".py", ".ui"))
         self.logger = getLogger(__name__)
 
         if 'DBFILE' in macros:
@@ -28,12 +27,4 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
         self.logic_connections()
         self.selection_connections()
         self.summ_connections()
-
-    # ~~~~ PyDM UI File Management ~~~~ #
-    @staticmethod
-    def ui_filename():
-        return 'mps_gui_main.ui'
-
-    def ui_filepath(self):
-        return path.join(path.dirname(path.realpath(__file__)),
-                         self.ui_filename())
+        self.configure_connections()

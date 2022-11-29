@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>510</width>
+    <height>793</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QScrollArea" name="single_dev_scroll">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="single_dev_cntnt">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>476</width>
+        <height>700</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QHBoxLayout" name="link_node_lyt">
+         <item>
+          <widget class="QLabel" name="link_node_sttc_lbl">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Link Node:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="link_node_lbl">
+           <property name="text">
+            <string>${LN}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="crate_loc_lyt">
+         <item>
+          <widget class="QLabel" name="crate_loc_sttc_lbl">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Crate Location:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="crate_loc_lbl">
+           <property name="text">
+            <string>${CL}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="app_card_lyt">
+         <item>
+          <widget class="QLabel" name="app_card_sttc_lbl">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Application Card:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="app_card_lbl">
+           <property name="text">
+            <string>${AC}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="channel_lyt">
+         <item>
+          <widget class="QLabel" name="channel_sttc_lbl">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Channel:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="channel_lbl">
+           <property name="text">
+            <string>${CH}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="xorbit_box">
+         <property name="title">
+          <string>X Orbit</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="xorbit_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:X&quot;,&quot;THR&quot;:&quot;T0&quot;,&quot;NUM&quot;:&quot;0&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="yorbit_box">
+         <property name="title">
+          <string>Y Orbit</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="yorbit_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:Y&quot;,&quot;THR&quot;:&quot;T0&quot;,&quot;NUM&quot;:&quot;0&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="tmit_box">
+         <property name="title">
+          <string>TMIT</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr0_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T0&quot;,&quot;NUM&quot;:&quot;0&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr1_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T1&quot;,&quot;NUM&quot;:&quot;1&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr2_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T2&quot;,&quot;NUM&quot;:&quot;2&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr3_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T3&quot;,&quot;NUM&quot;:&quot;3&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr4_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T4&quot;,&quot;NUM&quot;:&quot;4&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyDMEmbeddedDisplay" name="tmit_thr5_embed">
+            <property name="minimumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>369</width>
+              <height>52</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="macros" stdset="0">
+             <string>{&quot;P&quot;:&quot;${DEVICE}:TMIT&quot;,&quot;THR&quot;:&quot;T5&quot;,&quot;NUM&quot;:&quot;5&quot;}</string>
+            </property>
+            <property name="filename" stdset="0">
+             <string>$PYDM/mps/mps_inline_threshold_rbv.ui</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="single_dev_spcr">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="multi_dev_tbl">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <row>
+      <property name="text">
+       <string>Link Node</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Crate Location</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Application Card</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Channel(s)</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>X Orbit Thr0</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Y Orbit Thr0</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr0</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr1</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr2</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr3</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr4</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>TMIT Thr5</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Set Value To</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string>-</string>
+      </property>
+     </item>
+     <item row="1" column="0">
+      <property name="text">
+       <string>-</string>
+      </property>
+     </item>
+     <item row="2" column="0">
+      <property name="text">
+       <string>-</string>
+      </property>
+     </item>
+     <item row="3" column="0">
+      <property name="text">
+       <string>-</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PyDMEmbeddedDisplay</class>
+   <extends>QFrame</extends>
+   <header>pydm.widgets.embedded_display</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

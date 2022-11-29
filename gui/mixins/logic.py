@@ -11,15 +11,13 @@ class LogicMixin:
     def logic_init(self):
         """Initializer for everything in Logic tab: Logic Table Model,
         Logic Item Delegate, and Selection Details."""
-        self.tbl_model = LogicTableModel(self, self.model,
-                                         self.model.config.Session)
+        self.tbl_model = LogicTableModel(self, self.model, self.model.config.Session)
         self.delegate = LogicItemDelegate(self)
 
         self.logic_model = LogicSortFilterModel(self)
         self.logic_model.setSourceModel(self.tbl_model)
         self.logic_model.setFilterByColumn(0, "")
         self.ui.logic_tbl.setModel(self.logic_model)
-        self.ui.logic_tbl.setSortingEnabled(True)
         self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
         for i in range(self.tbl_model.beind, self.tbl_model.aind):
             self.ui.logic_tbl.hideColumn(i)
@@ -96,5 +94,4 @@ class LogicMixin:
         """When the number of displayed rows changes, update the row
         count at the bottom of the tab."""
         rows = self.logic_model.rowCount()
-        self.ui.num_flts_lbl.setText("Displaying {} / {} Faults"
-                                     .format(rows, len(self.model.faults)))
+        self.ui.num_flts_lbl.setText(f"Displaying {rows} / {len(self.model.faults)} Faults")

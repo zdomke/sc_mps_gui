@@ -1,6 +1,6 @@
 from logging import getLogger
 from platform import system
-from qtpy.QtGui import (QBrush, QColor, QFont)
+from qtpy.QtGui import (QBrush, QColor)
 from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
                          QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
@@ -13,8 +13,6 @@ from mps_database.models.fault_state import FaultState
 
 class LogicTableModel(QAbstractTableModel):
     # Set class variables for the model. These are standard and static.
-    font = QFont()
-    font.setBold(True)
     brushes = {3: QBrush(QColor(255, 0, 0)),       # Red
                2: QBrush(QColor(235, 235, 0)),     # Yellow
                1: QBrush(QColor(235, 0, 235)),     # Magenta
@@ -60,12 +58,10 @@ class LogicTableModel(QAbstractTableModel):
         return len(self.hdr_lst)
 
     def data(self, index: QModelIndex, role: Qt.ItemDataRole):
-        """Return the index's text, font, alignment, background color,
+        """Return the index's text, alignment, background color,
         and foreground color."""
         if role == Qt.DisplayRole:
             return str(self._data[index.row()][index.column()])
-        elif role == Qt.FontRole:
-            return self.font
         elif role == Qt.TextAlignmentRole and 0 < index.column():
             return Qt.AlignCenter
         elif role == Qt.BackgroundRole and 0 < index.column():
@@ -84,11 +80,9 @@ class LogicTableModel(QAbstractTableModel):
 
     def headerData(self, section: int, orientation: Qt.Orientation,
                    role: Qt.ItemDataRole):
-        """Set the horizontal header's text and font."""
+        """Set the horizontal header's text."""
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             return self.hdr_lst[section]
-        elif orientation == Qt.Horizontal and role == Qt.FontRole:
-            return self.font
 
     def set_data(self):
         """Set initial data for each fault. Populate each fault with the

@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>SC MPS GUI</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QSplitter::handle {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(121, 121, 121, 255), stop:0.3 rgba(121, 121, 121, 255), stop:0.301 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 128));
+}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -233,6 +238,9 @@
               <property name="contextMenuPolicy">
                <enum>Qt::CustomContextMenu</enum>
               </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight: bold;</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -374,8 +382,17 @@
               </item>
               <item>
                <widget class="QTableView" name="byp_tbl">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="contextMenuPolicy">
                  <enum>Qt::CustomContextMenu</enum>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font-weight: bold;</string>
                 </property>
                 <property name="alternatingRowColors">
                  <bool>true</bool>
@@ -445,8 +462,17 @@
           <enum>Qt::Vertical</enum>
          </property>
          <widget class="QTableView" name="logic_tbl">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="contextMenuPolicy">
            <enum>Qt::DefaultContextMenu</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-weight: bold;</string>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
@@ -459,6 +485,9 @@
           </property>
           <property name="horizontalScrollMode">
            <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>100</number>
@@ -476,8 +505,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1358</width>
-             <height>466</height>
+             <width>348</width>
+             <height>295</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -916,15 +945,24 @@
                 </layout>
                </item>
                <item>
-                <widget class="QListView" name="all_devs_list">
+                <widget class="QTableView" name="all_devs_tbl">
                  <property name="alternatingRowColors">
                   <bool>true</bool>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
                  </property>
                  <property name="verticalScrollMode">
                   <enum>QAbstractItemView::ScrollPerPixel</enum>
                  </property>
                  <property name="horizontalScrollMode">
                   <enum>QAbstractItemView::ScrollPerPixel</enum>
+                 </property>
+                 <property name="sortingEnabled">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -980,10 +1018,17 @@
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="sel_clear_btn">
+                   <property name="text">
+                    <string>Clear Selection</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item>
-                <widget class="QListView" name="sel_devs_list">
+                <widget class="QTableView" name="sel_devs_tbl">
                  <property name="alternatingRowColors">
                   <bool>true</bool>
                  </property>
@@ -995,6 +1040,9 @@
                  </property>
                  <property name="horizontalScrollMode">
                   <enum>QAbstractItemView::ScrollPerPixel</enum>
+                 </property>
+                 <property name="sortingEnabled">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1014,8 +1062,11 @@
           <property name="frameShadow">
            <enum>QFrame::Sunken</enum>
           </property>
+          <property name="macros" stdset="0">
+           <string>{}</string>
+          </property>
           <property name="filename" stdset="0">
-           <string>resources/mps_permit_panel.ui</string>
+           <string>resources/conf_def_embed.ui</string>
           </property>
          </widget>
         </widget>
@@ -1041,7 +1092,7 @@
         <string/>
        </property>
        <property name="filename" stdset="0">
-        <string>resources/lcls_mps_lockup_sidebyside_digital.png</string>
+        <string>$PYDM/mps/lcls_mps_lockup_sidebyside_digital.png</string>
        </property>
       </widget>
      </item>
