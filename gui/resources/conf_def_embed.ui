@@ -24,10 +24,11 @@
       </font>
      </property>
      <property name="text">
-      <string>Select Devices to Configure</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <string>&lt;p align=&quot;center&quot;&gt;Select Devices to Configure&lt;/p&gt;
+&lt;br&gt;&lt;br&gt;
+Supported Device Types:
+&lt;br&gt;
+- BPMS</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

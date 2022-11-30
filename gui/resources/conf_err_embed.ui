@@ -24,13 +24,10 @@
       </font>
      </property>
      <property name="text">
-      <string>ERROR: Multiple Types of Devices Selected
-
-
-Select devices of the same type to configure them all at once.</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ERROR:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;Select a supported Device Type: &lt;br/&gt;- BPMS &lt;br/&gt;&lt;br/&gt;~ or ~ &lt;br/&gt;&lt;br/&gt;Multiple Types of Devices Selected &lt;br/&gt;Select devices of the same type to configure them all at once.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

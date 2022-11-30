@@ -8,19 +8,26 @@
 `-- gui/  
     |-- mps_gui_main.ui  
     |-- mps_gui_main.py  
+    |-- enums.py  
     |-- mixins/  
     |   |-- __init__.py  
     |   |-- summary.py  
     |   |-- logic.py  
-    |   `-- selection_detail.py  
-    |-- models/  
+    |   |-- selection_detail.py  
+    |   `-- configure.py  
+    |-- models_pkg/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
-    |   `-- logic_model.py
+    |   |-- logic_model.py
+    |   `-- configure_model.py
     `-- resources/  
         |-- __init__.py  
         |-- mps_permit_panel.ui  
-        `-- lcls_mps_lockup_sidebyside_digital.png  
+        |-- widgets.py  
+        |-- conf_def_embed.ui  
+        |-- conf_err_embed.ui  
+        |-- conf_bpm_embed.py  
+        `-- conf_bpm_embed.ui  
 
 
 ### sc_mps_gui.bash  
@@ -43,12 +50,17 @@
       - Selecting a fault opens a panel with more details on that fault  
 
 
+### enums.py  
+  - Contains enums for use in the application  
+  - Used by the Selection Details and the Configure tab  
+
+
 ### summary.py  
   - This file contains a python mixin to manage the Summary tab  
   - Manage the faults table and the bypass table  
   - Minor interactions with Logic tab:  
     - On fault status change and/or bypass status change, alter the associated cell in Logic tab table  
-    - When a fault is right-clicked, present an option to open the fault in the Logic tab
+    - When a fault is right-clicked, present an option to open the fault in the Logic tab  
 
 
 ### logic.py  
@@ -70,6 +82,15 @@
     - PV Table  
 
 
+### configure.py  
+  - This file contains the python mixin to manage the Configure tab 
+  - Manage the table of all devices and add/remove them from the selected devices table on user interaction  
+  - When devices are (un)selected, sets the macros and file for the embedded display on the right  
+  - Display 'error' file when multiple device types are selected or an unsupported device type  
+  - Supported Device Types:  
+    - BPMS  
+
+
 ### mps_model.py  
   - Using MPSConfig, establish a connection to the MPS Database  
     - If a filename is not provided, then MPSModel will locate the default file to use  
@@ -80,10 +101,28 @@
   - Create a custom QAbstractTableModel, QSortFilterProxyModel, and QStyledItemDelegate for use in the Logic tab and Summary tab  
 
 
+### configure_model.py  
+  - Create a custom QAbstractTableModel used to manage the table of all devices and selected devices in the Configure tab  
+
+
 ### mps_permit_panel.ui  
   - The permit panel display embedded in the Summary tab  
   - Shows the Beam Class, Timing Beam Class, and Timing Rate  
 
 
-### lcls_mps_lockup_sidebyside_digital.png
-  - A standard-use image to tell the user this application is a part of the SC MPS  
+### widgets.py  
+  - Contains two subclasses of PyDM widgets that are used by the Configure tab  
+  - PyDMMultiCheckbox:  
+    - A PyDMCheckbox that connects to multiple channels  
+    - Only checked if all channels are True  
+  - PyDMMultiLineEdit:  
+    - A PyDMLineEdit that connects to multiple channels  
+
+
+### conf_def_embed.ui & conf_err_embed.ui  
+  - Static files that display messages to the user  
+
+
+### conf_bpm_embed.py & conf_bpm_embed.ui  
+  - Allow the user to alter the threshold values on the selected BPMS(s)  
+  - Make use of subclassed PyDM Widgets to write to multiple channels at once  

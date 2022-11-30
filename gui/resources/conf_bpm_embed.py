@@ -4,7 +4,7 @@ from qtpy.QtWidgets import (QWidget, QTableWidgetItem, QHBoxLayout, QVBoxLayout,
                             QMessageBox, QHeaderView, QLabel, QTableWidget)
 from pydm import Display
 from pydm.widgets import PyDMLabel, PyDMByteIndicator
-from widgets import (PyDMMultiLineEdit, PyDMMultiCheckbox)
+from resources.widgets import (PyDMMultiLineEdit, PyDMMultiCheckbox)
 
 
 class ConfBPM(Display):
