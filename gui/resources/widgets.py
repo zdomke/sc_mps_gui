@@ -1,4 +1,5 @@
-from qtpy.QtCore import Property
+from epics import caget_many
+from qtpy.QtCore import (Slot, Property)
 from pydm.widgets import (PyDMChannel, PyDMCheckbox, PyDMLineEdit)
 
 
@@ -8,12 +9,15 @@ class PyDMMultiCheckbox(PyDMCheckbox):
 
     @Property(str)
     def channel(self):
+        """Override base class' property getter."""
         if self._channel:
             return self._channel
         return None
 
     @channel.setter
     def channel(self, value):
+        """Override base class' property setter to allow for connection
+        to multiple channels."""
         if self._channel == value:
             return
 
@@ -28,7 +32,7 @@ class PyDMMultiCheckbox(PyDMCheckbox):
         for address in self._channel.split(", "):
             channel = PyDMChannel(address=address,
                                   connection_slot=self.connectionStateChanged,
-                                  value_slot=None,
+                                  value_slot=self.channelValueChanged,
                                   severity_slot=self.alarmSeverityChanged,
                                   enum_strings_slot=self.enumStringsChanged,
                                   unit_slot=None,
@@ -54,6 +58,18 @@ class PyDMMultiCheckbox(PyDMCheckbox):
             channel.connect()
             self._channels.append(channel)
 
+    @Slot(int)
+    @Slot(float)
+    @Slot(str)
+    @Slot(bool)
+    def channelValueChanged(self, new_val):
+        """Override base class' value_slot to only set the Checkbox
+        state to true when all channels are true."""
+        channels = self.channel.split(", ")
+        caget = caget_many(channels, connection_timeout=(len(channels) * .1))
+
+        self.value_changed(type(new_val)(all(caget)))
+
 
 class PyDMMultiLineEdit(PyDMLineEdit):
     def __init__(self, parent=None, init_channels=None):
@@ -61,12 +77,15 @@ class PyDMMultiLineEdit(PyDMLineEdit):
 
     @Property(str)
     def channel(self):
+        """Override base class' property getter."""
         if self._channel:
             return self._channel
         return None
 
     @channel.setter
     def channel(self, value):
+        """Override base class' property setter to allow for connection
+        to multiple channels."""
         if self._channel == value:
             return
 

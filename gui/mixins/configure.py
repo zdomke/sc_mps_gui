@@ -52,6 +52,27 @@ class ConfigureMixin:
         self.ui.sel_devs_tbl.clicked.connect(self.dev_deselect)
         self.sel_devs_model.table_changed.connect(self.reload_embed)
 
+    def bpm_macros(self):
+        """Construct the macros dictionary for the selected device(s) if
+        the device(s) are BPM's."""
+        multi = not self.sel_devs_model.rowCount() == 1
+
+        mac = {'MULTI': multi}
+        for i in range(self.sel_devs_model.rowCount()):
+            suf = str(i + 1) if multi else ""
+            dev = self.sel_devs_model.get_device(i)
+
+            mac['LN' + suf] = dev.card.link_node.lcls1_id
+            mac['CL' + suf] = dev.card.crate.location
+            mac['AC' + suf] = f"Slot {dev.card.number}" if dev.card.number != 1 else "RTM"
+            if dev.is_analog():
+                mac['CH' + suf] = dev.channel.number
+            else:
+                mac['CH' + suf] = ", ".join([i.channel.number for i in dev.inputs])
+            mac['DEVICE' + suf] = self.model.name.getDeviceName(dev)
+        
+        return mac
+
     @Slot(QItemSelection, QItemSelection)
     def dev_selected(self, selected: QItemSelection, **kw):
         """When a device is selected in all_devs_tbl, add it to the
@@ -77,29 +98,7 @@ class ConfigureMixin:
         """Reload the embedded display when the Selected Devices table
         content changes. Load the associated Configure Display."""
         if dev_type == ConfFiles.BPMS:
-            if self.sel_devs_model.rowCount() == 1:
-                dev = self.sel_devs_model.get_device(0)
-                mac = {'MULTI': False,
-                       'LN': dev.card.link_node.lcls1_id,
-                       'CL': dev.card.crate.location,
-                       'AC': f"Slot {dev.card.number}" if dev.card.number != 1 else "RTM"}
-                if dev.is_analog():
-                    mac['CH'] = dev.channel.number
-                else:
-                    mac['CH'] = ", ".join([i.channel.number for i in dev.inputs])
-                mac['DEVICE'] = self.model.name.getDeviceName(dev)
-            else:
-                mac = {'MULTI': True}
-                for i in range(self.sel_devs_model.rowCount()):
-                    dev = self.sel_devs_model.get_device(i)
-                    mac[f'LN{i+1}'] = dev.card.link_node.lcls1_id
-                    mac[f'CL{i+1}'] = dev.card.crate.location
-                    mac[f'AC{i+1}'] = f"Slot {dev.card.number}" if dev.card.number != 1 else "RTM"
-                    if dev.is_analog():
-                        mac[f'CH{i+1}'] = dev.channel.number
-                    else:
-                        mac[f'CH{i+1}'] = ", ".join([i.channel.number for i in dev.inputs])
-                    mac[f'DEV{i+1}'] = self.model.name.getDeviceName(dev)
+            mac = self.bpm_macros()
         else:
             mac = {}
 
