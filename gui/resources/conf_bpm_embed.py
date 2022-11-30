@@ -123,43 +123,59 @@ class ConfWriteBPM(QWidget):
         lbl.setStyleSheet("background-color: transparent")
         lyt.addWidget(lbl)
 
-        chk = PyDMMultiCheckbox(init_channels=", ".join([f"{d}_{hilo}_EN" for d in self.devs]))
-        lyt.addWidget(chk)
-
         edt = PyDMMultiLineEdit(init_channels=", ".join(f"{d}_{hilo}" for d in self.devs))
         edt.alarmSensitiveContent = True
         lyt.addWidget(edt)
 
-        try:
-            chk.clicked.disconnect()
-        except TypeError:
-            pass
+        edt.returnPressed.disconnect()
+        edt.returnPressed.connect(self.edt_returned)
+
+        chk = PyDMMultiCheckbox(init_channels=", ".join([f"{d}_{hilo}_EN" for d in self.devs]))
+        lyt.addWidget(chk)
+
+        chk.clicked.disconnect()
         chk.clicked.connect(self.chk_clicked)
-        chk.toggled.connect(edt.setEnabled)
+
+    @Slot()
+    def edt_returned(self):
+        """Slot for the PyDMMultiLineEdit. Checks that values match and
+        requests user confirmation if they do not."""
+        sndr = self.sender()
+        txt = sndr.text()
+        print(txt)
+        
+        vals = caget_many([f"{d[:-5]}_RBV" for d in sndr.channel.split(", ")],
+                          connection_timeout=(len(self.devs) * .1))
+        equiv = True
+        first = vals[0]
+
+        for v in vals:
+            if v != first:
+                equiv = False
+                break
+
+        if not equiv:
+            ret = QMessageBox.warning(self, "Differing Threshold Values",
+                                      "Threshold values are different across multiple devices."
+                                        "\n\nContinue writing to all devices?",
+                                      QMessageBox.Yes | QMessageBox.No)
+            if ret == QMessageBox.No:
+                return
+        sndr.setText(txt)
+        sndr.send_value()
 
     @Slot(bool)
     def chk_clicked(self, chk):
-        """Slot for the PyDMMultiCheckboxes. Checks that values match
-        and requests user confirmation if they do not."""
+        """Slot for the PyDMMultiCheckboxes. If enabling the thresholds,
+        confirm with the user first."""
         sndr = self.sender()
         if chk:
-            vals = caget_many([f"{d[:-5]}_RBV" for d in sndr.channel.split(", ")],
-                              connection_timeout=(len(self.devs) * .1))
-            equiv = True
-            first = vals[0]
-
-            for v in vals:
-                if v != first:
-                    equiv = False
-                    break
-
-            if not equiv:
-                ret = QMessageBox.warning(self,"Differing Threshold Values",
-                                          "Threshold values are different across multiple devices."
-                                              "\n\nContinue writing to all devices?",
-                                          QMessageBox.Yes | QMessageBox.No)
-                if ret == QMessageBox.No:
-                    sndr.setChecked(False)
-                    return
+            ret = QMessageBox.warning(self, "Confirm Enabling Threshold",
+                                      f"Enabling Thresholds:\n{sndr.channel.replace('_EN', '')}"
+                                        "\n\nContinue to enable thresholds?",
+                                      QMessageBox.Yes | QMessageBox.No)
+            if ret == QMessageBox.No:
+                sndr.setChecked(False)
+                return
 
         sndr.send_value(chk)

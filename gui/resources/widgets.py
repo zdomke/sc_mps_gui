@@ -63,12 +63,12 @@ class PyDMMultiCheckbox(PyDMCheckbox):
     @Slot(str)
     @Slot(bool)
     def channelValueChanged(self, new_val):
-        """Override base class' value_slot to only set the Checkbox
-        state to true when all channels are true."""
+        """Override base class' value_slot to set the Checkbox state to
+        true if any channels are true."""
         channels = self.channel.split(", ")
         caget = caget_many(channels, connection_timeout=(len(channels) * .1))
 
-        self.value_changed(type(new_val)(all(caget)))
+        self.value_changed(type(new_val)(any(caget)))
 
 
 class PyDMMultiLineEdit(PyDMLineEdit):
