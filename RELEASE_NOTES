@@ -1,3 +1,8 @@
+R2.0.1  Zach Domke      11/30/2022
+        Change order of widgets in ConfWriteBPM
+        Confirm with user before enabling thresholds
+        Allow user to always write to threshold values
+        Confirm user writing threshold values if they do not all match
 R2.0.0  Zach Domke      11/30/2022
         Add Configure tab to the display
         Configure tab supports BPMS devices
