@@ -1,4 +1,4 @@
-R1.5.0  Zach Domke      11/30/2022
+R2.0.0  Zach Domke      11/30/2022
         Add Configure tab to the display
         Configure tab supports BPMS devices
         Created personalized PyDM Widgets to write to multiple channels
