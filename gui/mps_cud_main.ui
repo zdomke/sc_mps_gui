@@ -33,10 +33,6 @@
   </property>
   <property name="styleSheet">
    <string notr="true">
-QSplitter::handle {
-	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(121, 121, 121, 255), stop:0.3 rgba(121, 121, 121, 255), stop:0.301 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 128));
-}
-
 PyDMLabel {
   border-radius: 5px;
 }
@@ -1292,9 +1288,6 @@ color: rgb(255, 255, 255);</string>
       <bold>true</bold>
      </font>
     </property>
-    <property name="contextMenuPolicy">
-     <enum>Qt::CustomContextMenu</enum>
-    </property>
     <property name="styleSheet">
      <string notr="true">font-weight: bold;</string>
     </property>
@@ -1307,8 +1300,8 @@ color: rgb(255, 255, 255);</string>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
-    <property name="selectionBehavior">
-     <enum>QAbstractItemView::SelectColumns</enum>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
     </property>
     <property name="verticalScrollMode">
      <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -1317,6 +1310,9 @@ color: rgb(255, 255, 255);</string>
      <enum>QAbstractItemView::ScrollPerPixel</enum>
     </property>
     <property name="showGrid">
+     <bool>true</bool>
+    </property>
+    <property name="sortingEnabled">
      <bool>true</bool>
     </property>
     <attribute name="horizontalHeaderMinimumSectionSize">
@@ -1368,9 +1364,6 @@ color: rgb(255, 255, 255);</string>
       <bold>true</bold>
      </font>
     </property>
-    <property name="contextMenuPolicy">
-     <enum>Qt::CustomContextMenu</enum>
-    </property>
     <property name="styleSheet">
      <string notr="true">font-weight: bold;</string>
     </property>
@@ -1380,14 +1373,17 @@ color: rgb(255, 255, 255);</string>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
-    <property name="selectionBehavior">
-     <enum>QAbstractItemView::SelectRows</enum>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
     </property>
     <property name="verticalScrollMode">
      <enum>QAbstractItemView::ScrollPerPixel</enum>
     </property>
     <property name="horizontalScrollMode">
      <enum>QAbstractItemView::ScrollPerPixel</enum>
+    </property>
+    <property name="sortingEnabled">
+     <bool>true</bool>
     </property>
     <attribute name="horizontalHeaderMinimumSectionSize">
      <number>40</number>

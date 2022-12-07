@@ -1,3 +1,6 @@
+R2.1.1  Zach Domke      12/07/2022
+        Make summary tables sortable
+        CUD Mode tables are unselectable
 R2.1.0  Zack Buschmannn 12/07/2022
         Add CUD mode & modified launcher + main.py to support
         Add -c | --cud flag to launcher

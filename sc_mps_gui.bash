@@ -32,16 +32,12 @@ do
     shift
 done
 
-echo $CUD_MODE $DB_FILE
-
 MACROS="P=SIOC:SYS0:MP03, T=TPG:SYS0:1:DST0, CUD=$CUD_MODE"
 
 if [[ -n $DB_FILE ]]
 then
     MACROS+=", DB_FILE=$DB_FILE"
 fi
-
-echo $MACROS
 
 pydm --hide-nav-bar --hide-status-bar --hide-menu-bar \
     -m "$MACROS" \

@@ -27,12 +27,12 @@ class LogicMixin:
                 self.ui.logic_tbl.hideColumn(i)
             self.ui.logic_tbl.setItemDelegate(self.delegate)
 
-            self.hdr = self.ui.logic_tbl.horizontalHeader()
-            self.hdr.setSectionResizeMode(QHeaderView.Interactive)
-            self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
-            self.hdr.resizeSection(1, 125)
-            self.hdr.resizeSection(self.tbl_model.bind, 70)
-            self.hdr.resizeSection(self.tbl_model.aind, 70)
+            hdr = self.ui.logic_tbl.horizontalHeader()
+            hdr.setSectionResizeMode(QHeaderView.Interactive)
+            hdr.setSectionResizeMode(0, QHeaderView.Stretch)
+            hdr.resizeSection(1, 125)
+            hdr.resizeSection(self.tbl_model.bind, 70)
+            hdr.resizeSection(self.tbl_model.aind, 70)
 
             self.show_inactive(0)
             self.show_row_count()

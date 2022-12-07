@@ -19,19 +19,19 @@ class SummaryMixin:
         self.ui.summ_tbl.sortByColumn(1, Qt.AscendingOrder)
         self.ui.summ_tbl.setItemDelegate(self.delegate)
 
-        self.hdr = self.ui.summ_tbl.horizontalHeader()
+        hdr = self.ui.summ_tbl.horizontalHeader()
         if not cud_mode:
-            self.hdr.setSectionResizeMode(QHeaderView.Interactive)
-            self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
-            self.hdr.resizeSection(1, 125)
+            hdr.setSectionResizeMode(QHeaderView.Interactive)
+            hdr.setSectionResizeMode(0, QHeaderView.Stretch)
+            hdr.resizeSection(1, 125)
         else:
-            font = self.hdr.font()
+            font = hdr.font()
             font.setPointSize(16)
-            self.hdr.setFont(font)
-            self.hdr.setFixedHeight(40)
-            self.hdr.resizeSection(0, 550)
-            self.hdr.resizeSection(1, 300)
-            self.hdr.setSectionResizeMode(8, QHeaderView.Stretch)
+            hdr.setFont(font)
+            hdr.setFixedHeight(40)
+            hdr.resizeSection(0, 550)
+            hdr.resizeSection(1, 300)
+            hdr.setSectionResizeMode(8, QHeaderView.Stretch)
 
         # Initialize the Bypass Table and Headers
         self.byp_model = LogicSortFilterModel(self)
@@ -41,15 +41,16 @@ class SummaryMixin:
         for i in range(2, self.tbl_model.aind + 1):
             self.ui.byp_tbl.hideColumn(i)
         self.ui.byp_tbl.showColumn(self.tbl_model.beind)
+        self.ui.byp_tbl.sortByColumn(self.tbl_model.beind, Qt.AscendingOrder)
         self.ui.byp_tbl.setItemDelegate(self.delegate)
 
-        self.hdr = self.ui.byp_tbl.horizontalHeader()
-        self.hdr.setSectionResizeMode(QHeaderView.Stretch)
+        hdr = self.ui.byp_tbl.horizontalHeader()
+        hdr.setSectionResizeMode(QHeaderView.Stretch)
         if cud_mode:
-            font = self.hdr.font()
+            font = hdr.font()
             font.setPointSize(14)
-            self.hdr.setFont(font)
-            self.hdr.setFixedHeight(40)
+            hdr.setFont(font)
+            hdr.setFixedHeight(40)
 
         # Initialize the QAction used by the conext menus
         if not cud_mode:
