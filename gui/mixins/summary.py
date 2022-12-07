@@ -4,7 +4,7 @@ from models_pkg.logic_model import LogicSortFilterModel
 
 
 class SummaryMixin:
-    def summary_init(self):
+    def summary_init(self, cud_mode=False):
         """Initializer for everything in the Summary tab: Summary table,
         Bypass table, and Custom Context menus."""
         # Initialize the Summary Table and Headers
@@ -20,9 +20,18 @@ class SummaryMixin:
         self.ui.summ_tbl.setItemDelegate(self.delegate)
 
         self.hdr = self.ui.summ_tbl.horizontalHeader()
-        self.hdr.setSectionResizeMode(QHeaderView.Interactive)
-        self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.hdr.resizeSection(1, 125)
+        if not cud_mode:
+            self.hdr.setSectionResizeMode(QHeaderView.Interactive)
+            self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
+            self.hdr.resizeSection(1, 125)
+        else:
+            font = self.hdr.font()
+            font.setPointSize(16)
+            self.hdr.setFont(font)
+            self.hdr.setFixedHeight(40)
+            self.hdr.resizeSection(0, 550)
+            self.hdr.resizeSection(1, 300)
+            self.hdr.setSectionResizeMode(8, QHeaderView.Stretch)
 
         # Initialize the Bypass Table and Headers
         self.byp_model = LogicSortFilterModel(self)
@@ -36,12 +45,18 @@ class SummaryMixin:
 
         self.hdr = self.ui.byp_tbl.horizontalHeader()
         self.hdr.setSectionResizeMode(QHeaderView.Stretch)
+        if cud_mode:
+            font = self.hdr.font()
+            font.setPointSize(14)
+            self.hdr.setFont(font)
+            self.hdr.setFixedHeight(40)
 
         # Initialize the QAction used by the conext menus
-        self.selected_fault = None
-        self.action = QAction("Open fault in Logic tab", self)
-        self.menu = QMenu(self)
-        self.menu.addAction(self.action)
+        if not cud_mode:
+            self.selected_fault = None
+            self.action = QAction("Open fault in Logic tab", self)
+            self.menu = QMenu(self)
+            self.menu.addAction(self.action)
 
     def summ_connections(self):
         """Establish connections for the context menus and their action."""

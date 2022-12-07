@@ -8,7 +8,7 @@ from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
 
 
 class LogicMixin:
-    def logic_init(self):
+    def logic_init(self, cud_mode=False):
         """Initializer for everything in Logic tab: Logic Table Model,
         Logic Item Delegate, and Selection Details."""
         self.tbl_model = LogicTableModel(self, self.model, self.model.config.Session)
@@ -16,26 +16,28 @@ class LogicMixin:
 
         self.logic_model = LogicSortFilterModel(self)
         self.logic_model.setSourceModel(self.tbl_model)
-        self.logic_model.setFilterByColumn(0, "")
-        self.ui.logic_tbl.setModel(self.logic_model)
-        self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-        for i in range(self.tbl_model.beind, self.tbl_model.aind):
-            self.ui.logic_tbl.hideColumn(i)
-        self.ui.logic_tbl.setItemDelegate(self.delegate)
-
-        self.hdr = self.ui.logic_tbl.horizontalHeader()
-        self.hdr.setSectionResizeMode(QHeaderView.Interactive)
-        self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.hdr.resizeSection(1, 125)
-        self.hdr.resizeSection(self.tbl_model.bind, 70)
-        self.hdr.resizeSection(self.tbl_model.aind, 70)
 
         self.pvs = []
 
-        self.show_inactive(0)
-        self.show_row_count()
+        if not cud_mode:
+            self.logic_model.setFilterByColumn(0, "")
+            self.ui.logic_tbl.setModel(self.logic_model)
+            self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
+            for i in range(self.tbl_model.beind, self.tbl_model.aind):
+                self.ui.logic_tbl.hideColumn(i)
+            self.ui.logic_tbl.setItemDelegate(self.delegate)
 
-    def logic_connections(self):
+            self.hdr = self.ui.logic_tbl.horizontalHeader()
+            self.hdr.setSectionResizeMode(QHeaderView.Interactive)
+            self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
+            self.hdr.resizeSection(1, 125)
+            self.hdr.resizeSection(self.tbl_model.bind, 70)
+            self.hdr.resizeSection(self.tbl_model.aind, 70)
+
+            self.show_inactive(0)
+            self.show_row_count()
+
+    def logic_connections(self, cud_mode=False):
         """Establish PV and slot connections for the logic model and
         logic tab."""
         for i, fault in enumerate(self.model.faults):
@@ -56,15 +58,17 @@ class LogicMixin:
                         auto_monitor=DBE_VALUE)
             self.pvs.append(act_pv)
 
-        # Establish connections for inactive checkbox and filter box
-        self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
-        self.ui.logic_filter_edt.textChanged.connect(
-            partial(self.logic_model.setFilterByColumn, 0))
+        if not cud_mode:
 
-        # Establish connections for showing the row count
-        self.logic_model.rowsRemoved.connect(self.show_row_count)
-        self.logic_model.rowsInserted.connect(self.show_row_count)
-        self.logic_model.layoutChanged.connect(self.show_row_count)
+            # Establish connections for inactive checkbox and filter box
+            self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
+            self.ui.logic_filter_edt.textChanged.connect(
+                partial(self.logic_model.setFilterByColumn, 0))
+
+            # Establish connections for showing the row count
+            self.logic_model.rowsRemoved.connect(self.show_row_count)
+            self.logic_model.rowsInserted.connect(self.show_row_count)
+            self.logic_model.layoutChanged.connect(self.show_row_count)
 
     def send_new_val(self, value: int, pvname: str, row: int, **kw):
         """Function to emit the appropriate signal based on the pvname."""
