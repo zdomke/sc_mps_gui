@@ -29,7 +29,7 @@ class ConfigureMixin:
         hdr.setSectionResizeMode(1, QHeaderView.ResizeToContents)
 
         # Set model, filter, and header for the Selected Devices table
-        self.sel_devs_model = ConfigureTableModel(self, [])
+        self.sel_devs_model = ConfigureTableModel(self, [], save_type=True)
         self.sel_devs_filter = QSortFilterProxyModel(self)
         self.sel_devs_filter.setFilterCaseSensitivity(Qt.CaseInsensitive)
         self.sel_devs_filter.setSourceModel(self.sel_devs_model)
@@ -44,7 +44,8 @@ class ConfigureMixin:
         configure tab."""
         # All Devices table and LineEdit
         self.ui.all_devs_edt.textChanged.connect(self.all_devs_filter.setFilterFixedString)
-        self.ui.all_devs_tbl.selectionModel().selectionChanged.connect(self.dev_selected)
+        # self.ui.all_devs_tbl.selectionModel().selectionChanged.connect(self.dev_selected)
+        self.ui.all_devs_tbl.clicked.connect(self.dev_selected)
 
         # Selected Devices table and LineEdit
         self.ui.sel_devs_edt.textChanged.connect(self.sel_devs_filter.setFilterFixedString)
@@ -73,20 +74,20 @@ class ConfigureMixin:
         
         return mac
 
-    @Slot(QItemSelection, QItemSelection)
-    def dev_selected(self, selected: QItemSelection, **kw):
-        """When a device is selected in all_devs_tbl, add it to the
+    @Slot(QModelIndex)
+    def dev_selected(self, index: QModelIndex):
+        """When a device is clicked in all_devs_tbl, add it to the
         sel_devs_tbl."""
-        indexes = [i for i in selected.indexes() if i.column() == 0]
+        if not index.isValid():
+            return
 
-        for ind in indexes:
-            dev_id = self.all_devs_filter.mapToSource(ind).row()
-            dev = self.all_devs_model.get_device(dev_id)
-            self.sel_devs_model.add_datum(dev)
+        dev_id = self.all_devs_filter.mapToSource(index).row()
+        dev = self.all_devs_model.get_device(dev_id)
+        self.sel_devs_model.add_datum(dev)
 
     @Slot(QModelIndex)
     def dev_deselect(self, index: QModelIndex):
-        """When a device is selected in sel_devs_tbl, remove it."""
+        """When a device is clicked in sel_devs_tbl, remove it."""
         if not index.isValid():
             return
 

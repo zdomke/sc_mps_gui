@@ -9,13 +9,14 @@ class ConfigureTableModel(QAbstractTableModel):
 
     table_changed = Signal(ConfFiles)
 
-    def __init__(self, parent, _data: List[Device]):
+    def __init__(self, parent, _data: List[Device], save_type=False):
         super(ConfigureTableModel, self).__init__(parent)
         self._data = _data
 
         self.type_dict = {}
-        for d in self._data:
-            self.add_type(d.device_type.name)
+        if save_type:
+            for d in self._data:
+                self.add_type(d.device_type.name)
 
     def rowCount(self, index: QModelIndex = QModelIndex()):
         """Return the number of rows in the model."""
@@ -74,7 +75,7 @@ class ConfigureTableModel(QAbstractTableModel):
         if dev_type not in self.type_dict:
             return
         self.type_dict[dev_type] -= 1
-        if self.type_dict[dev_type] == 0:
+        if self.type_dict[dev_type] <= 0:
             del self.type_dict[dev_type]
 
     def remove_datum(self, index: int):
@@ -89,7 +90,10 @@ class ConfigureTableModel(QAbstractTableModel):
 
     def clear_data(self):
         """Remove all devices and device types from the model."""
-        ind = len(self._data)
+        if not self._data:
+            return
+
+        ind = len(self._data) - 1
         self.beginRemoveRows(QModelIndex(), 0, ind)
         self._data = []
         self.endRemoveRows()
