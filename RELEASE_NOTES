@@ -1,3 +1,5 @@
+R2.1.2  Zach Domke      12/08/2022
+        Fix Config tab crash: Removing device(s) select table & filter all dev table -> crash
 R2.1.1  Zach Domke      12/07/2022
         Make summary tables sortable
         CUD Mode tables are unselectable
