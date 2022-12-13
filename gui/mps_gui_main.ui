@@ -20,7 +20,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="main_tabs">
      <property name="tabPosition">
       <enum>QTabWidget::South</enum>
      </property>
@@ -210,217 +210,900 @@
           </layout>
          </item>
          <item>
-          <widget class="QFrame" name="summ_frame">
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <property name="topMargin">
-             <number>6</number>
+          <widget class="QSplitter" name="summ_spltr">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QFrame" name="summ_frame">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>3</verstretch>
+             </sizepolicy>
             </property>
-            <item>
-             <widget class="QLabel" name="fault_lbl">
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Faulted Devices</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTableView" name="summ_tbl">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="contextMenuPolicy">
-               <enum>Qt::CustomContextMenu</enum>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-weight: bold;</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="alternatingRowColors">
-               <bool>true</bool>
-              </property>
-              <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectRows</enum>
-              </property>
-              <property name="verticalScrollMode">
-               <enum>QAbstractItemView::ScrollPerPixel</enum>
-              </property>
-              <property name="horizontalScrollMode">
-               <enum>QAbstractItemView::ScrollPerPixel</enum>
-              </property>
-              <property name="sortingEnabled">
-               <bool>true</bool>
-              </property>
-              <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>100</number>
-              </attribute>
-              <attribute name="horizontalHeaderHighlightSections">
-               <bool>false</bool>
-              </attribute>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="summ_bot_lyt">
-           <item>
-            <widget class="QFrame" name="engine_frame">
-             <layout class="QVBoxLayout" name="engine_lyt" stretch="2,3,3">
-              <property name="topMargin">
-               <number>6</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="engine_lbl">
-                <property name="font">
-                 <font>
-                  <pointsize>8</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Check Engine Lights</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignHCenter|Qt::AlignTop</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="PyDMByteIndicator" name="mp01_bit">
-                <property name="toolTip">
-                 <string/>
-                </property>
-                <property name="alarmSensitiveBorder" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="channel" stdset="0">
-                 <string>ca://SIOC:SYS0:MP01:MonitorReady</string>
-                </property>
-                <property name="offColor" stdset="0">
-                 <color>
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </property>
-                <property name="showLabels" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="circles" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="labels" stdset="0">
-                 <stringlist>
-                  <string>MP01</string>
-                 </stringlist>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="PyDMByteIndicator" name="mp03_bit">
-                <property name="toolTip">
-                 <string/>
-                </property>
-                <property name="alarmSensitiveBorder" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="channel" stdset="0">
-                 <string>ca://SIOC:SYS0:MP03:MonitorReady</string>
-                </property>
-                <property name="offColor" stdset="0">
-                 <color>
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </property>
-                <property name="showLabels" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="circles" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <property name="labels" stdset="0">
-                 <stringlist>
-                  <string>MP03</string>
-                 </stringlist>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="summ_sep_line">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QLabel" name="fault_lbl">
+               <property name="font">
+                <font>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Faulted Devices</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTableView" name="summ_tbl">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="contextMenuPolicy">
+                <enum>Qt::CustomContextMenu</enum>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font-weight: bold;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="alternatingRowColors">
+                <bool>true</bool>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <property name="verticalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
+               <property name="horizontalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>100</number>
+               </attribute>
+               <attribute name="horizontalHeaderHighlightSections">
+                <bool>false</bool>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QScrollArea" name="summ_bot_area">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="summ_bot_wid">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>-50</y>
+               <width>1360</width>
+               <height>445</height>
+              </rect>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="byp_frame">
-             <layout class="QVBoxLayout" name="byp_lyt">
-              <property name="topMargin">
-               <number>6</number>
-              </property>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QLabel" name="byp_lbl">
-                <property name="font">
-                 <font>
-                  <pointsize>8</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Bypassed Faults</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="summ_bot_lyt">
+                <item>
+                 <widget class="QFrame" name="engine_frame">
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <property name="topMargin">
+                    <number>6</number>
+                   </property>
+                   <item row="4" column="1">
+                    <widget class="QFrame" name="mp03_eng_frame">
+                     <layout class="QGridLayout" name="gridLayout_2">
+                      <item row="2" column="1">
+                       <widget class="PyDMLabel" name="mp03_sw_lbl">
+                        <property name="text">
+                         <string>Software Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="PyDMLabel" name="mp03_to_err_lbl">
+                        <property name="text">
+                         <string>Timeout Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="1">
+                       <widget class="PyDMLabel" name="mp03_drop_lbl">
+                        <property name="text">
+                         <string>Drop Count</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="1">
+                       <widget class="PyDMLabel" name="mp03_over_lbl">
+                        <property name="text">
+                         <string>Over Count</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <widget class="PyDMLabel" name="mp03_to_en_lbl">
+                        <property name="text">
+                         <string>Timeout Enabled</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="1">
+                       <widget class="PyDMLabel" name="mp03_eval_lbl">
+                        <property name="text">
+                         <string>Eval Enabled</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_eval_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_to_en_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="1">
+                       <widget class="PyDMLabel" name="mp03_pause_lbl">
+                        <property name="text">
+                         <string>Message Pause</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="7" column="1">
+                       <widget class="PyDMLabel" name="mp03_rx_lbl">
+                        <property name="text">
+                         <string>Rx Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_sw_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:SW_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_to_err_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:TO_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_drop_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:MONITOR_DROP</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_pause_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:MONITOR_PAUSE</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_over_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="7" column="0">
+                       <widget class="PyDMByteIndicator" name="mp03_rx_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP03:MONITOR_RX_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QFrame" name="mp01_eng_frame">
+                     <layout class="QGridLayout" name="gridLayout">
+                      <item row="4" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_drop_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:MONITOR_DROP</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_to_en_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="alarmSensitiveContent" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="alarmSensitiveBorder" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                        <property name="PyDMToolTip" stdset="0">
+                         <string/>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:TIMEOUT_ENABLE_RBV</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="bigEndian" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                        <property name="numBits" stdset="0">
+                         <number>1</number>
+                        </property>
+                        <property name="shift" stdset="0">
+                         <number>0</number>
+                        </property>
+                        <property name="labels" stdset="0">
+                         <stringlist>
+                          <string>Bit 0</string>
+                         </stringlist>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <widget class="PyDMLabel" name="mp01_to_en_lbl">
+                        <property name="text">
+                         <string>Timeout Enabled</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_eval_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:EVALUATION_ENABLE_RBV</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_sw_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:SW_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="1">
+                       <widget class="PyDMLabel" name="mp01_eval_lbl">
+                        <property name="text">
+                         <string>Eval Enabled</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="PyDMLabel" name="mp01_sw_lbl">
+                        <property name="text">
+                         <string>Software Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="1">
+                       <widget class="PyDMLabel" name="mp01_over_lbl">
+                        <property name="text">
+                         <string>Over Count</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_to_err_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:TO_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="PyDMLabel" name="mp01_to_err_lbl">
+                        <property name="text">
+                         <string>Timeout Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="1">
+                       <widget class="PyDMLabel" name="mp01_drop_lbl">
+                        <property name="text">
+                         <string>Drop Count</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="1">
+                       <widget class="PyDMLabel" name="mp01_pause_lbl">
+                        <property name="text">
+                         <string>Message Pause</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="7" column="1">
+                       <widget class="PyDMLabel" name="mp01_rx_lbl">
+                        <property name="text">
+                         <string>Rx Error</string>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_pause_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:MONITOR_PAUSE</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_over_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="alarmSensitiveContent" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:MONITOR_OVERFLOW</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="7" column="0">
+                       <widget class="PyDMByteIndicator" name="mp01_rx_bit">
+                        <property name="toolTip">
+                         <string/>
+                        </property>
+                        <property name="rules" stdset="0">
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP01:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                        </property>
+                        <property name="channel" stdset="0">
+                         <string>ca://SIOC:SYS0:MP01:MONITOR_RX_ERR</string>
+                        </property>
+                        <property name="offColor" stdset="0">
+                         <color>
+                          <red>255</red>
+                          <green>0</green>
+                          <blue>0</blue>
+                         </color>
+                        </property>
+                        <property name="showLabels" stdset="0">
+                         <bool>false</bool>
+                        </property>
+                        <property name="circles" stdset="0">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item row="3" column="0" colspan="2">
+                    <widget class="Line" name="eng_split_line">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="PyDMByteIndicator" name="mp03_bit">
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="toolTip">
+                      <string/>
+                     </property>
+                     <property name="alarmSensitiveBorder" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="channel" stdset="0">
+                      <string>ca://SIOC:SYS0:MP03:MonitorReady</string>
+                     </property>
+                     <property name="offColor" stdset="0">
+                      <color>
+                       <red>255</red>
+                       <green>0</green>
+                       <blue>0</blue>
+                      </color>
+                     </property>
+                     <property name="showLabels" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="circles" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="labels" stdset="0">
+                      <stringlist>
+                       <string>MP03</string>
+                      </stringlist>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" colspan="2">
+                    <widget class="QLabel" name="engine_lbl">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>8</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Check Engine Lights</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="PyDMByteIndicator" name="mp01_bit">
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="toolTip">
+                      <string/>
+                     </property>
+                     <property name="alarmSensitiveBorder" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="channel" stdset="0">
+                      <string>ca://SIOC:SYS0:MP01:MonitorReady</string>
+                     </property>
+                     <property name="offColor" stdset="0">
+                      <color>
+                       <red>255</red>
+                       <green>0</green>
+                       <blue>0</blue>
+                      </color>
+                     </property>
+                     <property name="showLabels" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="circles" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                     <property name="labels" stdset="0">
+                      <stringlist>
+                       <string>MP01</string>
+                      </stringlist>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0" colspan="2">
+                    <widget class="Line" name="eng_top_line">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="byp_frame">
+                  <layout class="QVBoxLayout" name="byp_lyt">
+                   <property name="topMargin">
+                    <number>6</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="byp_lbl">
+                     <property name="font">
+                      <font>
+                       <pointsize>8</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Bypassed Faults</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QTableView" name="byp_tbl">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="contextMenuPolicy">
+                      <enum>Qt::CustomContextMenu</enum>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">font-weight: bold;</string>
+                     </property>
+                     <property name="alternatingRowColors">
+                      <bool>true</bool>
+                     </property>
+                     <property name="selectionBehavior">
+                      <enum>QAbstractItemView::SelectRows</enum>
+                     </property>
+                     <property name="verticalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <property name="horizontalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <property name="sortingEnabled">
+                      <bool>true</bool>
+                     </property>
+                     <attribute name="horizontalHeaderHighlightSections">
+                      <bool>false</bool>
+                     </attribute>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QTableView" name="byp_tbl">
-                <property name="font">
-                 <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
+               <spacer name="summ_bot_spcr">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
                 </property>
-                <property name="contextMenuPolicy">
-                 <enum>Qt::CustomContextMenu</enum>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
                 </property>
-                <property name="styleSheet">
-                 <string notr="true">font-weight: bold;</string>
-                </property>
-                <property name="alternatingRowColors">
-                 <bool>true</bool>
-                </property>
-                <property name="selectionBehavior">
-                 <enum>QAbstractItemView::SelectRows</enum>
-                </property>
-                <property name="verticalScrollMode">
-                 <enum>QAbstractItemView::ScrollPerPixel</enum>
-                </property>
-                <property name="horizontalScrollMode">
-                 <enum>QAbstractItemView::ScrollPerPixel</enum>
-                </property>
-                <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-                <attribute name="horizontalHeaderHighlightSections">
-                 <bool>false</bool>
-                </attribute>
-               </widget>
+               </spacer>
               </item>
              </layout>
             </widget>
-           </item>
-          </layout>
+           </widget>
+          </widget>
          </item>
         </layout>
        </item>
@@ -511,8 +1194,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>348</width>
-             <height>295</height>
+             <width>1358</width>
+             <height>466</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -906,6 +1589,12 @@
               <bool>false</bool>
              </property>
              <widget class="QFrame" name="all_devs_frame">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>2</verstretch>
+               </sizepolicy>
+              </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <property name="leftMargin">
                 <number>6</number>
@@ -975,6 +1664,12 @@
               </layout>
              </widget>
              <widget class="QFrame" name="sel_devs_frame">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <property name="leftMargin">
                 <number>6</number>

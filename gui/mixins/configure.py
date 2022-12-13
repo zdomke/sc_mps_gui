@@ -44,7 +44,6 @@ class ConfigureMixin:
         configure tab."""
         # All Devices table and LineEdit
         self.ui.all_devs_edt.textChanged.connect(self.all_devs_filter.setFilterFixedString)
-        # self.ui.all_devs_tbl.selectionModel().selectionChanged.connect(self.dev_selected)
         self.ui.all_devs_tbl.clicked.connect(self.dev_selected)
 
         # Selected Devices table and LineEdit
