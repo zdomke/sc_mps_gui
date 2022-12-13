@@ -1,6 +1,5 @@
 from json import dumps
-from qtpy.QtCore import (Qt, Slot, QModelIndex, QItemSelection,
-                         QSortFilterProxyModel)
+from qtpy.QtCore import (Qt, Slot, QModelIndex, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QHeaderView, QApplication)
 from mps_database.models import Device
 from enums import ConfFiles
@@ -12,9 +11,6 @@ class ConfigureMixin:
         """Initializer for everything in Configure tab: ListViews and
         PyDMEmbeddedDisplay."""
         self.ui.configure_spltr.setSizes([50, 50])
-        self.ui.devs_spltr.setStretchFactor(0, 2)
-        self.ui.devs_spltr.setStretchFactor(1, 1)
-
         devs = self.model.config.session.query(Device).all()
 
         # Set model, filter, and header for the All Devices table
