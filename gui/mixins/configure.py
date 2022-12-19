@@ -66,7 +66,7 @@ class ConfigureMixin:
             else:
                 mac['CH' + suf] = ", ".join([i.channel.number for i in dev.inputs])
             mac['DEVICE' + suf] = self.model.name.getDeviceName(dev)
-        
+
         return mac
 
     @Slot(QModelIndex)

@@ -133,6 +133,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="xorbit_box">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>X Orbit</string>
          </property>
@@ -170,6 +176,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="yorbit_box">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Y Orbit</string>
          </property>
@@ -207,6 +219,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="tmit_box">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>TMIT</string>
          </property>

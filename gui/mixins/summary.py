@@ -33,7 +33,6 @@ class SummaryMixin:
             hdr.resizeSection(1, 300)
             hdr.setSectionResizeMode(8, QHeaderView.Stretch)
 
-
         # Initialize the Bypass Table and Headers
         self.byp_model = LogicSortFilterModel(self)
         self.byp_model.setSourceModel(self.tbl_model)
