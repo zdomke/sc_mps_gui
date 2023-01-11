@@ -1408,9 +1408,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>30</y>
+       <y>0</y>
        <width>120</width>
-       <height>80</height>
+       <height>65</height>
       </rect>
      </property>
      <property name="font">
@@ -1450,9 +1450,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>155</y>
+       <y>190</y>
        <width>120</width>
-       <height>80</height>
+       <height>65</height>
       </rect>
      </property>
      <property name="font">
@@ -1492,9 +1492,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>115</y>
+       <y>65</y>
        <width>120</width>
-       <height>30</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
@@ -1514,13 +1514,13 @@ color: rgb(255, 255, 255);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="engine_lbl_3">
+    <widget class="QLabel" name="engine_lbl_4">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>240</y>
+       <y>255</y>
        <width>120</width>
-       <height>30</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
@@ -1538,6 +1538,66 @@ color: rgb(255, 255, 255);</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="engine_lbl_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>160</y>
+       <width>120</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>MP02</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="PyDMByteIndicator" name="mp02_bit">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>95</y>
+       <width>120</width>
+       <height>65</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="channel" stdset="0">
+      <string>ca://SIOC:SYS0:MP02:MonitorReady</string>
+     </property>
+     <property name="offColor" stdset="0">
+      <color>
+       <red>255</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </property>
+     <property name="showLabels" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="circles" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="labels" stdset="0">
+      <stringlist>
+       <string>MP02</string>
+      </stringlist>
      </property>
     </widget>
    </widget>
