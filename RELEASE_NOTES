@@ -1,4 +1,5 @@
 R2.2.0  Zach Domke      01/10/2023
+        Add MP02 check engine light
         Check engine lights show which PVs are alarming
         Summary tab is in a splitter for the user to change which data to focus on
         Set frames in BPMS Config display to fixed horizontal sizepolicy
