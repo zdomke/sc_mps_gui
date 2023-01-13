@@ -18,13 +18,13 @@ sc_mps_gui
     |   |-- logic.py  
     |   |-- selection_detail.py  
     |   |-- configure.py  
-    |   `-- future.py  
+    |   `-- ignore.py  
     |-- models_pkg/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
     |   |-- logic_model.py
     |   |-- configure_model.py
-    |   `-- future_model.py  
+    |   `-- ignore_model.py  
     |  
     `-- resources/  
         |-- __init__.py  
@@ -106,8 +106,8 @@ sc_mps_gui
     - BPMS  
 
 
-### future.py  
-  - This file contains a python mixin to manage the Future Sight tab  
+### ignore.py  
+  - This file contains a python mixin to manage the Ignore Logic tab  
   - Right-clicking a fault allows the user to open more details in the Logic tab  
   - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
 
@@ -126,7 +126,7 @@ sc_mps_gui
   - Create a custom QAbstractTableModel used to manage the table of all devices and selected devices in the Configure tab  
 
 
-### future_model.py  
+### ignore_model.py  
   - Create a custom QAbstractTableModel
   - This table model is very similar to LogicTableModel, but:
     - Includes a column of the ignore conditions

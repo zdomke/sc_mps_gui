@@ -290,7 +290,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-104</y>
+               <y>0</y>
                <width>1360</width>
                <height>640</height>
               </rect>
@@ -1902,8 +1902,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1358</width>
-             <height>466</height>
+             <width>348</width>
+             <height>295</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -2482,15 +2482,15 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="future_tab">
+     <widget class="QWidget" name="ignore_tab">
       <attribute name="title">
-       <string>Future Sight</string>
+       <string>Ignore Logic</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <layout class="QHBoxLayout" name="future_filter_lyt">
+        <layout class="QHBoxLayout" name="ignore_filter_lyt">
          <item>
-          <widget class="QLineEdit" name="future_filter_edt">
+          <widget class="QLineEdit" name="ignore_filter_edt">
            <property name="placeholderText">
             <string>Case-insensitive Filter</string>
            </property>
@@ -2499,7 +2499,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableView" name="future_tbl">
+        <widget class="QTableView" name="ignore_tbl">
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
@@ -2521,9 +2521,9 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="future_num_flts_lyt">
+        <layout class="QHBoxLayout" name="ignore_num_flts_lyt">
          <item>
-          <spacer name="future_num_flts_spcr">
+          <spacer name="ignore_num_flts_spcr">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -2536,7 +2536,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="future_num_flts_lbl">
+          <widget class="QLabel" name="ignore_num_flts_lbl">
            <property name="font">
             <font>
              <pointsize>7</pointsize>

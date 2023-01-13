@@ -5,11 +5,11 @@ from mixins.summary import SummaryMixin
 from mixins.logic import LogicMixin
 from mixins.selection_detail import SelectionDetailsMixin
 from mixins.configure import ConfigureMixin
-from mixins.future import FutureMixin
+from gui.mixins.ignore import IgnoreMixin
 
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
-                    ConfigureMixin, FutureMixin):
+                    ConfigureMixin, IgnoreMixin):
     def __init__(self, parent=None, args=[], macros=None, ui_filename=None):
 
         cud_mode = False
@@ -35,11 +35,11 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
         if not cud_mode:
             self.configure_init()
             self.selection_init()
-            self.future_init()
+            self.ignore_init()
 
         self.logic_connections(cud_mode=cud_mode)
         if not cud_mode:
             self.configure_connections()
             self.selection_connections()
             self.summ_connections()
-            self.future_connections()
+            self.ignore_connections()

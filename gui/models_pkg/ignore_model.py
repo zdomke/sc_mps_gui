@@ -7,7 +7,7 @@ from mps_database.models.fault_state import FaultState
 from models_pkg.mps_model import MPSModel
 
 
-class FutureTableModel(QAbstractTableModel):
+class IgnoreTableModel(QAbstractTableModel):
     # Set class variables for the model. These are standard and static.
     font = QFont()
     font.setBold(True)
@@ -26,7 +26,7 @@ class FutureTableModel(QAbstractTableModel):
     act_signal = Signal(int, int)
 
     def __init__(self, parent, model: MPSModel, sessionmaker: sessionmaker):
-        super(FutureTableModel, self).__init__(parent)
+        super(IgnoreTableModel, self).__init__(parent)
         self.model = model
         self.faults = model.faults
         self.session = scoped_session(sessionmaker)
