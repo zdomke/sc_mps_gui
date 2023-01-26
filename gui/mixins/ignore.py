@@ -1,10 +1,8 @@
 from functools import partial
 from qtpy.QtCore import (Qt, Slot)
-from qtpy.QtWidgets import (QHeaderView, QLabel, QComboBox)
-from epics import PV
-from epics.dbr import DBE_VALUE
+from qtpy.QtWidgets import QHeaderView
+from pydm.widgets import PyDMByteIndicator
 from mps_database.models import Condition
-from gui.models_pkg.ignore_model import IgnoreTableModel
 from models_pkg.logic_model import (LogicSortFilterModel, LogicItemDelegate)
 
 
@@ -12,125 +10,91 @@ class IgnoreMixin:
     def ignore_init(self):
         conditions = self.model.config.session.query(Condition).all()
 
-        self.box_group = []
-        self.box_states = []
-        self.descriptions = []
+        names = []
+        for i, con in enumerate(conditions):
+            con_pv = self.model.name.getConditionPV(con)
+            name = con.name.split('_')[0] if "IGNORE" in con.name else con.name
+            if name in names:
+                continue
+            names.append(name)
 
-        for c in conditions:
-            c_pv = self.model.name.getConditionPV(c)
-            c_state = 0
-            if c_pv:
-                get_ret = PV(c_pv, connection_timeout=2).get()
-                c_state = get_ret + 1 if get_ret is not None else 0
+            wid = PyDMByteIndicator(init_channel=f"ca://{con_pv}")
+            wid.circles = True
+            wid.labels = [name]
+            wid.onColor = Qt.yellow
+            wid.offColor = Qt.transparent
+            wid.setStyleSheet("font-weight: bold;")
+            wid._indicators[0].setMinimumWidth(30)
+            wid.layout().setAlignment(wid._labels[0], Qt.AlignLeft)
+            self.ui.ignore_status_lyt.insertWidget(self.ui.ignore_status_lyt.count() - 1, wid)
 
-            if c.description not in self.descriptions:
-                self.descriptions.append(c.description)
-                self.box_states.append(c_state)
-            else:
-                ind = self.descriptions.index(c.description)
-                curr_state = self.box_states[ind]
+        self.ignore_delegate = LogicItemDelegate(self)
 
-                self.box_states[ind] = curr_state if curr_state else c_state
-
-        for i, d in enumerate(self.descriptions):
-            lbl = QLabel(d)
-            cbox = QComboBox()
-            cbox.addItems(["Does Not Matter", "Not Active", "Active"])
-            cbox.setCurrentIndex(self.box_states[i])
-            self.box_group.append(cbox)
-
-            self.ui.ignore_filter_lyt.insertWidget(i * 2, lbl)
-            self.ui.ignore_filter_lyt.insertWidget((i * 2) + 1, cbox)
-
-        self.ign_tbl_model = IgnoreTableModel(self, self.model,
-                                              self.model.config.Session)
-        self.ign_delegate = LogicItemDelegate(self)
-
-        self.ign_model = LogicSortFilterModel(self)
-        self.ign_model.setSourceModel(self.ign_tbl_model)
-        self.ign_model.setFilterByColumn(1, "True")
-        self.ign_model.setFilterByColumn(9, "Y")
-        self.ui.ignore_tbl.setModel(self.ign_model)
+        self.ignore_model = LogicSortFilterModel(self)
+        self.ignore_model.setSourceModel(self.tbl_model)
+        self.ui.ignore_tbl.setModel(self.ignore_model)
         self.ui.ignore_tbl.setSortingEnabled(True)
         self.ui.ignore_tbl.sortByColumn(0, Qt.AscendingOrder)
-        self.ui.ignore_tbl.hideColumn(8)
-        self.ui.ignore_tbl.hideColumn(9)
-        self.ui.ignore_tbl.setItemDelegate(self.ign_delegate)
+        for i in range(2, self.tbl_model.iind):
+            if i in self.tbl_model.conind:
+                continue
+            self.ui.ignore_tbl.hideColumn(i)
+        self.ui.ignore_tbl.setItemDelegate(self.ignore_delegate)
 
-        self.hdr = self.ui.ignore_tbl.horizontalHeader()
-        self.hdr.setSectionResizeMode(QHeaderView.Interactive)
-        self.hdr.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.hdr.resizeSection(1, 125)
+        hdr = self.ui.ignore_tbl.horizontalHeader()
+        hdr.setSectionResizeMode(QHeaderView.Interactive)
+        hdr.setSectionResizeMode(0, QHeaderView.Stretch)
+        hdr.resizeSection(1, 125)
+        hdr.resizeSection(self.tbl_model.aind, 70)
+        hdr.moveSection(self.tbl_model.iind, 3)
 
-        self.ign_pvs = []
+        self.show_inactive_ign(0)
         self.show_ignore_row_count()
-        self.set_new_filter(-1, -1)
 
     def ignore_connections(self):
         """Establish PV and slot connections for the context menus and
         their action."""
-        for i, fault in enumerate(self.faults):
-            ign_pv = PV(f"{fault.name}_TEST",
-                        callback=partial(self.new_ignore, row=i),
-                        auto_monitor=DBE_VALUE)
-            self.ign_pvs.append(ign_pv)
-
-        for i, box in enumerate(self.box_group):
-            box.currentIndexChanged.connect(
-                partial(self.set_new_filter, ind=i))
-
         self.ui.ignore_filter_edt.textChanged.connect(
-            partial(self.ign_model.setFilterByColumn, 0))
+            partial(self.ignore_model.setFilterByColumn, 0))
         self.ui.ignore_tbl.customContextMenuRequested.connect(
             self.custom_context_menu)
 
+        self.ui.ignore_beampath_cmbx.currentTextChanged.connect(self.show_beampath_ign)
+        self.ui.ignore_inactive_chck.stateChanged.connect(self.show_inactive_ign)
+
         # Establish connections for showing the row count
-        self.ign_model.rowsRemoved.connect(self.show_ignore_row_count)
-        self.ign_model.rowsInserted.connect(self.show_ignore_row_count)
-        self.ign_model.layoutChanged.connect(self.show_ignore_row_count)
+        self.ignore_model.rowsRemoved.connect(self.show_ignore_row_count)
+        self.ignore_model.rowsInserted.connect(self.show_ignore_row_count)
+        self.ignore_model.layoutChanged.connect(self.show_ignore_row_count)
 
-    def new_ignore(self, value: int, row: int, **kw):
-        """Function to emit the appropriate signal based on the pvname."""
-        self.ign_tbl_model.state_signal.emit(value, row)
+    def show_beampath_ign(self, path):
+        if path == "All" or path == "SC_SXR":
+            for i in self.tbl_model.conind:
+                self.ui.ignore_tbl.showColumn(i)
+            if path == "SC_SXR":
+                self.ui.ignore_tbl.hideColumn(self.tbl_model.conind[1])
+        elif path == "SC_BSYD" or path == "SC_HXR":
+            for i in self.tbl_model.conind:
+                self.ui.ignore_tbl.hideColumn(i)
+            self.ui.ignore_tbl.showColumn(self.tbl_model.conind[0])
+            if path == "SC_HXR":
+                self.ui.ignore_tbl.showColumn(self.tbl_model.conind[1])
 
-    @Slot(int, int)
-    def set_new_filter(self, state, ind):
-        """When a QComboBox value changes, change the table's filters."""
-        if ind != -1 and "YAG screen" in self.descriptions[ind]:
-            if state == 2:
-                self.box_states = [0] * len(self.box_states)
-                for box in self.box_group:
-                    if self.box_group.index(box) == ind:
-                        continue
-                    box.setEnabled(False)
-                    box.blockSignals(True)
-                    box.setCurrentIndex(0)
-                    box.blockSignals(False)
-            else:
-                for box in self.box_group:
-                    box.setEnabled(True)
-
-        if ind != -1:
-            self.box_states[ind] = state
-
-        exclusion_str = ", ".join([d for i, d in enumerate(self.descriptions)
-                                   if self.box_states[i] == 1])
-        filter_str = ", ".join([d for i, d in enumerate(self.descriptions)
-                                if self.box_states[i] == 2])
-
-        if exclusion_str:
-            self.ign_model.setExclusionByColumn(8, exclusion_str)
+    @Slot(int)
+    def show_inactive_ign(self, state):
+        """Slot called when Inactive Checkbox is toggled. Determines if
+        the inactive faults are shown. Only show faults that are active,
+        this not including faults that could not establish a connection."""
+        if not state:
+            self.ui.ignore_tbl.hideColumn(self.tbl_model.aind)
+            self.ignore_model.setFilterByColumn(self.tbl_model.aind, "Y")
         else:
-            self.ign_model.removeExclusionByColumn(8)
-        if filter_str:
-            self.ign_model.setFilterByColumn(8, filter_str)
-        else:
-            self.ign_model.removeFilterByColumn(8)
+            self.ui.ignore_tbl.showColumn(self.tbl_model.aind)
+            self.ignore_model.removeFilterByColumn(self.tbl_model.aind)
 
     @Slot()
     def show_ignore_row_count(self):
         """When the number of displayed rows changes, update the row
         count at the bottom of the tab."""
-        rows = self.ign_model.rowCount()
-        self.ui.ignore_num_flts_lbl.setText("Displaying {} / {} Faults"
-                                            .format(rows, len(self.faults)))
+        rows = self.ignore_model.rowCount()
+        self.ui.ignore_num_flts_lbl.setText(f"Displaying {rows} / {len(self.model.faults)} Faults")

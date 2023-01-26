@@ -5,7 +5,7 @@ from mixins.summary import SummaryMixin
 from mixins.logic import LogicMixin
 from mixins.selection_detail import SelectionDetailsMixin
 from mixins.configure import ConfigureMixin
-from gui.mixins.ignore import IgnoreMixin
+from mixins.ignore import IgnoreMixin
 
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,

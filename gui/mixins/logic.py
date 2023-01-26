@@ -23,7 +23,7 @@ class LogicMixin:
             self.logic_model.setFilterByColumn(0, "")
             self.ui.logic_tbl.setModel(self.logic_model)
             self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-            for i in range(self.tbl_model.beind, self.tbl_model.aind):
+            for i in range(self.tbl_model.conind[0], self.tbl_model.aind):
                 self.ui.logic_tbl.hideColumn(i)
             self.ui.logic_tbl.setItemDelegate(self.delegate)
 
@@ -80,7 +80,6 @@ class LogicMixin:
             self.tbl_model.ign_signal.emit(value, row)
         elif pvname[-7:] == "_ACTIVE":
             self.tbl_model.act_signal.emit(value, row)
-            self.ftr_tbl_model.act_signal.emit(value, row)
 
     @Slot(int)
     def show_inactive(self, state):
