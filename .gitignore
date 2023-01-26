@@ -1,3 +1,7 @@
 __pycache__/
 *.py[cod]
 *.log
+
+# Temporarily add Histor db files to .gitignore
+gui/config.py
+gui/history/*
