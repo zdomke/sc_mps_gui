@@ -69,7 +69,6 @@ class ConfBPM(Display):
         self.ui.multi_dev_tbl.setCellWidget(row, col, wid)
 
 
-
 class ConfReadBPM(QWidget):
     def __init__(self, parent, dev):
         super(ConfReadBPM, self).__init__(parent=parent)
@@ -83,7 +82,7 @@ class ConfReadBPM(QWidget):
     def make_row(self, hilo):
         """Makes the Min/Max row of the Read-only widget."""
         lyt = QHBoxLayout()
-        
+
         lbl = QLabel("Max" if hilo == "H" else "Min")
         lbl.setFixedSize(25, 12)
         lbl.setStyleSheet("background-color: transparent")
@@ -117,7 +116,7 @@ class ConfWriteBPM(QWidget):
         slot connections between the row's widgets."""
         lyt = QHBoxLayout()
         self.main_lyt.addLayout(lyt)
-        
+
         lbl = QLabel("Max" if hilo == "H" else "Min")
         lbl.setFixedSize(25, 12)
         lbl.setStyleSheet("background-color: transparent")
@@ -143,7 +142,7 @@ class ConfWriteBPM(QWidget):
         sndr = self.sender()
         txt = sndr.text()
         print(txt)
-        
+
         vals = caget_many([f"{d[:-5]}_RBV" for d in sndr.channel.split(", ")],
                           connection_timeout=(len(self.devs) * .1))
         equiv = True
@@ -157,7 +156,7 @@ class ConfWriteBPM(QWidget):
         if not equiv:
             ret = QMessageBox.warning(self, "Differing Threshold Values",
                                       "Threshold values are different across multiple devices."
-                                        "\n\nContinue writing to all devices?",
+                                      "\n\nContinue writing to all devices?",
                                       QMessageBox.Yes | QMessageBox.No)
             if ret == QMessageBox.No:
                 return
@@ -172,7 +171,7 @@ class ConfWriteBPM(QWidget):
         if chk:
             ret = QMessageBox.warning(self, "Confirm Enabling Threshold",
                                       f"Enabling Thresholds:\n{sndr.channel.replace('_EN', '')}"
-                                        "\n\nContinue to enable thresholds?",
+                                      "\n\nContinue to enable thresholds?",
                                       QMessageBox.Yes | QMessageBox.No)
             if ret == QMessageBox.No:
                 sndr.setChecked(False)
