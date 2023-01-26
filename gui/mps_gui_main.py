@@ -24,8 +24,8 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
                                             macros=macros, ui_filename=ui_filename)
         self.logger = getLogger(__name__)
 
-        if 'DBFILE' in macros:
-            self.model = MPSModel(macros['DBFILE'])
+        if 'DB_FILE' in macros:
+            self.model = MPSModel(macros['DB_FILE'])
         else:
             self.model = MPSModel()
 

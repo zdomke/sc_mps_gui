@@ -34,14 +34,18 @@
 ### sc_mps_gui.bash  
   - Run the MPS Display with the specified DB file (if one is specified)  
   - Usage:  
-    `` sc_mps_gui.bash --dbfile [filename] ``  
+    `` sc_mps_gui.bash [ -c | --cud ] [ -d | --dbfile filename ] ``  
 
   - Examples:  
     `` sc_mps_gui.bash ``  
-    `` sc_mps_gui.bash faults.db ``  
 
-  -To use "CUD mode":
-    `` sc_mps_gui.bash --cud ``  
+    - To use a specific SQLite database:  
+      `` sc_mps_gui.bash -d faults.db ``  
+      `` sc_mps_gui.bash --dbfile faults.db ``  
+
+    - To use "CUD mode":
+      `` sc_mps_gui.bash -c ``  
+      `` sc_mps_gui.bash --cud ``  
 
 
 ### mps_gui_main.py & mps_gui_main.ui & mps_cud_main.ui 

@@ -1,3 +1,6 @@
+R2.2.1  Zach Domke      01/26/2023
+        Fix dbfile command in .bash startup file
+        Add history db files to .gitignore temporarily
 R2.2.0  Zach Domke      01/10/2023
         Add MP02 check engine light
         Check engine lights show which PVs are alarming

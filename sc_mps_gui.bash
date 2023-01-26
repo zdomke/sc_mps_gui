@@ -5,7 +5,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 usage(){
     echo "LCLS-SC MPS GUI launcher"
     echo "Usage:" 1>&2
-    echo "  sc_mps_gui.bash [ -c | --cud ] [ DBFILE ]" 1>&2
+    echo "  sc_mps_gui.bash [ -c | --cud ] [ -d | --dbfile DB_FILE ]" 1>&2
     echo "" 1>&2
     echo "Examples:" 1>&2
     echo "  sc_mps_gui.bash" 1>&2
@@ -24,7 +24,8 @@ DB_FILE=""
 while [ $# -gt 0 ]
 do
     case $1 in
-        -d | --dbfile) DB_FILE="$2" ;;
+        -d | --dbfile) DB_FILE="$2" 
+                       shift ;;
         -c | --cud) CUD_MODE="True" ;;
         -h | --help) exit_abnormal ;;
         *) exit_abnormal
