@@ -23,7 +23,7 @@ class LogicMixin:
             self.logic_model.setFilterByColumn(0, "")
             self.ui.logic_tbl.setModel(self.logic_model)
             self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-            for i in range(self.tbl_model.beind, self.tbl_model.aind):
+            for i in range(self.tbl_model.conind[0], self.tbl_model.aind):
                 self.ui.logic_tbl.hideColumn(i)
             self.ui.logic_tbl.setItemDelegate(self.delegate)
 

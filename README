@@ -15,7 +15,8 @@
     |   |-- summary.py  
     |   |-- logic.py  
     |   |-- selection_detail.py  
-    |   `-- configure.py  
+    |   |-- configure.py  
+    |   `-- ignore.py  
     |-- models_pkg/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
@@ -50,12 +51,14 @@
 
 ### mps_gui_main.py & mps_gui_main.ui & mps_cud_main.ui 
   - This is the main display for the SC MPS Display  
-  - Contains a tab widget with 2 tabs:  
+  - Contains a tab widget with 4 tabs:  
     - The Summary tab contains 6 embedded displays, 2 'check engine lights', and 2 tables, one containing faulted PVs and one containing bypassed faults  
     - The Logic tab contains a table of all faults in the database  
       - The searchbar shows only faults containing that substring  
       - The checkbox shows the user all inactive faults  
       - Selecting a fault opens a panel with more details on that fault  
+    - The Ignore Logic tab displays which faults are ignored and the conditions in which they are ignored  
+    - The Configure tab allows the user to set thresholds for multiple devices at once  
   - mps_cud_main.ui is the UI for the CUD mode, consisting of the
     summary tab contents (without interactivity) in a CUD-ified UI
 
@@ -68,7 +71,10 @@
 ### summary.py  
   - This file contains a python mixin to manage the Summary tab  
   - Manage the faults table and the bypass table  
+  - Right-clicking a fault allows the user to open more details in the Logic tab  
+  - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
   - Minor interactions with Logic tab:  
+    - When a fault is right-clicking
     - On fault status change and/or bypass status change, alter the associated cell in Logic tab table  
     - When a fault is right-clicked, present an option to open the fault in the Logic tab  
 
@@ -79,6 +85,7 @@
   - Allow for searching and sorting in the main table  
   - Allow the user to filter out all inactive faults
   - Faults can be bypassed from the selection details pane  
+  - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
 
 
 ### selection_detail.py  
@@ -99,6 +106,12 @@
   - Display 'error' file when multiple device types are selected or an unsupported device type  
   - Supported Device Types:  
     - BPMS  
+
+
+### ignore.py  
+  - This file contains a python mixin to manage the Ignore Logic tab  
+  - Right-clicking a fault allows the user to open more details in the Logic tab  
+  - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
 
 
 ### mps_model.py  

@@ -3,7 +3,7 @@ from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import (QWidget, QTableWidgetItem, QHBoxLayout, QVBoxLayout,
                             QMessageBox, QHeaderView, QLabel, QTableWidget)
 from pydm import Display
-from pydm.widgets import PyDMLabel, PyDMByteIndicator
+from pydm.widgets import (PyDMLabel, PyDMByteIndicator)
 from resources.widgets import (PyDMMultiLineEdit, PyDMMultiCheckbox)
 
 
