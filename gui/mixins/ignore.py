@@ -8,9 +8,12 @@ from models_pkg.logic_model import (LogicSortFilterModel, LogicItemDelegate)
 
 class IgnoreMixin:
     def ignore_init(self):
-        conditions = self.model.config.session.query(Condition).all()
+        """Initializer for everything in Ignore Logic tab: Ignore Table
+        and Ignore Status Bit Indicators."""
 
+        # Create bit indicators for each Ignore status; exclude duplicates
         names = []
+        conditions = self.model.config.session.query(Condition).all()
         for i, con in enumerate(conditions):
             con_pv = self.model.name.getConditionPV(con)
             name = con.name.split('_')[0] if "IGNORE" in con.name else con.name
@@ -28,10 +31,11 @@ class IgnoreMixin:
             wid.layout().setAlignment(wid._labels[0], Qt.AlignLeft)
             self.ui.ignore_status_lyt.insertWidget(self.ui.ignore_status_lyt.count() - 1, wid)
 
+        # Initialize Ignore Table models, delegate, and view
         self.ignore_delegate = LogicItemDelegate(self)
-
         self.ignore_model = LogicSortFilterModel(self)
         self.ignore_model.setSourceModel(self.tbl_model)
+
         self.ui.ignore_tbl.setModel(self.ignore_model)
         self.ui.ignore_tbl.setSortingEnabled(True)
         self.ui.ignore_tbl.sortByColumn(0, Qt.AscendingOrder)
@@ -52,8 +56,8 @@ class IgnoreMixin:
         self.show_ignore_row_count()
 
     def ignore_connections(self):
-        """Establish PV and slot connections for the context menus and
-        their action."""
+        """Establish slot connections for the Context Menu, Filter Text
+        Edit, Beampath Combobox, and the Row Count Label."""
         self.ui.ignore_filter_edt.textChanged.connect(
             partial(self.ignore_model.setFilterByColumn, 0))
         self.ui.ignore_tbl.customContextMenuRequested.connect(
@@ -67,7 +71,10 @@ class IgnoreMixin:
         self.ignore_model.rowsInserted.connect(self.show_ignore_row_count)
         self.ignore_model.layoutChanged.connect(self.show_ignore_row_count)
 
+    @Slot(str)
     def show_beampath_ign(self, path):
+        """Slot called by the Beampath Combobox to hide/show Ignore
+        Table columns based on the Combobox option."""
         if path == "All" or path == "SC_SXR":
             for i in self.tbl_model.conind:
                 self.ui.ignore_tbl.showColumn(i)

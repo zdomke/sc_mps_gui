@@ -1,6 +1,5 @@
 R?.?.?  Zach Domke      ??/??/????
         Add Ignore Logic tab to the application
-                This feature allows the user to see faults that are currently ignored
 R2.2.0  Zach Domke      01/10/2023
         Add MP02 check engine light
         Check engine lights show which PVs are alarming

@@ -23,8 +23,7 @@ sc_mps_gui
     |   |-- __init__.py  
     |   |-- mps_model.py  
     |   |-- logic_model.py
-    |   |-- configure_model.py
-    |   `-- ignore_model.py  
+    |   `-- configure_model.py
     |  
     `-- resources/  
         |-- __init__.py  
@@ -124,13 +123,6 @@ sc_mps_gui
 
 ### configure_model.py  
   - Create a custom QAbstractTableModel used to manage the table of all devices and selected devices in the Configure tab  
-
-
-### ignore_model.py  
-  - Create a custom QAbstractTableModel
-  - This table model is very similar to LogicTableModel, but:
-    - Includes a column of the ignore conditions
-    - Excludes the Bypassed and Ignored columns
 
 
 ### mps_permit_panel.ui  
