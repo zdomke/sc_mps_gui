@@ -1,4 +1,5 @@
 from json import dumps
+from itertools import groupby
 from qtpy.QtCore import (Qt, Slot, QModelIndex, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QHeaderView, QApplication)
 from mps_database.models import Device
@@ -58,16 +59,51 @@ class ConfigureMixin:
             suf = str(i + 1) if multi else ""
             dev = self.sel_devs_model.get_device(i)
 
-            mac['LN' + suf] = dev.card.link_node.lcls1_id
-            mac['CL' + suf] = dev.card.crate.location
-            mac['AC' + suf] = f"Slot {dev.card.number}" if dev.card.number != 1 else "RTM"
-            if dev.is_analog():
-                mac['CH' + suf] = dev.channel.number
-            else:
-                mac['CH' + suf] = ", ".join([i.channel.number for i in dev.inputs])
-            mac['DEVICE' + suf] = self.model.name.getDeviceName(dev)
+            mac[f'LN{suf}'] = dev.card.link_node.lcls1_id
+            mac[f'CL{suf}'] = dev.card.crate.location
+            mac[f'DEVICE{suf}'] = self.model.name.getDeviceName(dev)
+
+            if multi:
+                if dev.is_analog():
+                    chans = dev.channel.number
+                else:
+                    chans = self.channel_range([i.channel for i in dev.inputs])
+                mac[f'AC{suf}'] = dev.card.number
+                mac[f'CH{suf}'] = chans
+
+        if not multi:
+            mac['AS'] = dev.card.slot_number
+            mac['CPU'] = dev.card.link_node.cpu
+
+            for i in range(1, 8):
+                mac[f'AC{i}'] = "Slot Empty"
+                mac[f'CH{i}'] = ""
+
+            for c in dev.card.crate.cards:
+                chans = self.channel_range(c.analog_channels
+                                           + c.digital_channels
+                                           + c.digital_out_channels)
+                mac[f'AC{c.slot_number}'] = c.number
+                mac[f'CH{c.slot_number}'] = chans
 
         return mac
+
+    def channel_range(self, channels):
+        """Takes a list of channels (AnalogChannel, DigitalChannel, or
+        DigitalOutChannel) and returns ranges of numbers covered."""
+        nums = sorted([ch.number for ch in channels])
+        ranges = []
+        for _, r in groupby(enumerate(nums), lambda e: e[1] - e[0]):
+            r = list(r)
+            if len(r) == 1:
+                ranges.append((r[0][1], None))
+            elif len(r) == 2:
+                ranges.append((r[0][1], None))
+                ranges.append((r[-1][1], None))
+            else:
+                ranges.append((r[0][1], r[-1][1]))
+
+        return ", ".join([str(x) if not y else f"{x}-{y}" for x, y in ranges])
 
     @Slot(QModelIndex)
     def dev_selected(self, index: QModelIndex):
