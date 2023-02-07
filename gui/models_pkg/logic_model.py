@@ -1,25 +1,18 @@
 from logging import getLogger
 from platform import system
-from qtpy.QtGui import (QBrush, QColor)
 from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
                          QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
 from epics import PV
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import sessionmaker, scoped_session
-from models_pkg.mps_model import MPSModel
+from sqlalchemy.orm import (sessionmaker, scoped_session)
 from mps_database.models.condition import Condition
 from mps_database.models.fault_state import FaultState
+from enums import Statuses
+from models_pkg.mps_model import MPSModel
 
 
 class LogicTableModel(QAbstractTableModel):
-    # Set class variables for the model. These are standard and static.
-    brushes = {3: QBrush(QColor(255, 0, 0)),       # Red
-               2: QBrush(QColor(235, 235, 0)),     # Yellow
-               1: QBrush(QColor(235, 0, 235)),     # Magenta
-               0: QBrush(QColor(0, 235, 0)),       # Green
-               -1: QBrush(QColor(255, 255, 255)),  # White
-               -2: QBrush(QColor(0, 0, 0, 165))}   # Background
     logger = getLogger(__name__)
 
     state_signal = Signal(int, int)
@@ -76,23 +69,29 @@ class LogicTableModel(QAbstractTableModel):
         elif role == Qt.TextAlignmentRole and 0 < index.column():
             return Qt.AlignCenter
         elif role == Qt.BackgroundRole and 0 < index.column():
-            return self.brushes[-2]
+            return Statuses.BGD.brush()
         elif role == Qt.ForegroundRole:
+            row = index.row()
             col = index.column()
-            if col == 1:
-                status = self.status[index.row()]
-                color = status if status in [-1, 1] else 0
-            elif 2 <= col < self.conind[0]:
-                color = 0 if index.data() == '-' else self.status[index.row()]
-            elif col in self.conind:
-                color = 2 if index.data() == "Is In" else 0
-                # color = 0
-            elif col == self.iind:
-                color = 2 if index.data() == "Ignored" else 0
-            elif self.bind <= col <= self.aind:
-                color = -1 if index.data() == '?' else 0
-            if col != 0:
-                return self.brushes[color]
+            txt = index.data()
+
+            if col == 1 and self.status[row].error():
+                return self.status[row].brush()
+
+            elif 2 <= col < self.conind[0] and txt != '-':
+                return self.status[row].brush()
+
+            elif col in self.conind and txt == "Is In":
+                return Statuses.YEL.brush()
+
+            elif col == self.iind and txt == "Ignored":
+                return Statuses.YEL.brush()
+
+            elif self.bind <= col <= self.aind and txt == '?':
+                return Statuses.WHT.brush()
+
+            elif col != 0:
+                return Statuses.GRN.brush()
 
     def headerData(self, section: int, orientation: Qt.Orientation,
                    role: Qt.ItemDataRole):
@@ -121,7 +120,7 @@ class LogicTableModel(QAbstractTableModel):
                 lst[col] = "Is In"
 
             self._data.append(lst)
-            self.status.append(-1)
+            self.status.append(Statuses.WHT)
             pv = PV(f"{fault.name}_SCBYP_END")
             self.byp_ends[fault.name] = pv
 
@@ -129,14 +128,14 @@ class LogicTableModel(QAbstractTableModel):
         """Check if row is faulted based on the color (red, yellow, and
         magenta are faulted) then confirm that fault is not ignored and
         is active."""
-        return 0 < self.status[row]
+        return self.status[row].faulted()
 
     @Slot(int, int)
     def set_state(self, value: int, row: int):
         """Called when a Fault's state changes. Set the Fault's
         description and beam destinations based on the current state."""
         self._data[row][1:self.conind[0]] = ["-"] * (self.conind[0] - 1)
-        self.status[row] = 0
+        self.status[row] = Statuses.GRN
 
         if value == 0:
             # Analog 'OK' State: all cells should be represented as '-'
@@ -146,7 +145,7 @@ class LogicTableModel(QAbstractTableModel):
         elif value == -1:
             # Timeout State: all cells should be represented as 'TIMEOUT'
             self._data[row][1:self.conind[0]] = ["TIMEOUT"] * (self.conind[0] - 1)
-            self.status[row] = 1
+            self.status[row] = Statuses.MAG
             self.dataChanged.emit(self.index(row, 1),
                                   self.index(row, self.conind[0] - 1))
             return
@@ -157,7 +156,7 @@ class LogicTableModel(QAbstractTableModel):
         except NoResultFound:
             # Database Error State: all cells should be "DB_ERROR"
             self._data[row][1:self.conind[0]] = ["DB_ERROR"] * (self.conind[0] - 1)
-            self.status[row] = 1
+            self.status[row] = Statuses.MAG
             self.dataChanged.emit(self.index(row, 1),
                                   self.index(row, self.conind[0] - 1))
             return
@@ -165,7 +164,7 @@ class LogicTableModel(QAbstractTableModel):
             self._data[row][1] = curr_state.device_state.description
 
         for cl in curr_state.allowed_classes:
-            if cl.beam_class.name == "Full":
+            if cl.beam_class.name == "Full" or self.status[row] == Statuses.RED:
                 continue
 
             col = self.hdr_lst.index(cl.beam_destination.name)
@@ -173,7 +172,7 @@ class LogicTableModel(QAbstractTableModel):
 
             is_yellow = "Hz" in cl.beam_class.name
             is_yellow |= cl.beam_class.name in ["Diagnostic", "Tuning"]
-            self.status[row] = 2 if self.status[row] != 3 and is_yellow else 3
+            self.status[row] = Statuses.YEL if is_yellow else Statuses.RED
         self.dataChanged.emit(self.index(row, 1),
                               self.index(row, self.conind[0] - 1))
 
@@ -237,8 +236,8 @@ class LogicSortFilterModel(QSortFilterProxyModel):
         """Override QSortFilterProxyModel's lessThan method to sort
         columns to meet more personalized needs."""
         if 0 < left.column() < self.sourceModel().conind[0]:
-            left_state = self.sourceModel().status[left.row()]
-            right_state = self.sourceModel().status[right.row()]
+            left_state = self.sourceModel().status[left.row()].num()
+            right_state = self.sourceModel().status[right.row()].num()
 
             if left.column() != 1:
                 left_txt = left.data()
