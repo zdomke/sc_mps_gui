@@ -1884,7 +1884,7 @@
            <enum>QAbstractItemView::ScrollPerPixel</enum>
           </property>
           <property name="sortingEnabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>100</number>
@@ -2462,7 +2462,29 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableView" name="app_status_tbl"/>
+        <widget class="QTableView" name="app_status_tbl">
+         <property name="styleSheet">
+          <string notr="true">font-weight: bold;</string>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="horizontalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="horizontalHeaderHighlightSections">
+          <bool>false</bool>
+         </attribute>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="num_apps_lyt">

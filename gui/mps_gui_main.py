@@ -6,10 +6,11 @@ from mixins.logic import LogicMixin
 from mixins.selection_detail import SelectionDetailsMixin
 from mixins.configure import ConfigureMixin
 from mixins.ignore import IgnoreMixin
+from mixins.app_status import AppStatusMixin
 
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
-                    ConfigureMixin, IgnoreMixin):
+                    ConfigureMixin, IgnoreMixin, AppStatusMixin):
     def __init__(self, parent=None, args=[], macros=None, ui_filename=None):
 
         cud_mode = False
@@ -36,6 +37,7 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
             self.configure_init()
             self.selection_init()
             self.ignore_init()
+            self.app_status_init()
 
         self.logic_connections(cud_mode=cud_mode)
         if not cud_mode:
@@ -43,3 +45,4 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
             self.selection_connections()
             self.summ_connections()
             self.ignore_connections()
+            self.app_status_connections()
