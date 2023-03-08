@@ -2447,7 +2447,7 @@
        <item>
         <layout class="QHBoxLayout" name="app_status_filter_lyt">
          <item>
-          <spacer name="app__status_filter_spcr">
+          <spacer name="app_status_filter_spcr">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -2458,6 +2458,37 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Search by</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="app_status_filter_cmbx">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>Link Node</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Group</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="app_status_filter_edt">
+           <property name="placeholderText">
+            <string>Case-insensitive Filter</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

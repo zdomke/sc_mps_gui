@@ -228,8 +228,7 @@ class LogicTableModel(QAbstractTableModel):
                 if not self.status[row].faulted():
                     return False
             else:
-                ind = self.index(row, col, parent)
-                if ind.isValid() and (text not in str(ind.data()).lower()):
+                if text not in str(self._data[row][col]).lower():
                     return False
         return True
 
@@ -256,8 +255,9 @@ class MPSSortFilterModel(QSortFilterProxyModel):
 
     def removeFilterByColumn(self, column: int):
         """Removes the filters from a given column."""
-        self.filters.pop(column)
-        self.invalidateFilter()
+        if column in self.filters:
+            del self.filters[column]
+            self.invalidateFilter()
 
     def lessThan(self, left: QModelIndex, right: QModelIndex):
         """Override QSortFilterProxyModel's lessThan method to sort

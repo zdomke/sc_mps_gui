@@ -20,16 +20,16 @@ class AppStatusMixin:
         self.app_model.setSourceModel(self.app_tbl_model)
 
         self.ui.app_status_tbl.setModel(self.app_model)
-        self.ui.app_status_tbl.sortByColumn(5, Qt.AscendingOrder)
+        self.ui.app_status_tbl.sortByColumn(self.app_tbl_model.sind, Qt.AscendingOrder)
 
         self.ui.app_status_tbl.setItemDelegate(self.delegate)
-        self.ui.app_status_tbl.setItemDelegateForColumn(6, self.rd_button_delegate)
+        self.ui.app_status_tbl.setItemDelegateForColumn(self.app_tbl_model.gdind, self.rd_button_delegate)
         for row in range(len(self.apps)):
-            self.ui.app_status_tbl.openPersistentEditor(self.app_model.index(row, 6))
+            self.ui.app_status_tbl.openPersistentEditor(self.app_model.index(row, self.app_tbl_model.gdind))
 
         hdr = self.ui.app_status_tbl.horizontalHeader()
-        hdr.setSectionResizeMode(5, QHeaderView.Stretch)
-        hdr.resizeSection(6, 100)
+        hdr.setSectionResizeMode(self.app_tbl_model.sind, QHeaderView.Stretch)
+        hdr.resizeSection(self.app_tbl_model.gdind, 100)
 
         self.app_pvs = []
 
@@ -41,6 +41,9 @@ class AppStatusMixin:
                         auto_monitor=DBE_VALUE)
             self.app_pvs.append(app_pv)
 
+            self.ui.app_status_filter_edt.textChanged.connect(self.search_app_status)
+            self.ui.app_status_filter_cmbx.currentIndexChanged.connect(self.search_app_status)
+
             # Establish connections for showing the row count
             self.app_model.rowsRemoved.connect(self.show_app_row_count)
             self.app_model.rowsInserted.connect(self.show_app_row_count)
@@ -49,6 +52,17 @@ class AppStatusMixin:
     def send_app_status(self, value: int, row: int, **kw):
         """Function to emit the status signal in the model."""
         self.app_tbl_model.status_signal.emit(value, row)
+
+    @Slot()
+    def search_app_status(self):
+        col = self.ui.app_status_filter_cmbx.currentIndex()
+        if col == self.app_tbl_model.lnind:
+            self.app_model.removeFilterByColumn(self.app_tbl_model.gind)
+        elif col == self.app_tbl_model.gind:
+            self.app_model.removeFilterByColumn(self.app_tbl_model.lnind)
+
+        txt = self.ui.app_status_filter_edt.currentText()
+        self.app_model.setFilterByColumn(col, txt)
 
     @Slot()
     def show_app_row_count(self):
