@@ -43,6 +43,7 @@ class LogicTableModel(QAbstractTableModel):
 
         self._data = []
         self.status = []
+        self.channels = []
         self.byp_ends = {}
 
         self.set_data()
@@ -121,14 +122,9 @@ class LogicTableModel(QAbstractTableModel):
 
             self._data.append(lst)
             self.status.append(Statuses.WHT)
+            self.channels.append(fault.name)
             pv = PV(f"{fault.name}_SCBYP_END")
             self.byp_ends[fault.name] = pv
-
-    def is_row_faulted(self, row: int):
-        """Check if row is faulted based on the color (red, yellow, and
-        magenta are faulted) then confirm that fault is not ignored and
-        is active."""
-        return self.status[row].faulted()
 
     @Slot(int, int)
     def set_state(self, value: int, row: int):
@@ -200,44 +196,12 @@ class LogicTableModel(QAbstractTableModel):
         self.dataChanged.emit(self.index(row, self.aind),
                               self.index(row, self.aind))
 
-
-class LogicSortFilterModel(QSortFilterProxyModel):
-    """Customized QSortFilterProxyModel to allow the user to sort and
-    filter the customized QAbstractTableModel. Allows for functionality
-    for the summary table, bypass table, and logic table."""
-    def __init__(self, parent):
-        super(LogicSortFilterModel, self).__init__(parent)
-        self.filters = {}
-        self.exclusions = {}
-
-    def setFilterByColumn(self, column: int, text: str):
-        """Sets the filters to be used on individual columns."""
-        self.filters[column] = text.lower()
-        self.invalidateFilter()
-
-    def setExclusionByColumn(self, column: int, text: str):
-        """Sets filter to exclude from given column."""
-        self.exclusions[column] = text.lower()
-        self.invalidateFilter()
-
-    def removeFilterByColumn(self, column: int):
-        """Removes the filters from a given column."""
-        if column in self.filters:
-            del self.filters[column]
-            self.invalidateFilter()
-
-    def removeExclusionByColumn(self, column: int):
-        """Removes the filters from a given column."""
-        if column in self.exclusions:
-            del self.exclusions[column]
-            self.invalidateFilter()
-
-    def lessThan(self, left: QModelIndex, right: QModelIndex):
-        """Override QSortFilterProxyModel's lessThan method to sort
-        columns to meet more personalized needs."""
-        if 0 < left.column() < self.sourceModel().conind[0]:
-            left_state = self.sourceModel().status[left.row()].num()
-            right_state = self.sourceModel().status[right.row()].num()
+    def less_than(self, left: QModelIndex, right: QModelIndex):
+        """Called by MPSSortFilterProxyModel to sort rows based on the
+        app's status."""
+        if 0 < left.column() < self.conind[0]:
+            left_state = self.status[left.row()].num()
+            right_state = self.status[right.row()].num()
 
             if left.column() != 1:
                 left_txt = left.data()
@@ -249,56 +213,83 @@ class LogicSortFilterModel(QSortFilterProxyModel):
                     right_state /= 10
 
             return right_state < left_state
-        elif (left.column() in self.sourceModel().conind
-              or left.column() == self.sourceModel().bind
-              or left.column() == self.sourceModel().aind):
+        elif (left.column() in self.conind
+              or left.column() == self.bind
+              or left.column() == self.aind):
             return right.data() < left.data()
         else:
             return left.data() < right.data()
 
-    def filterAcceptsRow(self, source_row: int, source_parent: QModelIndex):
-        """Override QSortFilterProxyModel's filterAcceptsRow method to
-        filter out rows based on the table's needs."""
-        for col, text in self.filters.items():
+    def filter_accepts_row(self, row: int, parent: QModelIndex, filters: dict):
+        """Called by MPSSortFilterProxyModel to filter out rows based on
+        the table's needs."""
+        for col, text in filters.items():
             if col == 1:
-                if not self.sourceModel().is_row_faulted(source_row):
+                if not self.status[row].faulted():
                     return False
             else:
-                ind = self.sourceModel().index(source_row, col, source_parent)
+                ind = self.index(row, col, parent)
                 if ind.isValid() and (text not in str(ind.data()).lower()):
-                    return False
-        for col, text in self.exclusions.items():
-            ind = self.sourceModel().index(source_row, col, source_parent)
-            if text in str(ind.data()).lower():
-                return False
-            for word in text.split(','):
-                if word.strip() in str(ind.data()).lower():
                     return False
         return True
 
+    def middle_click_data(self, index: QModelIndex):
+        """Method called by the ItemDelegate. Returns the data to be
+        sent to the clipboard."""
+        if index.column() == 0:
+            return index.data()
+        return self.channels[index.row()]
 
-class LogicItemDelegate(QStyledItemDelegate):
+
+class MPSSortFilterModel(QSortFilterProxyModel):
+    """Customized QSortFilterProxyModel to allow the user to sort and
+    filter the customized QAbstractTableModel. Allows for functionality
+    for the summary table, bypass table, and logic table."""
+    def __init__(self, parent):
+        super(MPSSortFilterModel, self).__init__(parent)
+        self.filters = {}
+
+    def setFilterByColumn(self, column: int, text: str):
+        """Sets the filters to be used on individual columns."""
+        self.filters[column] = text.lower()
+        self.invalidateFilter()
+
+    def removeFilterByColumn(self, column: int):
+        """Removes the filters from a given column."""
+        self.filters.pop(column)
+        self.invalidateFilter()
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex):
+        """Override QSortFilterProxyModel's lessThan method to sort
+        columns to meet more personalized needs."""
+        return self.sourceModel().less_than(left, right)
+
+    def filterAcceptsRow(self, source_row: int, source_parent: QModelIndex):
+        """Override QSortFilterProxyModel's filterAcceptsRow method to
+        filter out rows based on the table's needs."""
+        return self.sourceModel().filter_accepts_row(source_row, source_parent, self.filters)
+
+
+class MPSItemDelegate(QStyledItemDelegate):
     """Customized QStyledItemDelegate to allow the user to copy
     some fault information from the table. Mimics functionality from
     PyDMWidgets."""
     def __init__(self, parent):
-        super(LogicItemDelegate, self).__init__(parent)
+        super(MPSItemDelegate, self).__init__(parent)
 
     def editorEvent(self, event, model, option, index) -> bool:
         """Allow the user to copy a PV address by middle-clicking."""
         if (event.type() == QEvent.MouseButtonPress
                 and event.button() == Qt.MiddleButton):
             clipboard = QApplication.clipboard()
+
             mode = clipboard.Clipboard
             if system() == 'Linux':
                 mode = clipboard.Selection
-            if index.column() != 0:
-                source_ind = model.mapToSource(index)
-                key_list = list(model.sourceModel().byp_ends.keys())
-                text = key_list[source_ind.row()]
-            else:
-                text = index.data()
+            source_ind = model.mapToSource(index)
+            text = model.sourceModel().middle_click_data(source_ind)
             clipboard.setText(text, mode=mode)
+
             new_event = QEvent(QEvent.Clipboard)
             QApplication.instance().sendEvent(clipboard, new_event)
             QToolTip.showText(event.globalPos(), text)

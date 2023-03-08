@@ -39,3 +39,7 @@ class Statuses(Enum):
 
     def error(self) -> bool:
         return abs(self.num()) == 1
+
+    @classmethod
+    def max(cls) -> int:
+        return cls.RED.num()

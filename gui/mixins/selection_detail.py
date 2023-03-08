@@ -5,7 +5,7 @@ from qtpy.QtCore import (Qt, Slot, QItemSelection)
 from qtpy.QtWidgets import (QHeaderView, QTableWidget, QTableWidgetItem)
 from epics import PV
 from epics.dbr import DBE_VALUE
-from pydm.widgets.related_display_button import PyDMRelatedDisplayButton
+from pydm.widgets import PyDMRelatedDisplayButton
 from enums import DevThr
 
 

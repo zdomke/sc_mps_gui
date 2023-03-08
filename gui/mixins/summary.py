@@ -1,6 +1,6 @@
 from qtpy.QtCore import (Qt, Slot, QPoint)
 from qtpy.QtWidgets import (QHeaderView, QAction, QMenu, QTableView)
-from models_pkg.logic_model import LogicSortFilterModel
+from models_pkg.logic_model import MPSSortFilterModel
 
 
 class SummaryMixin:
@@ -8,7 +8,7 @@ class SummaryMixin:
         """Initializer for everything in the Summary tab: Summary table,
         Bypass table, and Custom Context menus."""
         # Initialize the Summary Table and Headers
-        self.summ_model = LogicSortFilterModel(self)
+        self.summ_model = MPSSortFilterModel(self)
         self.summ_model.setSourceModel(self.tbl_model)
         self.summ_model.setFilterByColumn(1, "True")
         self.summ_model.setFilterByColumn(self.tbl_model.iind, "Not Ignored")
@@ -34,7 +34,7 @@ class SummaryMixin:
             hdr.setSectionResizeMode(8, QHeaderView.Stretch)
 
         # Initialize the Bypass Table and Headers
-        self.byp_model = LogicSortFilterModel(self)
+        self.byp_model = MPSSortFilterModel(self)
         self.byp_model.setSourceModel(self.tbl_model)
         self.byp_model.setFilterByColumn(self.tbl_model.bind, "Y")
         self.ui.byp_tbl.setModel(self.byp_model)

@@ -3,7 +3,7 @@ from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import QHeaderView
 from pydm.widgets import PyDMByteIndicator
 from mps_database.models import Condition
-from models_pkg.logic_model import (LogicSortFilterModel, LogicItemDelegate)
+from models_pkg.logic_model import (MPSSortFilterModel, MPSItemDelegate)
 
 
 class IgnoreMixin:
@@ -32,8 +32,8 @@ class IgnoreMixin:
             self.ui.ignore_status_lyt.insertWidget(self.ui.ignore_status_lyt.count() - 1, wid)
 
         # Initialize Ignore Table models, delegate, and view
-        self.ignore_delegate = LogicItemDelegate(self)
-        self.ignore_model = LogicSortFilterModel(self)
+        self.ignore_delegate = MPSItemDelegate(self)
+        self.ignore_model = MPSSortFilterModel(self)
         self.ignore_model.setSourceModel(self.tbl_model)
 
         self.ui.ignore_tbl.setModel(self.ignore_model)

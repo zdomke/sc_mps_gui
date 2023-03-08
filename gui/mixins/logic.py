@@ -3,8 +3,8 @@ from epics import PV
 from epics.dbr import DBE_VALUE
 from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import QHeaderView
-from models_pkg.logic_model import (LogicTableModel, LogicSortFilterModel,
-                                    LogicItemDelegate)
+from models_pkg.logic_model import (LogicTableModel, MPSSortFilterModel,
+                                    MPSItemDelegate)
 
 
 class LogicMixin:
@@ -12,9 +12,9 @@ class LogicMixin:
         """Initializer for everything in Logic tab: Logic Table Model,
         Logic Item Delegate, and Selection Details."""
         self.tbl_model = LogicTableModel(self, self.model, self.model.config.Session)
-        self.delegate = LogicItemDelegate(self)
+        self.delegate = MPSItemDelegate(self)
 
-        self.logic_model = LogicSortFilterModel(self)
+        self.logic_model = MPSSortFilterModel(self)
         self.logic_model.setSourceModel(self.tbl_model)
 
         self.pvs = []
