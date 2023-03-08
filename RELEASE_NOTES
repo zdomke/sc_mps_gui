@@ -1,3 +1,10 @@
+R4.0.0  Zach Domke      03/07/2023
+        Add App Status tab to display the current status of all MPS Apps
+        LogicSortFilterModel -> MPSSortFilterModel
+        MPSSortFilterModel is more general, calling on the sourceModel for sorting and filtering
+        LogicItemDelegate -> MPSItemDelegate
+        MPSItemDelegate is more general, calling on the sourceModel for clipboard
+        Add enums.max() classmethod
 R3.1.0  Zach Domke      02/02/2023
         Add crate representation to BPM Config embed
 R3.0.0  Zach Domke      01/27/2023

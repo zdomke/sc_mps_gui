@@ -15,12 +15,14 @@
     |   |-- summary.py  
     |   |-- logic.py  
     |   |-- selection_detail.py  
-    |   |-- configure.py  
-    |   `-- ignore.py  
+    |   |-- ignore.py  
+    |   |-- app_status.py  
+    |   `-- configure.py  
     |-- models_pkg/  
     |   |-- __init__.py  
     |   |-- mps_model.py  
     |   |-- logic_model.py
+    |   |-- app_status_model.py
     |   `-- configure_model.py
     `-- resources/  
         |-- __init__.py  
@@ -99,6 +101,18 @@
     - PV Table  
 
 
+### ignore.py  
+  - This file contains a python mixin to manage the Ignore Logic tab  
+  - Right-clicking a fault allows the user to open more details in the Logic tab  
+  - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
+
+
+### app_status.py  
+  - This file contains a python mixin to manage the App Status tab  
+  - Show all apps and their Link Node, Location, Slot, ID, Type, and Status  
+  - Includes Related Display Buttons to open the app's MPS Group  
+
+
 ### configure.py  
   - This file contains the python mixin to manage the Configure tab 
   - Manage the table of all devices and add/remove them from the selected devices table on user interaction  
@@ -106,12 +120,6 @@
   - Display 'error' file when multiple device types are selected or an unsupported device type  
   - Supported Device Types:  
     - BPMS  
-
-
-### ignore.py  
-  - This file contains a python mixin to manage the Ignore Logic tab  
-  - Right-clicking a fault allows the user to open more details in the Logic tab  
-  - Middle-clicking a fault copies the fault's name or fault's pv based on which column is clicked  
 
 
 ### mps_model.py  
@@ -122,6 +130,11 @@
 
 ### logic_model.py  
   - Create a custom QAbstractTableModel, QSortFilterProxyModel, and QStyledItemDelegate for use in the Logic tab and Summary tab  
+
+
+### app_status_model.py  
+  - Create a custom QAbstractTableModel for managing all MPS Apps used by the App Status tab  
+  - Create a custom QStyledItemDelegate to create PyDMRelatedDisplayButtons for each application  
 
 
 ### configure_model.py  
