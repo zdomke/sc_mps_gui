@@ -199,26 +199,26 @@ class LogicTableModel(QAbstractTableModel):
     def less_than(self, left: QModelIndex, right: QModelIndex):
         """Called by MPSSortFilterProxyModel to sort rows based on the
         app's status."""
+        left_state = left.data()
+        right_state = right.data()
+
         if 0 < left.column() < self.conind[0]:
             left_state = self.status[left.row()].num()
             right_state = self.status[right.row()].num()
 
             if left.column() != 1:
-                left_txt = left.data()
-                if left_state > 0 and left_txt == '-':
+                if left_state > 0 and left.data() == '-':
                     left_state /= 10
 
-                right_txt = right.data()
-                if right_state > 0 and right_txt == '-':
+                if right_state > 0 and right.data() == '-':
                     right_state /= 10
 
+        if (0 < left.column() < self.conind[-1]
+                or left.column() == self.bind
+                or left.column() == self.aind):
             return right_state < left_state
-        elif (left.column() in self.conind
-              or left.column() == self.bind
-              or left.column() == self.aind):
-            return right.data() < left.data()
-        else:
-            return left.data() < right.data()
+
+        return left_state < right_state
 
     def filter_accepts_row(self, row: int, parent: QModelIndex, filters: dict):
         """Called by MPSSortFilterProxyModel to filter out rows based on

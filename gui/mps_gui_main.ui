@@ -1884,7 +1884,7 @@
            <enum>QAbstractItemView::ScrollPerPixel</enum>
           </property>
           <property name="sortingEnabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>100</number>
@@ -2399,6 +2399,9 @@
          </property>
          <property name="horizontalScrollMode">
           <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
          </property>
          <attribute name="horizontalHeaderDefaultSectionSize">
           <number>90</number>

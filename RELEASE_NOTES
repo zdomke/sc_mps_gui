@@ -1,3 +1,5 @@
+R4.1.2  Zach Domke      03/09/2023
+        Fix bug in Logic tab that disabled sorting
 R4.1.1  Zach Domke      03/09/2023
         Changed "Faults" to "Apps" in the count at the bottom of App Status tab
 R4.1.0  Zach Domke      03/09/2023

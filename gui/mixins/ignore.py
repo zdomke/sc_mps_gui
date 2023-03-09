@@ -37,7 +37,6 @@ class IgnoreMixin:
         self.ignore_model.setSourceModel(self.tbl_model)
 
         self.ui.ignore_tbl.setModel(self.ignore_model)
-        self.ui.ignore_tbl.setSortingEnabled(True)
         self.ui.ignore_tbl.sortByColumn(0, Qt.AscendingOrder)
         for i in range(2, self.tbl_model.iind):
             if i in self.tbl_model.conind:
