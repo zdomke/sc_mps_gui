@@ -24,8 +24,6 @@ class AppStatusMixin:
 
         self.ui.app_status_tbl.setItemDelegate(self.delegate)
         self.ui.app_status_tbl.setItemDelegateForColumn(self.app_tbl_model.gdind, self.rd_button_delegate)
-        for row in range(len(self.apps)):
-            self.ui.app_status_tbl.openPersistentEditor(self.app_model.index(row, self.app_tbl_model.gdind))
 
         hdr = self.ui.app_status_tbl.horizontalHeader()
         hdr.setSectionResizeMode(self.app_tbl_model.sind, QHeaderView.Stretch)
@@ -61,7 +59,7 @@ class AppStatusMixin:
         elif col == self.app_tbl_model.gind:
             self.app_model.removeFilterByColumn(self.app_tbl_model.lnind)
 
-        txt = self.ui.app_status_filter_edt.currentText()
+        txt = self.ui.app_status_filter_edt.text()
         self.app_model.setFilterByColumn(col, txt)
 
     @Slot()

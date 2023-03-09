@@ -41,6 +41,8 @@ class AppStatusTable(QAbstractTableModel):
             return
         elif role == Qt.DisplayRole:
             return str(self._data[index.row()][index.column()])
+        elif role == Qt.UserRole:
+            return self._data[index.row()][index.column()]
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignCenter
         elif role == Qt.BackgroundRole:
@@ -48,7 +50,7 @@ class AppStatusTable(QAbstractTableModel):
         elif role == Qt.ForegroundRole:
             row = index.row()
             col = index.column()
-            if col == 5:
+            if col == self.sind:
                 return self.status[row].brush()
             else:
                 return Statuses.GRN.brush()
@@ -71,7 +73,8 @@ class AppStatusTable(QAbstractTableModel):
             lst[3] = app.slot_number if app.slot_number != 1 else "RTM"
             lst[4] = app.number
             lst[5] = app.type.name
-            lst[7] = app.link_node.group
+            lst[7] = (f"$PHYSICS_TOP/mps_configuration/current/display/groups/LinkNodeGroup{app.link_node.group}.ui",
+                      f"Group {app.link_node.group}...")
 
             self._data.append(lst)
             self.status.append(Statuses.WHT)
@@ -115,18 +118,21 @@ class AppStatusTable(QAbstractTableModel):
         return self.channels[index.row()]
 
 
-# TODO: Generalize this
 class RelatedDisplayDelegate(QStyledItemDelegate):
     """Customized QStyledItemDelegate to allow the user to open an
-    associated display."""
+    associated display. Model's data should be in the form of:
+    tuple(filename, button_text)"""
     def __init__(self, parent):
         super(RelatedDisplayDelegate, self).__init__(parent)
 
-    def createEditor(self, parent, option, index):
-        """Create the RelatedDisplayButton to show for the index."""
-        file = f"$PHYSICS_TOP/mps_configuration/current/display/groups/LinkNodeGroup{index.data()}.ui"
-        editor = PyDMRelatedDisplayButton(parent=parent, filename=file)
-        editor.setText(f"Group {index.data()}...")
-        editor.showIcon = False
-        editor.openInNewWindow = True
-        return editor
+    def initStyleOption(self, option, index):
+        btn = self.parent().indexWidget(index)
+        if not btn:
+            data = index.data(Qt.UserRole)
+            btn = PyDMRelatedDisplayButton(filename=data[0])
+            btn.setText(data[1])
+            btn.showIcon = False
+            btn.openInNewWindow = True
+            self.parent().setIndexWidget(index, btn)
+
+        return super().initStyleOption(option, index)
