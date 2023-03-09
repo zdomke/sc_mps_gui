@@ -1,3 +1,8 @@
+R4.1.0  Zach Domke      03/09/2023
+        Add App Status tab search capability
+        Add Group column to App Status table
+        Fix RelatedDisplayDelegate to keep its RelatedDisplayButton open
+        Fix MPSSortFilterModel's removeFilterByColumn function
 R4.0.0  Zach Domke      03/07/2023
         Add App Status tab to display the current status of all MPS Apps
         LogicSortFilterModel -> MPSSortFilterModel
