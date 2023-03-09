@@ -67,4 +67,4 @@ class AppStatusMixin:
         """When the number of displayed rows changes, update the row
         count at the bottom of the tab."""
         rows = self.app_model.rowCount()
-        self.ui.num_apps_lbl.setText(f"Displaying {rows} / {len(self.apps)} Faults")
+        self.ui.num_apps_lbl.setText(f"Displaying {rows} / {len(self.apps)} Apps")
