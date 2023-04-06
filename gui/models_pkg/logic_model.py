@@ -160,11 +160,14 @@ class LogicTableModel(QAbstractTableModel):
             self._data[row][1] = curr_state.device_state.description
 
         for cl in curr_state.allowed_classes:
-            if cl.beam_class.name == "Full" or self.status[row] == Statuses.RED:
+            if cl.beam_class.name == "Full":
                 continue
 
             col = self.hdr_lst.index(cl.beam_destination.name)
             self._data[row][col] = cl.beam_class.name
+
+            if self.status[row] == Statuses.RED:
+                continue
 
             is_yellow = "Hz" in cl.beam_class.name
             is_yellow |= cl.beam_class.name in ["Diagnostic", "Tuning"]
