@@ -1279,7 +1279,7 @@
                          <string>Software Error</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1289,7 +1289,7 @@
                          <string>Timeout Error</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1299,7 +1299,7 @@
                          <string>Drop Count</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1309,7 +1309,7 @@
                          <string>Over Count</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1319,7 +1319,7 @@
                          <string>Timeout Enabled</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1329,7 +1329,7 @@
                          <string>Eval Enabled</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1339,10 +1339,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:EVALUATION_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:EVALUATION_ENABLE_RBV</string>
+                         <string>ca://${P}:EVALUATION_ENABLE_RBV</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1365,10 +1365,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:TIMEOUT_ENABLE_RBV&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:TIMEOUT_ENABLE_RBV</string>
+                         <string>ca://${P}:TIMEOUT_ENABLE_RBV</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1391,7 +1391,7 @@
                          <string>Message Pause</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1401,7 +1401,7 @@
                          <string>Rx Error</string>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                        </widget>
                       </item>
@@ -1411,10 +1411,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:SW_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:SW_ERR</string>
+                         <string>ca://${P}:SW_ERR</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1437,10 +1437,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:TO_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:TO_ERR</string>
+                         <string>ca://${P}:TO_ERR</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1463,10 +1463,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_DROP&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:MONITOR_DROP</string>
+                         <string>ca://${P}:MONITOR_DROP</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1489,10 +1489,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_PAUSE&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:MONITOR_PAUSE</string>
+                         <string>ca://${P}:MONITOR_PAUSE</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1515,10 +1515,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_OVERFLOW&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:MONITOR_OVERFLOW</string>
+                         <string>ca://${P}:MONITOR_OVERFLOW</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1541,10 +1541,10 @@
                          <string/>
                         </property>
                         <property name="rules" stdset="0">
-                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://SIOC:SYS0:MP03:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
+                         <string>[{&quot;name&quot;: &quot;New Rule&quot;, &quot;property&quot;: &quot;Visible&quot;, &quot;initial_value&quot;: &quot;false&quot;, &quot;expression&quot;: &quot;ch[0] != 1&quot;, &quot;channels&quot;: [{&quot;channel&quot;: &quot;ca://${P}:MONITOR_RX_ERR&quot;, &quot;trigger&quot;: true, &quot;use_enum&quot;: false}]}]</string>
                         </property>
                         <property name="channel" stdset="0">
-                         <string>ca://SIOC:SYS0:MP03:MONITOR_RX_ERR</string>
+                         <string>ca://${P}:MONITOR_RX_ERR</string>
                         </property>
                         <property name="offColor" stdset="0">
                          <color>
@@ -1706,7 +1706,7 @@
                       <bool>true</bool>
                      </property>
                      <property name="channel" stdset="0">
-                      <string>ca://SIOC:SYS0:MP03:MonitorReady</string>
+                      <string>ca://${P}:MonitorReady</string>
                      </property>
                      <property name="offColor" stdset="0">
                       <color>
