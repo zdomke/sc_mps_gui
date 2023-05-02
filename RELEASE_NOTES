@@ -1,3 +1,5 @@
+R4.1.4  Zach Domke      05/02/2023
+        Show Ignored column in Logic tab
 R4.1.3  Zach Domke      04/06/2023
         Fix LogicTableModel bug for updating state columns
 R4.1.2  Zach Domke      03/09/2023

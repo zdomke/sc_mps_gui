@@ -4,7 +4,7 @@ from epics.dbr import DBE_VALUE
 from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import QHeaderView
 from models_pkg.logic_model import (LogicTableModel, MPSSortFilterModel,
-                                    MPSItemDelegate)
+                                    MPSItemDelegate, IgnoredColDelegate)
 
 
 class LogicMixin:
@@ -13,6 +13,7 @@ class LogicMixin:
         Logic Item Delegate, and Selection Details."""
         self.tbl_model = LogicTableModel(self, self.model, self.model.config.Session)
         self.delegate = MPSItemDelegate(self)
+        self.ign_col_delegate = IgnoredColDelegate(self)
 
         self.logic_model = MPSSortFilterModel(self)
         self.logic_model.setSourceModel(self.tbl_model)
@@ -23,15 +24,18 @@ class LogicMixin:
             self.logic_model.setFilterByColumn(0, "")
             self.ui.logic_tbl.setModel(self.logic_model)
             self.ui.logic_tbl.sortByColumn(0, Qt.AscendingOrder)
-            for i in range(self.tbl_model.conind[0], self.tbl_model.aind):
+            for i in range(self.tbl_model.conind[0], self.tbl_model.iind):
                 self.ui.logic_tbl.hideColumn(i)
             self.ui.logic_tbl.setItemDelegate(self.delegate)
+            self.ui.logic_tbl.setItemDelegateForColumn(self.tbl_model.iind,
+                                                       self.ign_col_delegate)
 
             hdr = self.ui.logic_tbl.horizontalHeader()
             hdr.setSectionResizeMode(QHeaderView.Interactive)
             hdr.setSectionResizeMode(0, QHeaderView.Stretch)
             hdr.resizeSection(1, 125)
             hdr.resizeSection(self.tbl_model.bind, 70)
+            hdr.resizeSection(self.tbl_model.iind, 70)
             hdr.resizeSection(self.tbl_model.aind, 70)
 
             self.show_inactive(0)

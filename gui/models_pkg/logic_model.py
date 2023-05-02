@@ -3,6 +3,7 @@ from platform import system
 from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
                          QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
+from qtpy.QtGui import QPalette
 from epics import PV
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import (sessionmaker, scoped_session)
@@ -297,3 +298,22 @@ class MPSItemDelegate(QStyledItemDelegate):
             QApplication.instance().sendEvent(clipboard, new_event)
             QToolTip.showText(event.globalPos(), text)
         return super().editorEvent(event, model, option, index)
+
+
+class IgnoredColDelegate(MPSItemDelegate):
+    """Customized QStyledItemDelegate to change the Ignored column
+    display options.
+    """
+    def __init__(self, parent):
+        super(IgnoredColDelegate, self).__init__(parent)
+
+    def initStyleOption(self, option, index):
+        super(IgnoredColDelegate, self).initStyleOption(option, index)
+        option.palette.setBrush(QPalette.Text, Statuses.GRN.brush())
+
+    def displayText(self, value, locale):
+        if value == "Ignored":
+            value = 'Y'
+        elif value == "Not Ignored":
+            value = 'N'
+        return value
