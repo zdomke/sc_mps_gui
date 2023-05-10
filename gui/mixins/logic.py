@@ -34,9 +34,8 @@ class LogicMixin:
             hdr.setSectionResizeMode(QHeaderView.Interactive)
             hdr.setSectionResizeMode(0, QHeaderView.Stretch)
             hdr.resizeSection(1, 125)
-            hdr.resizeSection(self.tbl_model.bind, 70)
-            hdr.resizeSection(self.tbl_model.iind, 70)
-            hdr.resizeSection(self.tbl_model.aind, 70)
+            hdr.resizeSection(self.tbl_model.iind, 65)
+            hdr.resizeSection(self.tbl_model.aind, 65)
 
             self.show_inactive(0)
             self.show_row_count()
