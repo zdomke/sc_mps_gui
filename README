@@ -1,12 +1,10 @@
 # SC MPS Display  
 
 ## Directory Structure  
-```
 .  
 |-- README  
 |-- RELEASE_NOTES  
 |-- sc_mps_gui.bash  
-|  
 `-- gui/  
     |-- mps_cud_main.ui  
     |-- mps_gui_main.ui  

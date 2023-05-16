@@ -85,10 +85,8 @@ class SummaryMixin:
                               f"{type(table)} is not a QTableView")
             return
         index = table.indexAt(pos)
-        is_valid = index.isValid()
-        if is_valid:
+        if index.isValid():
             source_index = table.model().mapToSource(index)
             self.selected_fault = (self.logic_model.sourceModel()
                                    .index(source_index.row(), 0))
-        self.action.setEnabled(is_valid)
-        self.menu.popup(table.viewport().mapToGlobal(pos))
+            self.menu.popup(table.viewport().mapToGlobal(pos))
