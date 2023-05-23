@@ -16,7 +16,7 @@ class SummaryMixin:
         self.ui.summ_tbl.setModel(self.summ_model)
         for i in range(self.tbl_model.conind[0], self.tbl_model.aind + 1):
             self.ui.summ_tbl.hideColumn(i)
-        self.ui.summ_tbl.sortByColumn(1, Qt.AscendingOrder)
+        self.ui.summ_tbl.sortByColumn(2, Qt.AscendingOrder)
         self.ui.summ_tbl.setItemDelegate(self.delegate)
 
         hdr = self.ui.summ_tbl.horizontalHeader()

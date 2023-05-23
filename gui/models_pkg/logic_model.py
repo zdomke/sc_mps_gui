@@ -214,10 +214,16 @@ class LogicTableModel(QAbstractTableModel):
             left_state = self.status[left.row()].num()
             right_state = self.status[right.row()].num()
 
+            # Reduce priority of Ignored faults
+            if self._data[left.row()][self.iind] == "Ignored":
+                left_state -= .5
+            if self._data[right.row()][self.iind] == "Ignored":
+                right_state -= .5
+
+            # Reduce priority of fault if the sort destination is Full
             if left.column() != 1:
                 if left_state > 0 and left.data() == '-':
                     left_state /= 10
-
                 if right_state > 0 and right.data() == '-':
                     right_state /= 10
 

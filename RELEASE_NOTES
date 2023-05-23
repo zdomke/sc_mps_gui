@@ -1,3 +1,6 @@
+R4.1.6  Zach Domke      05/23/2023
+        Summary table sorts by SC_BSYD by default
+        Logic table sort prioritizes Not Ignored over Ignored faults
 R4.1.5  Zach Domke      05/23/2023
         Fixed bug: Bypass Exp Date wouldn't populate
 R4.1.4  Zach Domke      05/02/2023
