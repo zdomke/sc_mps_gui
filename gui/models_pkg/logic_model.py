@@ -1,3 +1,4 @@
+from time import sleep
 from logging import getLogger
 from platform import system
 from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
@@ -180,6 +181,9 @@ class LogicTableModel(QAbstractTableModel):
     def set_byp(self, pvname: str, value: int, row: int):
         """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
         row."""
+        # This gives the Bypass Exp Date PV enough time to update
+        if value:
+            sleep(.02)
         self._data[row][self.bind] = "Y" if value else "N"
         self._data[row][self.beind] = (self.byp_ends[pvname].value
                                        if value else "None")
