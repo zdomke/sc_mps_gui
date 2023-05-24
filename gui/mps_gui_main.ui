@@ -2463,7 +2463,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="app_status_filter_lbl">
            <property name="text">
             <string>Search by</string>
            </property>
@@ -2805,7 +2805,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="ftr_spcr">
+      <spacer name="ftr_1_spcr">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -2822,8 +2822,42 @@
        <property name="toolTip">
         <string/>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+       </property>
        <property name="channel" stdset="0">
         <string>ca://SIOC:SYS0:AL00:TOD</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="ftr_2_spcr">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="ftr_ver_lbl">
+       <property name="font">
+        <font>
+         <pointsize>7</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;version tag&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
        </property>
       </widget>
      </item>

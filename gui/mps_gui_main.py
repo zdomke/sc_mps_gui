@@ -1,4 +1,5 @@
 from logging import getLogger
+from subprocess import run
 from pydm import Display
 from models_pkg.mps_model import MPSModel
 from mixins.summary import SummaryMixin
@@ -11,6 +12,13 @@ from mixins.app_status import AppStatusMixin
 
 class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
                     ConfigureMixin, IgnoreMixin, AppStatusMixin):
+    def git_version(self):
+        git_cmd = run("git describe --tags",
+                      text=True,
+                      shell=True,
+                      capture_output=True)
+        return git_cmd.stdout.strip()
+
     def __init__(self, parent=None, args=[], macros=None, ui_filename=None):
 
         cud_mode = False
@@ -34,6 +42,7 @@ class MpsGuiDisplay(Display, SummaryMixin, LogicMixin, SelectionDetailsMixin,
         self.logic_init(cud_mode=cud_mode)
         self.summary_init(cud_mode=cud_mode)
         if not cud_mode:
+            self.ui.ftr_ver_lbl.setText(self.git_version())
             self.configure_init()
             self.selection_init()
             self.ignore_init()
