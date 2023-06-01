@@ -1,3 +1,7 @@
+R4.1.7  Zack Buschmann  06/01/2023
+        Updated CUD summary page to dynamically sort/hide columns based on 'TPG mode'
+        Also greys-out permits that are not allowed by the current TPG mode
+        Removed 'LASER' destination permit, added MPS shutter status
 R4.1.6  Zach Domke      05/23/2023
         Summary table sorts by SC_BSYD by default
         Logic table sort prioritizes Not Ignored over Ignored faults
