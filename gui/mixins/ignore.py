@@ -31,6 +31,8 @@ class IgnoreMixin:
             wid.layout().setAlignment(wid._labels[0], Qt.AlignLeft)
             self.ui.ignore_status_lyt.insertWidget(self.ui.ignore_status_lyt.count() - 1, wid)
 
+        self.ui.ignore_beampath_cmbx.addItems(names)
+
         # Initialize Ignore Table models, delegate, and view
         self.ignore_delegate = MPSItemDelegate(self)
         self.ignore_model = MPSSortFilterModel(self)
@@ -62,7 +64,7 @@ class IgnoreMixin:
         self.ui.ignore_tbl.customContextMenuRequested.connect(
             self.custom_context_menu)
 
-        self.ui.ignore_beampath_cmbx.currentTextChanged.connect(self.show_beampath_ign)
+        self.ui.ignore_beampath_cmbx.currentIndexChanged.connect(self.show_beampath_ign)
         self.ui.ignore_inactive_chck.stateChanged.connect(self.show_inactive_ign)
 
         # Establish connections for showing the row count
@@ -70,21 +72,18 @@ class IgnoreMixin:
         self.ignore_model.rowsInserted.connect(self.show_ignore_row_count)
         self.ignore_model.layoutChanged.connect(self.show_ignore_row_count)
 
-    @Slot(str)
-    def show_beampath_ign(self, path):
+    @Slot(int)
+    def show_beampath_ign(self, index):
         """Slot called by the Beampath Combobox to hide/show Ignore
         Table columns based on the Combobox option."""
-        if path == "All" or path == "SC_SXR":
+        if not index:
             for i in self.tbl_model.conind:
                 self.ui.ignore_tbl.showColumn(i)
-            if path == "SC_SXR":
-                self.ui.ignore_tbl.hideColumn(self.tbl_model.conind[1])
-        elif path == "SC_BSYD" or path == "SC_HXR":
+        else:
             for i in self.tbl_model.conind:
                 self.ui.ignore_tbl.hideColumn(i)
-            self.ui.ignore_tbl.showColumn(self.tbl_model.conind[0])
-            if path == "SC_HXR":
-                self.ui.ignore_tbl.showColumn(self.tbl_model.conind[1])
+            index_col = self.tbl_model.conind[0] + index - 1
+            self.ui.ignore_tbl.showColumn(index_col)
 
     @Slot(int)
     def show_inactive_ign(self, state):
