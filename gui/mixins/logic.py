@@ -52,6 +52,10 @@ class LogicMixin:
                         callback=partial(self.send_new_val, row=i),
                         auto_monitor=DBE_VALUE)
             self.pvs.append(byp_pv)
+            byp_exp_pv = PV(f"{fault.name}_SCBYP_END",
+                            callback=partial(self.send_new_val, row=i),
+                            auto_monitor=DBE_VALUE)
+            self.pvs.append(byp_exp_pv)
             ign_pv = PV(f"{fault.name}_IGNORED",
                         callback=partial(self.send_new_val, row=i),
                         auto_monitor=DBE_VALUE)
@@ -62,7 +66,6 @@ class LogicMixin:
             self.pvs.append(act_pv)
 
         if not cud_mode:
-
             # Establish connections for inactive checkbox and filter box
             self.ui.inactive_chck.stateChanged.connect(self.show_inactive)
             self.ui.logic_filter_edt.textChanged.connect(
@@ -73,15 +76,17 @@ class LogicMixin:
             self.logic_model.rowsInserted.connect(self.show_row_count)
             self.logic_model.layoutChanged.connect(self.show_row_count)
 
-    def send_new_val(self, value: int, pvname: str, row: int, **kw):
+    def send_new_val(self, value, pvname: str, row: int, **kw):
         """Function to emit the appropriate signal based on the pvname."""
-        if pvname[-4:] == "_FLT":
+        if pvname[-3:] == "FLT":
             self.tbl_model.state_signal.emit(value, row)
-        elif pvname[-7:] == "_SCBYPS":
-            self.tbl_model.byp_signal.emit(pvname[:-7], value, row)
-        elif pvname[-8:] == "_IGNORED":
+        elif pvname[-6:] == "SCBYPS":
+            self.tbl_model.byp_signal.emit(value, row)
+        elif pvname[-9:] == "SCBYP_END":
+            self.tbl_model.byp_exp_signal.emit(value, row)
+        elif pvname[-7:] == "IGNORED":
             self.tbl_model.ign_signal.emit(value, row)
-        elif pvname[-7:] == "_ACTIVE":
+        elif pvname[-6:] == "ACTIVE":
             self.tbl_model.act_signal.emit(value, row)
 
     @Slot(int)

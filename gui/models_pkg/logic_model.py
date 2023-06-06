@@ -1,11 +1,9 @@
-from time import sleep
 from logging import getLogger
 from platform import system
 from qtpy.QtCore import (Qt, Slot, Signal, QModelIndex, QAbstractTableModel,
                          QEvent, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
 from qtpy.QtGui import QPalette
-from epics import PV
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import (sessionmaker, scoped_session)
 from mps_database.models.condition import Condition
@@ -18,7 +16,8 @@ class LogicTableModel(QAbstractTableModel):
     logger = getLogger(__name__)
 
     state_signal = Signal(int, int)
-    byp_signal = Signal(str, int, int)
+    byp_signal = Signal(int, int)
+    byp_exp_signal = Signal(str, int)
     ign_signal = Signal(int, int)
     act_signal = Signal(int, int)
 
@@ -46,11 +45,11 @@ class LogicTableModel(QAbstractTableModel):
         self._data = []
         self.status = []
         self.channels = []
-        self.byp_ends = {}
 
         self.set_data()
         self.state_signal.connect(self.set_state)
         self.byp_signal.connect(self.set_byp)
+        self.byp_exp_signal.connect(self.set_byp_exp)
         self.ign_signal.connect(self.set_ign)
         self.act_signal.connect(self.set_act)
 
@@ -112,7 +111,7 @@ class LogicTableModel(QAbstractTableModel):
             lst[1] = fault.name
             lst[self.bind] = "?"
             lst[self.beind] = "None"
-            lst[self.iind] = "Not Ignored"
+            lst[self.iind] = "?"
             lst[self.aind] = "?"
 
             for i in self.conind:
@@ -125,8 +124,6 @@ class LogicTableModel(QAbstractTableModel):
             self._data.append(lst)
             self.status.append(Statuses.WHT)
             self.channels.append(fault.name)
-            pv = PV(f"{fault.name}_SCBYP_END")
-            self.byp_ends[fault.name] = pv
 
     @Slot(int, int)
     def set_state(self, value: int, row: int):
@@ -177,17 +174,18 @@ class LogicTableModel(QAbstractTableModel):
         self.dataChanged.emit(self.index(row, 1),
                               self.index(row, self.conind[0] - 1))
 
-    @Slot(str, int, int)
-    def set_byp(self, pvname: str, value: int, row: int):
-        """Sets the 'Bypassed' and 'Bypass Exp Date' cells for the given
-        row."""
-        # This gives the Bypass Exp Date PV enough time to update
-        if value:
-            sleep(.02)
+    @Slot(int, int)
+    def set_byp(self, value: int, row: int):
+        """Sets the 'Bypassed' cell for the given row."""
         self._data[row][self.bind] = "Y" if value else "N"
-        self._data[row][self.beind] = (self.byp_ends[pvname].value
-                                       if value else "None")
         self.dataChanged.emit(self.index(row, self.bind),
+                              self.index(row, self.bind))
+
+    @Slot(str, int)
+    def set_byp_exp(self, value: str, row: int):
+        """Sets the 'Bypass Exp Date' cells for the given row."""
+        self._data[row][self.beind] = value
+        self.dataChanged.emit(self.index(row, self.beind),
                               self.index(row, self.beind))
 
     @Slot(int, int)
@@ -319,7 +317,10 @@ class IgnoredColDelegate(MPSItemDelegate):
 
     def initStyleOption(self, option, index):
         super(IgnoredColDelegate, self).initStyleOption(option, index)
-        option.palette.setBrush(QPalette.Text, Statuses.GRN.brush())
+        if index.data() == '?':
+            option.palette.setBrush(QPalette.Text, Statuses.WHT.brush())
+        else:
+            option.palette.setBrush(QPalette.Text, Statuses.GRN.brush())
 
     def displayText(self, value, locale):
         if value == "Ignored":
