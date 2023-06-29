@@ -37,26 +37,25 @@ class SummaryMixin:
             hdr.setDefaultSectionSize(200)
             hdr.resizeSection(0, 1100)
             hdr.setSectionResizeMode(1, QHeaderView.Stretch)
-            for i in range(2, 10): self.ui.summ_tbl.hideColumn(i)
+            for i in range(2, 10):
+                self.ui.summ_tbl.hideColumn(i)
 
             self.TPG_mode_destination_preference = {
-                'SC10': 6, # LASER
-                'SC11': 2, # BSYD
-                'SC12': 2, # BSYD
-                'SC13': 3, # DIAG0
-                'SC14': 2, # BSYD
-                'SC15': 4, # HXR
-                'SC16': 5, # SXR
-                'SC17': 5, # SXR
-                'SC18': 5, # SXR
-                }
+                'SC10': 6,  # LASER
+                'SC11': 2,  # BSYD
+                'SC12': 2,  # BSYD
+                'SC13': 3,  # DIAG0
+                'SC14': 2,  # BSYD
+                'SC15': 4,  # HXR
+                'SC16': 5,  # SXR
+                'SC17': 5,  # SXR
+                'SC18': 5}  # SXR
             self.dest_permit_map = {
                 'SC_DIAG0': self.ui.permit_DIAG0,
                 'SC_BSYD':  self.ui.permit_BSYD,
                 'SC_HXR':   self.ui.permit_HXR,
                 'SC_SXR':   self.ui.permit_SXR,
-                'SC_LESA':  self.ui.permit_LESA,
-                }
+                'SC_LESA':  self.ui.permit_LESA}
 
             # need this initial call with direct caget, otherwise the initial
             # run of the callback will not connect to the 'DSTxx_NAME' PVs
@@ -129,16 +128,19 @@ class SummaryMixin:
         # sort by "priority" destination
         priority_destination = self.TPG_mode_destination_preference[value]
         self.ui.summ_tbl.sortByColumn(priority_destination, Qt.AscendingOrder)
-        for i in range(2, 10): self.ui.summ_tbl.hideColumn(i)
+        for i in range(2, 10):
+            self.ui.summ_tbl.hideColumn(i)
         self.ui.summ_tbl.showColumn(priority_destination)
         # always show DIAG0 column for modes that allow it
-        if value not in ['SC10', 'SC11', 'SC12']: self.ui.summ_tbl.showColumn(3)
+        if value not in ['SC10', 'SC11', 'SC12']:
+            self.ui.summ_tbl.showColumn(3)
 
         # shade permit boxes for unsupported destinations
         allowed_destinations = []
         for i in range(6):
             dest_name = caget(f'TPG:SYS0:1:{value}:DST0{i}_NAME')
-            if dest_name != 'NULL': allowed_destinations.append(dest_name)
+            if dest_name != 'NULL':
+                allowed_destinations.append(dest_name)
 
         for dest_name, dest_permit_obj in self.dest_permit_map.items():
             permit_effect = None
