@@ -1,4 +1,6 @@
-from epics import caget_many
+from functools import partial
+from epics import (PV, caget_many)
+from epics.dbr import DBE_VALUE
 from qtpy.QtCore import (Qt, Slot)
 from qtpy.QtWidgets import (QWidget, QTableWidgetItem, QHBoxLayout, QVBoxLayout,
                             QMessageBox, QHeaderView, QLabel, QTableWidget)
@@ -70,70 +72,105 @@ class ConfBPM(Display):
 
 
 class ConfReadBPM(QWidget):
-    def __init__(self, parent, dev):
+    def __init__(self, parent, dev: str):
         super(ConfReadBPM, self).__init__(parent=parent)
         self.dev = dev
+        self.slope_pv = f"{self.dev.rsplit('_', 1)[0]}_SS_RBV"
         self.main_lyt = QVBoxLayout()
         self.setLayout(self.main_lyt)
 
-        self.make_row("L")
-        self.make_row("H")
+        self.make_row("Min")
+        self.make_row("Max")
 
-    def make_row(self, hilo):
+        self.slope = PV(self.slope_pv,
+                        callback=self.order_thresholds,
+                        auto_monitor=DBE_VALUE)
+
+    def make_row(self, min_max: str):
         """Makes the Min/Max row of the Read-only widget."""
         lyt = QHBoxLayout()
 
-        lbl = QLabel("Max" if hilo == "H" else "Min")
+        lbl = QLabel(min_max)
         lbl.setFixedSize(25, 12)
         lbl.setStyleSheet("background-color: transparent")
         lyt.addWidget(lbl)
 
-        wid = PyDMLabel(init_channel=f"ca://{self.dev}_{hilo}_RBV")
+        wid = PyDMLabel()
         wid.setMinimumWidth(64)
         lyt.addWidget(wid)
+        setattr(self, f"{min_max.lower()}_lbl", wid)
 
-        wid = PyDMByteIndicator(init_channel=f"ca://{self.dev}_{hilo}_EN_RBV")
+        wid = PyDMByteIndicator()
         wid.setFixedSize(14, 14)
         wid.showLabels = False
-        wid.offColor = Qt.red
+        # wid.offColor = Qt.red
         lyt.addWidget(wid)
+        setattr(self, f"{min_max.lower()}_bit", wid)
 
         self.main_lyt.addLayout(lyt)
+
+    def order_thresholds(self, value, **kw):
+        """Set Min/Max channels based on the device's slope (value)."""
+        min_ch, max_ch = ("L", "H") if value >= 0 else ("H", "L")
+
+        self.min_lbl.channel = f"ca://{self.dev}_{min_ch}_RBV"
+        self.min_bit.channel = f"ca://{self.dev}_{min_ch}_EN_RBV"
+        self.max_lbl.channel = f"ca://{self.dev}_{max_ch}_RBV"
+        self.max_bit.channel = f"ca://{self.dev}_{max_ch}_EN_RBV"
 
 
 class ConfWriteBPM(QWidget):
     def __init__(self, parent, devs):
         super(ConfWriteBPM, self).__init__(parent=parent)
-        self.devs = devs
+        self.devs = {}
+        self.slope_pvs = []
         self.main_lyt = QVBoxLayout()
         self.setLayout(self.main_lyt)
 
-        self.make_row("L")
-        self.make_row("H")
+        self.make_row("Min")
+        self.make_row("Max")
 
-    def make_row(self, hilo):
+        for dev in devs:
+            slope_pv = f"{dev.rsplit('_', 1)[0]}_SS_RBV"
+            self.devs[slope_pv] = (f"{dev}_L", f"{dev}_H")
+            self.slope_pvs.append(PV(slope_pv,
+                                     callback=partial(self.order_thresholds, dev=dev),
+                                     auto_monitor=DBE_VALUE))
+
+    def make_row(self, min_max: str):
         """Makes the Min/Max row of the Write-only widget. Establishes
         slot connections between the row's widgets."""
         lyt = QHBoxLayout()
-        self.main_lyt.addLayout(lyt)
 
-        lbl = QLabel("Max" if hilo == "H" else "Min")
+        lbl = QLabel(min_max)
         lbl.setFixedSize(25, 12)
         lbl.setStyleSheet("background-color: transparent")
         lyt.addWidget(lbl)
 
-        edt = PyDMMultiLineEdit(init_channels=", ".join(f"{d}_{hilo}" for d in self.devs))
+        edt = PyDMMultiLineEdit()
         edt.alarmSensitiveContent = True
-        lyt.addWidget(edt)
-
-        edt.returnPressed.disconnect()
         edt.returnPressed.connect(self.edt_returned)
+        lyt.addWidget(edt)
+        setattr(self, f"{min_max.lower()}_edt", edt)
 
-        chk = PyDMMultiCheckbox(init_channels=", ".join([f"{d}_{hilo}_EN" for d in self.devs]))
-        lyt.addWidget(chk)
-
-        chk.clicked.disconnect()
+        chk = PyDMMultiCheckbox()
         chk.clicked.connect(self.chk_clicked)
+        lyt.addWidget(chk)
+        setattr(self, f"{min_max.lower()}_chk", chk)
+
+        self.main_lyt.addLayout(lyt)
+
+    def order_thresholds(self, pvname, value, dev, **kw):
+        """Set Min/Max channels based on the device's slope (value)."""
+        min_ch, max_ch = ("L", "H") if value >= 0 else ("H", "L")
+
+        self.devs[pvname] = (f"{dev}_{min_ch}", f"{dev}_{max_ch}")
+
+        vals = self.devs.values()
+        self.min_edt.channel = ", ".join([ch[0] for ch in vals])
+        self.min_chk.channel = ", ".join([f"{ch[0]}_EN" for ch in vals])
+        self.max_edt.channel = ", ".join([ch[1] for ch in vals])
+        self.max_chk.channel = ", ".join([f"{ch[1]}_EN" for ch in vals])
 
     @Slot()
     def edt_returned(self):
@@ -141,7 +178,6 @@ class ConfWriteBPM(QWidget):
         requests user confirmation if they do not."""
         sndr = self.sender()
         txt = sndr.text()
-        print(txt)
 
         vals = caget_many([f"{d[:-5]}_RBV" for d in sndr.channel.split(", ")],
                           connection_timeout=(len(self.devs) * .1))

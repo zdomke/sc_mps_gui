@@ -6,6 +6,7 @@ from pydm.widgets import (PyDMChannel, PyDMCheckbox, PyDMLineEdit)
 class PyDMMultiCheckbox(PyDMCheckbox):
     def __init__(self, parent=None, init_channels=None):
         super(PyDMMultiCheckbox, self).__init__(parent, init_channel=init_channels)
+        self.clicked.disconnect()
 
     @Property(str)
     def channel(self):
@@ -74,6 +75,7 @@ class PyDMMultiCheckbox(PyDMCheckbox):
 class PyDMMultiLineEdit(PyDMLineEdit):
     def __init__(self, parent=None, init_channels=None):
         super(PyDMMultiLineEdit, self).__init__(parent, init_channel=init_channels)
+        self.returnPressed.disconnect()
 
     @Property(str)
     def channel(self):
