@@ -165,12 +165,12 @@ class LogicTableModel(QAbstractTableModel):
             col = self.hdr_lst.index(cl.beam_destination.name)
             self._data[row][col] = cl.beam_class.name
 
-            if self.status[row] == Statuses.RED:
-                continue
+            # Beam Class numbers for "Beam Off" & "Kicker STBY"
+            if cl.beam_class.number < 2:
+                self.status[row] = Statuses.RED
+            elif cl.beam_class.number < 7 and self.status[row] != Statuses.RED:
+                self.status[row] = Statuses.YEL
 
-            is_yellow = "Hz" in cl.beam_class.name
-            is_yellow |= cl.beam_class.name in ["Diagnostic", "Tuning"]
-            self.status[row] = Statuses.YEL if is_yellow else Statuses.RED
         self.dataChanged.emit(self.index(row, 1),
                               self.index(row, self.conind[0] - 1))
 
