@@ -6,8 +6,8 @@ from qtpy.QtWidgets import (QStyledItemDelegate, QApplication, QToolTip)
 from qtpy.QtGui import QPalette
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import (sessionmaker, scoped_session)
-from mps_database.models.condition import Condition
-from mps_database.models.fault_state import FaultState
+from epics import caget
+from mps_database.models import (Condition, FaultState)
 from enums import Statuses
 from models_pkg.mps_model import MPSModel
 
@@ -45,6 +45,9 @@ class LogicTableModel(QAbstractTableModel):
         self._data = []
         self.status = []
         self.channels = []
+
+        # Get max permit value for determining fault status
+        self.speed_limit = caget("SIOC:SYS0:MP00:MAX_PERMIT.RVAL") - 1
 
         self.set_data()
         self.state_signal.connect(self.set_state)
@@ -165,10 +168,13 @@ class LogicTableModel(QAbstractTableModel):
             col = self.hdr_lst.index(cl.beam_destination.name)
             self._data[row][col] = cl.beam_class.name
 
-            # Beam Class numbers for "Beam Off" & "Kicker STBY"
+            # Find Beam Class values in MPS Beam Class Definitions display
+            if self.status[row] == Statuses.RED:
+                # Status already accounted for
+                continue
             if cl.beam_class.number < 2:
                 self.status[row] = Statuses.RED
-            elif cl.beam_class.number < 7 and self.status[row] != Statuses.RED:
+            elif cl.beam_class.number < self.speed_limit:
                 self.status[row] = Statuses.YEL
 
         self.dataChanged.emit(self.index(row, 1),
@@ -219,11 +225,17 @@ class LogicTableModel(QAbstractTableModel):
                 right_state -= .5
 
             # Reduce priority of fault if the sort destination is Full
+            # Increase priority of fault if the cell is not a '-'
             if left.column() != 1:
-                if left_state > 0 and left.data() == '-':
+                if left.data() == '-' and left_state > 0:
                     left_state /= 10
-                if right_state > 0 and right.data() == '-':
+                elif left.data() != '-':
+                    left_state += .35
+
+                if right.data() == '-' and right_state > 0:
                     right_state /= 10
+                elif right.data() != '-':
+                    right_state += .35
 
         if (0 < left.column() < self.conind[-1]
                 or left.column() == self.bind
