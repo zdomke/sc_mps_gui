@@ -54,7 +54,7 @@
 ### mps_gui_main.py & mps_gui_main.ui & mps_cud_main.ui 
   - This is the main display for the SC MPS Display  
   - Contains a tab widget with 4 tabs:  
-    - The Summary tab contains 6 embedded displays, 2 'check engine lights', and 2 tables, one containing faulted PVs and one containing bypassed faults  
+    - The Summary tab contains 6 embedded displays, 3 'check engine lights', and 2 tables, one containing faulted PVs and one containing bypassed faults  
     - The Logic tab contains a table of all faults in the database  
       - The searchbar shows only faults containing that substring  
       - The checkbox shows the user all inactive faults  

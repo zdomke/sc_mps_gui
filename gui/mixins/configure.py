@@ -4,7 +4,7 @@ from qtpy.QtCore import (Qt, Slot, QModelIndex, QSortFilterProxyModel)
 from qtpy.QtWidgets import (QHeaderView, QApplication)
 from mps_database.models import Device
 from enums import ConfFiles
-from models_pkg.configure_model import (ConfigureTableModel)
+from models_pkg.configure_model import ConfigureTableModel
 
 
 class ConfigureMixin:
